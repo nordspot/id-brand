@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>.brand — SBB/CFF/FFS Identity Agent</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sbb-red: #eb0000;
+    --sbb-blue: #2d327d;
+    --surface-0: #0a0a0a;
+    --surface-1: #111111;
+    --surface-2: #1a1a1a;
+    --surface-3: #222222;
+    --border: #2a2a2a;
+    --text-0: #ffffff;
+    --text-1: #cccccc;
+    --text-2: #888888;
+    --accent: #eb0000;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--surface-0);
+    color: var(--text-0);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+  ::selection { background: var(--accent); color: white; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes glowPulse { 0%,100% { box-shadow: 0 0 20px rgba(235,0,0,0.1); } 50% { box-shadow: 0 0 40px rgba(235,0,0,0.25); } }
+  .anim { animation: fadeIn 0.4s ease-out forwards; }
+  .s1 { animation-delay:.05s; opacity:0 } .s2 { animation-delay:.1s; opacity:0 } .s3 { animation-delay:.15s; opacity:0 } .s4 { animation-delay:.2s; opacity:0 }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+const API = 'https://sbb-brand-api.billowing-leaf-4d6a.workers.dev';
+
+function useAPI(endpoint) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    fetch(API + endpoint).then(r=>r.json()).then(d=>{setData(d);setLoading(false)}).catch(()=>setLoading(false));
+  }, [endpoint]);
+  return { data, loading };
+}
+
+const Spin = () => <div style={{textAlign:'center',padding:60}}><div style={{display:'inline-block',width:24,height:24,border:'2px solid var(--border)',borderTopColor:'var(--accent)',borderRadius:'50%',animation:'spin .6s linear infinite'}}/><p style={{color:'var(--text-2)',fontSize:13,marginTop:12}}>Loading...</p></div>;
+
+// ─── Semantic Search ───
+function Search() {
+  const [q, setQ] = useState('');
+  const [results, setResults] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [history, setHistory] = useState([]);
+
+  const go = useCallback(async (query) => {
+    if (!query.trim()) return;
+    setLoading(true);
+    const r = await fetch(API+'/api/search?q='+encodeURIComponent(query));
+    const d = await r.json();
+    setResults(d); setLoading(false);
+    setHistory(p => [query,...p.filter(h=>h!==query)].slice(0,8));
+  }, []);
+
+  const suggestions = [
+    "Can I modify the SBB logo?",
+    "What is the primary brand color?",
+    "Typography rules for headings",
+    "How to use the Rotes Fenster?",
+    "Brand values of SBB",
+    "Pictogram style guidelines",
+    "Logo placement on dark backgrounds",
+    "What fonts for digital products?"
+  ];
+
+  return (
+    <div style={{maxWidth:900,margin:'0 auto'}}>
+      <div style={{display:'flex',alignItems:'center',gap:12,background:'var(--surface-2)',border:'1px solid',borderColor:q?'var(--accent)':'var(--border)',borderRadius:12,padding:'14px 18px',transition:'all .2s',boxShadow:q?'0 0 30px rgba(235,0,0,0.08)':'none',marginBottom:32}}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{color:'var(--text-2)',flexShrink:0}}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input value={q} onChange={e=>setQ(e.target.value)} onKeyDown={e=>e.key==='Enter'&&go(q)} placeholder="Ask the brand anything... (semantic search)" style={{flex:1,background:'none',border:'none',outline:'none',color:'var(--text-0)',fontSize:16,fontFamily:'inherit'}}/>
+        {q && <button onClick={()=>go(q)} style={{background:'var(--accent)',color:'white',border:'none',borderRadius:8,padding:'6px 16px',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'inherit'}}>Search</button>}
+      </div>
+
+      {!results && !loading && (
+        <div className="anim">
+          <p style={{color:'var(--text-2)',fontSize:13,marginBottom:16,fontWeight:500,textTransform:'uppercase',letterSpacing:'.05em'}}>Try asking</p>
+          <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
+            {suggestions.map((s,i)=>(
+              <button key={i} onClick={()=>{setQ(s);go(s)}} className={`anim s${(i%4)+1}`}
+                style={{background:'var(--surface-2)',border:'1px solid var(--border)',borderRadius:8,padding:'8px 14px',color:'var(--text-1)',fontSize:13,cursor:'pointer',fontFamily:'inherit',transition:'all .2s'}}
+                onMouseOver={e=>{e.target.style.borderColor='var(--accent)';e.target.style.color='var(--text-0)'}}
+                onMouseOut={e=>{e.target.style.borderColor='var(--border)';e.target.style.color='var(--text-1)'}}
+              >{s}</button>
+            ))}
+          </div>
+          {history.length>0 && (
+            <div style={{marginTop:24}}>
+              <p style={{color:'var(--text-2)',fontSize:12,marginBottom:8,fontWeight:500,textTransform:'uppercase',letterSpacing:'.05em'}}>Recent</p>
+              <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
+                {history.map((h,i)=><button key={i} onClick={()=>{setQ(h);go(h)}} style={{background:'none',border:'1px solid var(--border)',borderRadius:6,padding:'4px 10px',color:'var(--text-2)',fontSize:12,cursor:'pointer',fontFamily:'inherit'}}>{h}</button>)}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {loading && <div style={{textAlign:'center',padding:40}}><div style={{display:'inline-block',width:24,height:24,border:'2px solid var(--border)',borderTopColor:'var(--accent)',borderRadius:'50%',animation:'spin .6s linear infinite'}}/><p style={{color:'var(--text-2)',fontSize:13,marginTop:12}}>Searching brand knowledge...</p></div>}
+
+      {results && !loading && (
+        <div className="anim">
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
+            <span style={{color:'var(--text-2)',fontSize:13}}>{results.count} result{results.count!==1?'s':''} · <code style={{color:'var(--accent)',fontSize:12}}>{results.model}</code></span>
+            <button onClick={()=>{setResults(null);setQ('')}} style={{background:'var(--surface-3)',border:'1px solid var(--border)',borderRadius:6,padding:'4px 12px',color:'var(--text-2)',fontSize:12,cursor:'pointer',fontFamily:'inherit'}}>Clear</button>
+          </div>
+          {results.results.map((r,i)=>(
+            <div key={i} className={`anim s${(i%4)+1}`} style={{background:'var(--surface-2)',border:'1px solid var(--border)',borderRadius:12,padding:20,marginBottom:12,borderLeft:`3px solid ${r.score>.7?'var(--accent)':r.score>.5?'#f59e0b':'var(--border)'}`}}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:10}}>
+                <div style={{display:'flex',gap:8,alignItems:'center'}}>
+                  <span style={{background:r.score>.7?'rgba(235,0,0,0.15)':r.score>.5?'rgba(245,158,11,0.15)':'rgba(255,255,255,0.05)',color:r.score>.7?'var(--accent)':r.score>.5?'#f59e0b':'var(--text-2)',padding:'2px 8px',borderRadius:4,fontSize:12,fontWeight:600,fontFamily:'monospace'}}>{(r.score*100).toFixed(1)}%</span>
+                  <span style={{color:'var(--text-2)',fontSize:12}}>{r.chunk_type}</span>
+                </div>
+                {r.metadata?.url && <a href={r.metadata.url} target="_blank" rel="noopener" style={{color:'var(--text-2)',textDecoration:'none',fontSize:12}}>source ↗</a>}
+              </div>
+              <p style={{color:'var(--text-0)',fontSize:14,lineHeight:1.65}}>{r.chunk_text}</p>
+              <div style={{marginTop:8,display:'flex',gap:6}}>
+                {r.metadata?.section && <span style={{background:'var(--surface-3)',padding:'2px 8px',borderRadius:4,fontSize:11,color:'var(--text-2)'}}>{r.metadata.section}</span>}
+                {r.metadata?.section_title && <span style={{background:'var(--surface-3)',padding:'2px 8px',borderRadius:4,fontSize:11,color:'var(--text-2)'}}>{r.metadata.section_title}</span>}
+              </div>
+            </div>
+          ))}
+          {results.count===0 && <div style={{textAlign:'center',padding:40,color:'var(--text-2)'}}><p>No results. Try a different query.</p></div>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Colors ───
+function Colors() {
+  const {data,loading} = useAPI('/api/colors');
+  if (loading) return <Spin/>;
+  const cats = {};
+  data.colors.forEach(c=>{if(!cats[c.category])cats[c.category]=[];cats[c.category].push(c)});
+  return (
+    <div style={{maxWidth:900,margin:'0 auto'}}>
+      {Object.entries(cats).map(([cat,colors],ci)=>(
+        <div key={cat} className={`anim s${(ci%4)+1}`} style={{marginBottom:36}}>
+          <h3 style={{fontSize:13,fontWeight:600,textTransform:'uppercase',letterSpacing:'.08em',color:'var(--text-2)',marginBottom:16}}>{cat}</h3>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:12}}>
+            {colors.map((c,i)=>(
+              <div key={i} style={{background:'var(--surface-2)',border:'1px solid var(--border)',borderRadius:12,overflow:'hidden'}}>
+                <div style={{height:80,background:c.hex,borderBottom:c.hex==='#ffffff'?'1px solid var(--border)':'none'}}/>
+                <div style={{padding:'12px 14px'}}>
+                  <p style={{fontWeight:600,fontSize:14,marginBottom:4}}>{c.name}</p>
+                  <p style={{fontFamily:'monospace',fontSize:12,color:'var(--accent)',marginBottom:6}}>{c.hex}</p>
+                  {c.pantone && <span style={{fontSize:11,color:'var(--text-2)',display:'block'}}>Pantone {c.pantone}</span>}
+                  {c.ral && <span style={{fontSize:11,color:'var(--text-2)',display:'block'}}>RAL {c.ral}</span>}
+                  {c.cmyk && <span style={{fontSize:11,color:'var(--text-2)',display:'block'}}>CMYK {c.cmyk}</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── Typography ───
+function Typography() {
+  const {data,loading} = useAPI('/api/typography');
+  if (loading) return <Spin/>;
+  return (
+    <div style={{maxWidth:900,margin:'0 auto',display:'grid',gap:12}}>
+      {data.typography.map((t,i)=>(
+        <div key={i} className={`anim s${(i%4)+1}`} style={{background:'var(--surface-2)',border:'1px solid var(--border)',borderRadius:12,padding:20,display:'grid',gridTemplateColumns:'1fr auto',gap:16}}>
+          <div>
+            <div style={{display:'flex',gap:8,alignItems:'center',marginBottom:8}}>
+              <span style={{fontWeight:700,fontSize:16}}>{t.font_name||t.name||'Font'}</span>
+              {t.weight && <span style={{background:'var(--surface-3)',padding:'2px 8px',borderRadius:4,fontSize:11,color:'var(--text-2)'}}>{t.weight}</span>}
+            </div>
+            {(t.usage_context||t.usage) && <p style={{color:'var(--text-1)',fontSize:13,lineHeight:1.5}}>{t.usage_context||t.usage}</p>}
+          </div>
+          <div style={{display:'flex',flexDirection:'column',gap:4,alignItems:'flex-end',justifyContent:'center'}}>
+            {t.size_range && <span style={{fontFamily:'monospace',fontSize:12,color:'var(--text-2)'}}>{t.size_range}</span>}
+            {t.restrictions && <span style={{fontSize:11,color:'#f59e0b',background:'rgba(245,158,11,0.1)',padding:'2px 8px',borderRadius:4}}>⚠ {t.restrictions}</span>}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── Rules ───
+function Rules() {
+  const {data,loading} = useAPI('/api/rules');
+  const [filter,setFilter] = useState('all');
+  if (loading) return <Spin/>;
+  const types = ['all',...new Set(data.rules.map(r=>r.type))];
+  const filtered = filter==='all'?data.rules:data.rules.filter(r=>r.type===filter);
+  const tc = {principle:'#3b82f6',usage:'#10b981',restriction:'#ef4444',exception:'#f59e0b',technical:'#8b5cf6'};
+  return (
+    <div style={{maxWidth:900,margin:'0 auto'}}>
+      <div style={{display:'flex',gap:6,marginBottom:24,flexWrap:'wrap'}}>
+        {types.map(t=>(
+          <button key={t} onClick={()=>setFilter(t)} style={{background:filter===t?(tc[t]||'var(--accent)'):'var(--surface-2)',color:filter===t?'white':'var(--text-2)',border:'1px solid',borderColor:filter===t?'transparent':'var(--border)',borderRadius:6,padding:'6px 14px',fontSize:12,fontWeight:500,cursor:'pointer',fontFamily:'inherit',textTransform:'capitalize'}}>{t==='all'?`All (${data.rules.length})`:`${t} (${data.rules.filter(r=>r.type===t).length})`}</button>
+        ))}
+      </div>
+      <div style={{display:'grid',gap:8}}>
+        {filtered.map((r,i)=>(
+          <div key={i} className={`anim s${(i%4)+1}`} style={{background:'var(--surface-2)',border:'1px solid var(--border)',borderRadius:10,padding:'14px 18px',borderLeft:`3px solid ${tc[r.type]||'var(--border)'}`,display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:16}}>
+            <p style={{color:'var(--text-0)',fontSize:14,lineHeight:1.5,flex:1}}>{r.rule_text||r.description||r.content}</p>
+            <span style={{background:`${tc[r.type]||'#666'}22`,color:tc[r.type]||'#666',padding:'2px 8px',borderRadius:4,fontSize:11,fontWeight:500,whiteSpace:'nowrap',textTransform:'capitalize'}}>{r.type}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── .brand Concept ───
+function Concept() {
+  return (
+    <div style={{maxWidth:1000,margin:'0 auto'}}>
+      <div className="anim" style={{background:'var(--surface-2)',border:'1px solid var(--border)',borderRadius:16,padding:32,marginBottom:24}}>
+        <h3 style={{fontSize:22,fontWeight:700,marginBottom:8}}><span style={{color:'var(--accent)'}}>.</span>brand — Brand Identity as an Agent</h3>
+        <p style={{color:'var(--text-1)',fontSize:15,lineHeight:1.7,maxWidth:700}}>A .brand file is not a static asset — it's an MCP agent that <em>embodies</em> a brand identity. It understands the brand's DNA, can answer questions, validate designs, and enforce guidelines autonomously.</p>
+      </div>
+
+      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:16,marginBottom:24}}>
+        {[
+          {title:'Brand Consciousness',desc:'Central AI maintaining the essence of the brand DNA. Semantic understanding, not just rules.',color:'#eb0000'},
+          {title:'Knowledge Layers',desc:'D1 for structured data (colors, fonts, specs). Vectorize for semantic search. Workers AI for embeddings.',color:'#3b82f6'},
+          {title:'Guardian Protocol',desc:'Every design decision validated against the brand. Real-time enforcement, not post-hoc review.',color:'#10b981'},
+        ].map((item,i)=>(
+          <div key={i} className={`anim s${i+1}`} style={{background:'var(--surface-2)',border:'1px solid var(--border)',borderRadius:12,padding:24}}>
+            <div style={{width:8,height:8,borderRadius:'50%',background:item.color,marginBottom:12}}/>
+            <h4 style={{fontSize:15,fontWeight:600,marginBottom:6}}>{item.title}</h4>
+            <p style={{color:'var(--text-2)',fontSize:13,lineHeight:1.6}}>{item.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="anim s2" style={{background:'var(--surface-1)',border:'1px solid var(--border)',borderRadius:16,padding:32,fontFamily:'monospace',fontSize:12,lineHeight:2,color:'var(--text-2)',overflow:'auto',marginBottom:24}}>
+        <pre>{`  ┌──────────────────────────────────────────────────────────────┐
+  │                  .brand  MCP  Agent  Layer                   │
+  │                                                              │
+  │   ┌──────────┐   ┌─────────────┐   ┌──────────────────┐    │
+  │   │  Brand    │   │  Semantic   │   │   Validation     │    │
+  │   │  Context  │◄─►│  Search    │◄─►│   Engine         │    │
+  │   │  Engine   │   │ (Vectorize)│   │  (Rules + AI)    │    │
+  │   └──────────┘   └─────────────┘   └──────────────────┘    │
+  │         │               │                    │              │
+  │         └───────────────┼────────────────────┘              │
+  │                         │                                   │
+  └─────────────────────────┼───────────────────────────────────┘
+                            │
+  ┌─────────────────────────┼───────────────────────────────────┐
+  │                         ▼                                   │
+  │             Cloudflare Workers Runtime                      │
+  │                                                             │
+  │   ┌──────────┐   ┌─────────────┐   ┌──────────────────┐   │
+  │   │   D1     │   │  Vectorize  │   │   Workers AI     │   │
+  │   │ (SQL DB) │   │ (Vector DB) │   │  (Embeddings)    │   │
+  │   │          │   │             │   │                   │   │
+  │   │ 14 colrs │   │  768-dim    │   │ bge-base-en-v1.5 │   │
+  │   │ 10 fonts │   │  cosine     │   │                   │   │
+  │   │ 23 rules │   │  17 chunks  │   │                   │   │
+  │   │ 5 values │   │             │   │                   │   │
+  │   │ 13 sects │   │             │   │                   │   │
+  │   └──────────┘   └─────────────┘   └──────────────────┘   │
+  │                                                             │
+  └─────────────────────────────────────────────────────────────┘`}</pre>
+      </div>
+
+      <div className="anim s3" style={{background:'var(--surface-2)',border:'1px solid var(--border)',borderRadius:16,padding:32,marginBottom:24}}>
+        <h3 style={{fontSize:18,fontWeight:700,marginBottom:4}}>Les 6 typologies d'identités dynamiques</h3>
+        <p style={{color:'var(--text-2)',fontSize:13,marginBottom:20}}>Nicolas Paupe, Brigade Studio — Taxonomie pour les Brand Identity Agents</p>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12}}>
+          {[
+            {n:'01',name:'Conteneur',desc:'Forme fixe, contenu variable. Le logo devient un cadre.',ex:'MTV, AOL'},
+            {n:'02',name:'Transformatif',desc:'Le logo lui-même mute et se transforme.',ex:'Google Doodles'},
+            {n:'03',name:'Génératif',desc:'Créé algorithmiquement à partir de paramètres.',ex:'Nordkyn, Casa da Música'},
+            {n:'04',name:'Réactif',desc:'Répond à des stimuli en temps réel.',ex:'MIT Media Lab'},
+            {n:'05',name:'Participatif',desc:'Co-créé avec les utilisateurs.',ex:'John Maeda RISD'},
+            {n:'06',name:'Évolutif',desc:'Change au fil du temps, vit et vieillit.',ex:'Seed Media, EDP'},
+          ].map((t,i)=>(
+            <div key={i} style={{background:'var(--surface-3)',borderRadius:10,padding:16,borderTop:`2px solid ${['#eb0000','#3b82f6','#10b981','#f59e0b','#8b5cf6','#ec4899'][i]}`}}>
+              <span style={{fontFamily:'monospace',fontSize:11,color:'var(--text-2)'}}>{t.n}</span>
+              <h4 style={{fontSize:14,fontWeight:600,margin:'4px 0'}}>{t.name}</h4>
+              <p style={{color:'var(--text-2)',fontSize:12,lineHeight:1.5,marginBottom:6}}>{t.desc}</p>
+              <p style={{fontSize:11,color:'var(--text-2)',fontStyle:'italic'}}>{t.ex}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="anim s4" style={{background:'var(--surface-2)',border:'1px solid var(--border)',borderRadius:16,padding:32}}>
+        <h3 style={{fontSize:18,fontWeight:700,marginBottom:20}}>Feuille de route</h3>
+        {[
+          {phase:'Phase 1',title:'Brand Library API',status:'done',items:['D1 database populated','Vectorize index (17 chunks)','Semantic search live','REST API deployed','GitHub Actions CI/CD']},
+          {phase:'Phase 2',title:'MCP Server (.brand agent)',status:'next',items:['MCP protocol implementation','Brand validation tools','Design critique capabilities','Context-aware responses','Multi-language support']},
+          {phase:'Phase 3',title:'Multi-brand ecosystem',status:'future',items:['.brand file format spec','Brand marketplace','Inter-brand communication','Brand consciousness network']},
+        ].map((p,i)=>(
+          <div key={i} style={{display:'grid',gridTemplateColumns:'160px 1fr',gap:16,background:'var(--surface-3)',borderRadius:10,padding:18,marginBottom:12,borderLeft:`3px solid ${p.status==='done'?'#10b981':p.status==='next'?'var(--accent)':'var(--border)'}`,opacity:p.status==='future'?.6:1}}>
+            <div>
+              <span style={{fontFamily:'monospace',fontSize:11,color:'var(--text-2)'}}>{p.phase}</span>
+              <h4 style={{fontSize:14,fontWeight:600,marginTop:2}}>{p.title}</h4>
+              <span style={{display:'inline-flex',alignItems:'center',gap:4,marginTop:6,fontSize:11,fontWeight:500,color:p.status==='done'?'#10b981':p.status==='next'?'var(--accent)':'var(--text-2)'}}>
+                {p.status==='done'?'✓ Complete':p.status==='next'?'◆ In Progress':'○ Planned'}
+              </span>
+            </div>
+            <div style={{display:'flex',flexWrap:'wrap',gap:6,alignContent:'flex-start'}}>
+              {p.items.map((item,j)=><span key={j} style={{background:'var(--surface-2)',padding:'4px 10px',borderRadius:6,fontSize:12,color:'var(--text-1)'}}>{item}</span>)}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Workspace ───
+function Workspace() {
+  const [notes,setNotes] = useState([
+    {id:1,author:'Daniel',text:'The .brand concept needs to go beyond static guidelines. Every brand should have an agent that understands its DNA.',color:'#eb0000',ts:'2025-04-09'},
+    {id:2,author:'Nicolas',text:'Les 6 typologies forment la base théorique. Le .brand est la 7ème — l\'identité consciente, autonome, qui peut dialoguer.',color:'#3b82f6',ts:'2025-04-09'},
+    {id:3,author:'Daniel',text:'SBB is the perfect first case: strict rules, multilingual (DE/FR/IT/EN), complex system (logo + Bildmarke + Signet + Rotes Fenster).',color:'#eb0000',ts:'2025-04-09'},
+    {id:4,author:'Nicolas',text:'Important: le framework Influenceurs/Récepteurs. Le .brand agent est un Influenceur qui maintient la cohérence face aux Récepteurs (designers, agences).',color:'#3b82f6',ts:'2025-04-09'},
+    {id:5,author:'Daniel',text:'Phase 1 done: API is live at sbb-brand-api.billowing-leaf-4d6a.workers.dev — 17 semantic chunks embedded, full color/type/rule system in D1.',color:'#eb0000',ts:'2025-04-09'},
+  ]);
+  const [newNote,setNewNote] = useState('');
+  const [author,setAuthor] = useState('Daniel');
+
+  const add = () => {
+    if(!newNote.trim())return;
+    setNotes(p=>[...p,{id:Date.now(),author,text:newNote,color:author==='Daniel'?'#eb0000':'#3b82f6',ts:new Date().toISOString().split('T')[0]}]);
+    setNewNote('');
+  };
+
+  return (
+    <div style={{maxWidth:900,margin:'0 auto'}}>
+      <div className="anim" style={{background:'var(--surface-2)',border:'1px solid var(--border)',borderRadius:12,padding:20,marginBottom:24}}>
+        <div style={{display:'flex',gap:8,marginBottom:12}}>
+          {['Daniel','Nicolas'].map(n=>(
+            <button key={n} onClick={()=>setAuthor(n)} style={{background:author===n?(n==='Daniel'?'#eb0000':'#2d327d'):'var(--surface-3)',color:author===n?'white':'var(--text-2)',border:'none',borderRadius:6,padding:'6px 14px',fontSize:13,fontWeight:500,cursor:'pointer',fontFamily:'inherit'}}>{n}</button>
+          ))}
+        </div>
+        <div style={{display:'flex',gap:8}}>
+          <textarea value={newNote} onChange={e=>setNewNote(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();add()}}} placeholder="Add a thought, idea, question..." rows={2} style={{flex:1,background:'var(--surface-3)',border:'1px solid var(--border)',borderRadius:8,padding:'10px 14px',color:'var(--text-0)',fontSize:14,fontFamily:'inherit',resize:'vertical',outline:'none'}}/>
+          <button onClick={add} style={{background:'var(--accent)',color:'white',border:'none',borderRadius:8,padding:'0 20px',fontSize:13,fontWeight:600,cursor:'pointer',fontFamily:'inherit',alignSelf:'flex-end'}}>Add</button>
+        </div>
+      </div>
+      <div style={{display:'grid',gap:10}}>
+        {[...notes].reverse().map((n,i)=>(
+          <div key={n.id} className={`anim s${(i%4)+1}`} style={{background:'var(--surface-2)',border:'1px solid var(--border)',borderRadius:10,padding:'14px 18px',borderLeft:`3px solid ${n.color}`}}>
+            <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
+              <span style={{fontWeight:600,fontSize:13,color:n.color}}>{n.author}</span>
+              <span style={{fontSize:11,color:'var(--text-2)'}}>{n.ts}</span>
+            </div>
+            <p style={{color:'var(--text-1)',fontSize:14,lineHeight:1.6}}>{n.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── App ───
+function App() {
+  const [tab,setTab] = useState('search');
+  const tabs = [
+    {id:'search',label:'Brand Search'},
+    {id:'colors',label:'Colors'},
+    {id:'typography',label:'Typography'},
+    {id:'rules',label:'Rules'},
+    {id:'concept',label:'.brand Concept'},
+    {id:'workspace',label:'Workspace'},
+  ];
+
+  return (
+    <div style={{minHeight:'100vh',display:'flex',flexDirection:'column'}}>
+      <header style={{borderBottom:'1px solid var(--border)',padding:'16px 32px',display:'flex',justifyContent:'space-between',alignItems:'center',background:'var(--surface-1)',position:'sticky',top:0,zIndex:100}}>
+        <div style={{display:'flex',alignItems:'center',gap:16}}>
+          <div style={{width:36,height:36,background:'var(--accent)',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',fontWeight:800,fontSize:16,color:'white',fontFamily:'monospace',animation:'glowPulse 3s ease-in-out infinite'}}>.b</div>
+          <div>
+            <h1 style={{fontSize:16,fontWeight:700,letterSpacing:'-.02em'}}>SBB<span style={{color:'var(--text-2)',fontWeight:400}}>/</span>CFF<span style={{color:'var(--text-2)',fontWeight:400}}>/</span>FFS</h1>
+            <p style={{fontSize:11,color:'var(--text-2)'}}>Brand Identity Agent · v1.0.0</p>
+          </div>
+        </div>
+        <div style={{display:'flex',alignItems:'center',gap:12}}>
+          <div style={{display:'flex',gap:6,alignItems:'center'}}><span style={{width:8,height:8,borderRadius:'50%',background:'#10b981',display:'inline-block'}}/><span style={{fontSize:11,color:'var(--text-2)'}}>API Live</span></div>
+          <a href="https://sbb-brand-api.billowing-leaf-4d6a.workers.dev/api" target="_blank" rel="noopener" style={{color:'var(--text-2)',textDecoration:'none',fontSize:12,background:'var(--surface-3)',padding:'4px 10px',borderRadius:6}}>API ↗</a>
+          <a href="https://github.com/nordspot/sbb-brand-api" target="_blank" rel="noopener" style={{color:'var(--text-2)',textDecoration:'none',fontSize:12,background:'var(--surface-3)',padding:'4px 10px',borderRadius:6}}>GitHub ↗</a>
+        </div>
+      </header>
+
+      <nav style={{borderBottom:'1px solid var(--border)',padding:'0 32px',display:'flex',background:'var(--surface-1)',overflowX:'auto'}}>
+        {tabs.map(t=>(
+          <button key={t.id} onClick={()=>setTab(t.id)} style={{background:'none',border:'none',borderBottom:'2px solid',borderColor:tab===t.id?'var(--accent)':'transparent',color:tab===t.id?'var(--text-0)':'var(--text-2)',padding:'12px 18px',fontSize:13,fontWeight:tab===t.id?600:400,cursor:'pointer',fontFamily:'inherit',whiteSpace:'nowrap',transition:'all .2s'}}
+            onMouseOver={e=>{if(tab!==t.id)e.currentTarget.style.color='var(--text-1)'}}
+            onMouseOut={e=>{if(tab!==t.id)e.currentTarget.style.color='var(--text-2)'}}
+          >{t.label}</button>
+        ))}
+      </nav>
+
+      <main style={{flex:1,padding:'32px 32px 64px'}}>
+        {tab==='search' && <Search/>}
+        {tab==='colors' && <Colors/>}
+        {tab==='typography' && <Typography/>}
+        {tab==='rules' && <Rules/>}
+        {tab==='concept' && <Concept/>}
+        {tab==='workspace' && <Workspace/>}
+      </main>
+
+      <footer style={{borderTop:'1px solid var(--border)',padding:'16px 32px',display:'flex',justifyContent:'space-between',alignItems:'center',background:'var(--surface-1)',fontSize:12,color:'var(--text-2)'}}>
+        <span>Brigade Studio × Nord.spot · Fribourg</span>
+        <span style={{fontFamily:'monospace'}}>.brand ecosystem · 2025</span>
+      </footer>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

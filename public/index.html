@@ -4,662 +4,648 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>.brand Studio — SBB/CFF/FFS</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 <style>
-  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Roman.woff2') format('woff2');font-weight:400;font-display:swap}
-  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Light.woff2') format('woff2');font-weight:300;font-display:swap}
-  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
-
+  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Light.woff2') format('woff2');font-weight:300}
+  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Roman.woff2') format('woff2');font-weight:400}
+  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Bold.woff2') format('woff2');font-weight:700}
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:'SBBWeb',system-ui,sans-serif;background:#0a0a0a;color:#fff;overflow:hidden;height:100vh;-webkit-font-smoothing:antialiased}
   ::selection{background:#eb0000;color:#fff}
-  ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
-  input,textarea,select,button{font-family:inherit}
-  @keyframes fadeIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+  canvas{display:block;position:absolute;top:0;left:0}
+
+  #ui{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10}
+
+  #header{position:absolute;top:0;left:0;right:0;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;pointer-events:auto}
+  #header .brand{display:flex;align-items:center;gap:12px}
+  #header .brand h1{font-size:16px;font-weight:700;letter-spacing:-.01em}
+  #header .brand h1 span{color:#eb0000}
+  #header .brand small{font-size:12px;color:#555;font-weight:300}
+  #header .links{display:flex;gap:14px;align-items:center}
+  #header .links a{color:#555;text-decoration:none;font-size:12px;font-weight:300}
+  #header .links .dot{width:6px;height:6px;border-radius:50%;background:#10b981}
+
+  #prompt-bar{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);width:600px;max-width:calc(100% - 48px);pointer-events:auto}
+  #prompt-bar .input-wrap{display:flex;background:rgba(20,20,20,.9);border:1px solid #333;border-radius:8px;backdrop-filter:blur(20px);overflow:hidden;transition:border-color .2s}
+  #prompt-bar .input-wrap:focus-within{border-color:#eb0000}
+  #prompt-bar input{flex:1;background:none;border:none;padding:14px 18px;color:#fff;font-size:15px;font-family:inherit;font-weight:300;outline:none}
+  #prompt-bar input::placeholder{color:#555}
+  #prompt-bar .cats{display:flex;gap:4px;padding:8px 10px;align-items:center}
+  #prompt-bar .cat-btn{width:28px;height:28px;border-radius:4px;border:1px solid #333;background:none;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+  #prompt-bar .cat-btn:hover,.prompt-bar .cat-btn.active{border-color:currentColor;background:rgba(255,255,255,.05)}
+  #prompt-bar .hint{text-align:center;color:#333;font-size:11px;margin-top:8px;font-weight:300}
+
+  #detail{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,10,10,.95);border:1px solid #333;border-radius:12px;padding:0;max-width:500px;width:90%;backdrop-filter:blur(30px);pointer-events:auto;display:none;overflow:hidden;z-index:100}
+  #detail.show{display:block;animation:popIn .3s cubic-bezier(.16,1,.3,1)}
+  #detail .detail-color{height:4px}
+  #detail .detail-body{padding:24px}
+  #detail .detail-title{font-size:20px;font-weight:700;margin-bottom:4px}
+  #detail .detail-cat{font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;font-weight:400}
+  #detail .detail-text{font-size:14px;color:#aaa;line-height:1.7;font-weight:300}
+  #detail .detail-img{width:100%;max-height:300px;object-fit:cover;margin-bottom:16px;border-radius:6px}
+  #detail .detail-sound{margin:12px 0}
+  #detail .detail-sound button{background:#eb0000;color:#fff;border:none;border-radius:4px;padding:8px 20px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:700}
+  #detail .detail-close{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:4px;border:1px solid #333;background:none;color:#666;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  #detail .detail-close:hover{border-color:#666;color:#fff}
+
+  #side-list{position:absolute;right:0;top:52px;bottom:80px;width:220px;overflow-y:auto;pointer-events:auto;padding:8px}
+  #side-list::-webkit-scrollbar{width:3px}
+  #side-list::-webkit-scrollbar-thumb{background:#222;border-radius:2px}
+  #side-list .item{padding:8px 10px;border-radius:4px;cursor:pointer;transition:background .15s;display:flex;align-items:center;gap:8px}
+  #side-list .item:hover{background:rgba(255,255,255,.03)}
+  #side-list .item .item-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  #side-list .item .item-title{font-size:12px;color:#888;font-weight:300;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  #counter{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);text-align:center;color:#333;font-size:12px;pointer-events:none;font-weight:300}
+
+  @keyframes popIn{from{opacity:0;transform:translate(-50%,-50%) scale(.95)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
 </style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel">
-const {useState,useEffect,useRef,useCallback,useMemo} = React;
+<canvas id="c"></canvas>
+<div id="ui">
+  <div id="header">
+    <div class="brand">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142 48" width="60" height="20"><path fill="#eb0000" d="M1 47h141V1H1v46z"/><path fill="#fff" d="M87 40h9.3L83.8 27.7h15.5V40h7.4V27.7h15.6L109.7 40h9.3l16-16-15.9-16h-9.3l12.5 12.3h-15.6V8h-7.4v12.3H83.8L96.3 8H87L71 24l16 16z"/></svg>
+      <div><h1><span>.</span>brand Studio</h1><small>SBB/CFF/FFS — living brand identity</small></div>
+    </div>
+    <div class="links">
+      <div class="dot"></div>
+      <a href="https://sbb-brand-api.billowing-leaf-4d6a.workers.dev/api" target="_blank">API →</a>
+      <a href="https://github.com/nordspot/sbb-brand-api" target="_blank">GitHub →</a>
+    </div>
+  </div>
 
-/* ── Constants ── */
-const CATEGORIES = {
-  visual:   {label:'Visual',   color:'#eb0000', icon:'◆'},
-  texture:  {label:'Texture',  color:'#f59e0b', icon:'▦'},
-  sound:    {label:'Sound',    color:'#8b5cf6', icon:'♪'},
-  culture:  {label:'Culture',  color:'#3b82f6', icon:'⬡'},
-  story:    {label:'Story',    color:'#10b981', icon:'¶'},
-  feeling:  {label:'Feeling',  color:'#ec4899', icon:'◎'},
-  rule:     {label:'Rule',     color:'#6b7280', icon:'§'},
-  mcp:      {label:'MCP Tool', color:'#06b6d4', icon:'⚙'},
+  <div id="prompt-bar">
+    <div class="input-wrap">
+      <input id="input" type="text" placeholder="Add a mood, texture, sound, feeling, image URL..." autocomplete="off"/>
+      <div class="cats">
+        <button class="cat-btn" data-cat="visual" style="color:#eb0000" title="Visual">◆</button>
+        <button class="cat-btn" data-cat="texture" style="color:#f59e0b" title="Texture">▦</button>
+        <button class="cat-btn" data-cat="sound" style="color:#8b5cf6" title="Sound">♪</button>
+        <button class="cat-btn" data-cat="culture" style="color:#3b82f6" title="Culture">⬡</button>
+        <button class="cat-btn" data-cat="story" style="color:#10b981" title="Story">¶</button>
+        <button class="cat-btn" data-cat="feeling" style="color:#ec4899" title="Feeling">◎</button>
+        <button class="cat-btn" data-cat="rule" style="color:#6b7280" title="Rule">§</button>
+        <button class="cat-btn" data-cat="mcp" style="color:#06b6d4" title="MCP">⚙</button>
+      </div>
+    </div>
+    <div class="hint">Type to add elements · Paste or drop images · Click dots to explore</div>
+  </div>
+
+  <div id="side-list"></div>
+  <div id="counter"></div>
+
+  <div id="detail">
+    <div class="detail-color"></div>
+    <button class="detail-close" onclick="closeDetail()">×</button>
+    <div class="detail-body">
+      <div class="detail-cat" id="det-cat"></div>
+      <div class="detail-title" id="det-title"></div>
+      <div id="det-img-wrap"></div>
+      <div id="det-sound-wrap"></div>
+      <div class="detail-text" id="det-text"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   CORE ENGINE
+   ═══════════════════════════════════════════════ */
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W, H;
+
+const CATS = {
+  visual:  {label:'Visual',  color:'#eb0000', icon:'◆'},
+  texture: {label:'Texture', color:'#f59e0b', icon:'▦'},
+  sound:   {label:'Sound',   color:'#8b5cf6', icon:'♪'},
+  culture: {label:'Culture', color:'#3b82f6', icon:'⬡'},
+  story:   {label:'Story',   color:'#10b981', icon:'¶'},
+  feeling: {label:'Feeling', color:'#ec4899', icon:'◎'},
+  rule:    {label:'Rule',    color:'#6b7280', icon:'§'},
+  mcp:     {label:'MCP',     color:'#06b6d4', icon:'⚙'},
 };
 
-const API = 'https://sbb-brand-api.billowing-leaf-4d6a.workers.dev';
+let activeCat = 'feeling';
+let particles = [];
+let shapePoints = []; // points sampled from the SBB signet
+let mouseX = 0, mouseY = 0;
+let hoveredParticle = null;
+let audioCtx = null;
+let time = 0;
 
-/* ── SBB Logo ── */
-const SBBSignet = ({size=24}) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142 48" width={size*(142/48)} height={size}>
-    <path fill="#eb0000" d="M1 47h141V1H1v46z"/>
-    <path fill="#fff" d="M87 40h9.3L83.8 27.7h15.5V40h7.4V27.7h15.6L109.7 40h9.3l16-16-15.9-16h-9.3l12.5 12.3h-15.6V8h-7.4v12.3H83.8L96.3 8H87L71 24l16 16z"/>
-  </svg>
-);
-
-/* ── Unique ID ── */
-let _id = Date.now();
-const uid = () => 'n' + (_id++);
-
-/* ── Default cards for SBB ── */
-const DEFAULT_CARDS = [
-  {id:'n1',x:80,y:80,w:280,h:null,cat:'visual',title:'SBB Rot',body:'#eb0000 — The single most recognizable element. Red as identity, not decoration.',author:'Daniel',color:'#eb0000',type:'color',comments:[],ts:Date.now()},
-  {id:'n2',x:420,y:80,w:280,h:null,cat:'feeling',title:'Vertrauen / Confiance',body:'Precision, reliability, Swiss punctuality. The brand feeling is trust — trains run on time, the system works.',author:'Nicolas',comments:[],ts:Date.now()},
-  {id:'n3',x:760,y:80,w:280,h:null,cat:'culture',title:'Multilingual Identity',body:'DE/FR/IT/EN — The brand must speak all 4 languages natively. Not translation, but cultural adaptation.',author:'Daniel',comments:[],ts:Date.now()},
-  {id:'n4',x:80,y:300,w:280,h:null,cat:'sound',title:'Station Jingle',body:'The 3-tone SBB announcement chime. Heard 1000x daily across Switzerland. Sonic brand DNA.',author:'Nicolas',comments:[{author:'Daniel',text:'We need to embed audio references in the .brand file',ts:Date.now()}],ts:Date.now()},
-  {id:'n5',x:420,y:300,w:280,h:null,cat:'texture',title:'Brushed Metal + Glass',body:'The material language of SBB: platform steel, glass canopies, concrete pillars. Industrial Swiss precision.',author:'Daniel',comments:[],ts:Date.now()},
-  {id:'n6',x:760,y:300,w:280,h:null,cat:'mcp',title:'brand.validate()',body:'MCP tool: takes a design file, validates against all brand rules. Returns compliance score + specific violations.',author:'Daniel',comments:[{author:'Nicolas',text:'Should also suggest fixes, not just flag errors',ts:Date.now()}],ts:Date.now()},
-  {id:'n7',x:80,y:520,w:280,h:null,cat:'story',title:'150 Years of Swiss Rail',body:'Founded 1902 (SBB), but Swiss rail since 1847. The brand carries 175+ years of national infrastructure history.',author:'Nicolas',comments:[],ts:Date.now()},
-  {id:'n8',x:420,y:520,w:280,h:null,cat:'rule',title:'Logo Protection Zone',body:'Minimum clear space around logo = height of the Bildmarke. Never crop, rotate, recolor, or partially use.',author:'Daniel',comments:[],ts:Date.now()},
-  {id:'n9',x:760,y:520,w:280,h:null,cat:'mcp',title:'brand.search()',body:'MCP tool: semantic search across all brand knowledge. "Can I use blue for headlines?" → structured answer with rules.',author:'Daniel',comments:[],ts:Date.now()},
-];
-
-const DEFAULT_CONNECTIONS = [
-  {from:'n1',to:'n2'},
-  {from:'n2',to:'n3'},
-  {from:'n4',to:'n2'},
-  {from:'n6',to:'n8'},
-  {from:'n9',to:'n6'},
-];
-
-/* ══════════════════════════════════════════
-   CARD COMPONENT
-   ══════════════════════════════════════════ */
-function Card({card, selected, onSelect, onMove, onUpdate, onDelete, onStartConnect, onEndConnect, connecting}) {
-  const cat = CATEGORIES[card.cat] || CATEGORIES.visual;
-  const [dragging, setDragging] = useState(false);
-  const [showComments, setShowComments] = useState(false);
-  const [newComment, setNewComment] = useState('');
-  const [editing, setEditing] = useState(false);
-  const dragRef = useRef({startX:0,startY:0,cardX:0,cardY:0});
-
-  const onMouseDown = (e) => {
-    if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
-    e.stopPropagation();
-    onSelect(card.id);
-    setDragging(true);
-    dragRef.current = {startX:e.clientX, startY:e.clientY, cardX:card.x, cardY:card.y};
-
-    const onMouseMove = (ev) => {
-      const dx = ev.clientX - dragRef.current.startX;
-      const dy = ev.clientY - dragRef.current.startY;
-      onMove(card.id, dragRef.current.cardX + dx, dragRef.current.cardY + dy);
-    };
-    const onMouseUp = () => {
-      setDragging(false);
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
-    };
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-  };
-
-  const addComment = () => {
-    if (!newComment.trim()) return;
-    const comments = [...(card.comments||[]), {author:'Me', text:newComment, ts:Date.now()}];
-    onUpdate(card.id, {comments});
-    setNewComment('');
-  };
-
-  return (
-    <div
-      onMouseDown={onMouseDown}
-      style={{
-        position:'absolute', left:card.x, top:card.y, width:card.w||280,
-        background:'#161616', border:`1px solid ${selected?cat.color:'#2a2a2a'}`,
-        borderRadius:6, overflow:'hidden', cursor:dragging?'grabbing':'grab',
-        boxShadow: selected ? `0 0 0 1px ${cat.color}, 0 8px 32px rgba(0,0,0,.4)` : '0 4px 16px rgba(0,0,0,.3)',
-        transition: dragging ? 'none' : 'box-shadow .2s',
-        zIndex: selected ? 100 : 10,
-        animation: 'fadeIn .3s ease',
-        userSelect: 'none',
-      }}
-    >
-      {/* Category bar */}
-      <div style={{height:3,background:cat.color}}/>
-
-      {/* Header */}
-      <div style={{padding:'10px 14px 0',display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
-        <div style={{display:'flex',gap:8,alignItems:'center',flex:1,minWidth:0}}>
-          <span style={{color:cat.color,fontSize:14,flexShrink:0}}>{cat.icon}</span>
-          {editing ? (
-            <input defaultValue={card.title} autoFocus
-              onBlur={e=>{onUpdate(card.id,{title:e.target.value});setEditing(false)}}
-              onKeyDown={e=>{if(e.key==='Enter'){onUpdate(card.id,{title:e.target.value});setEditing(false)}}}
-              style={{background:'#222',border:'1px solid #444',borderRadius:3,padding:'2px 6px',color:'#fff',fontSize:14,fontWeight:700,fontFamily:'inherit',flex:1,outline:'none'}}
-            />
-          ) : (
-            <span onDoubleClick={()=>setEditing(true)} style={{fontWeight:700,fontSize:14,color:'#fff',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{card.title}</span>
-          )}
-        </div>
-        <div style={{display:'flex',gap:4,flexShrink:0,marginLeft:8}}>
-          {/* Connect handle */}
-          <button
-            onClick={(e)=>{e.stopPropagation(); connecting ? onEndConnect(card.id) : onStartConnect(card.id)}}
-            title={connecting ? 'Connect here' : 'Draw connection'}
-            style={{width:22,height:22,borderRadius:3,border:`1px solid ${connecting?'#10b981':'#444'}`,background:connecting?'rgba(16,185,129,.15)':'transparent',color:connecting?'#10b981':'#666',fontSize:12,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',lineHeight:1}}
-          >⤳</button>
-          <button onClick={(e)=>{e.stopPropagation();onDelete(card.id)}} style={{width:22,height:22,borderRadius:3,border:'1px solid #444',background:'transparent',color:'#666',fontSize:14,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',lineHeight:1}}>×</button>
-        </div>
-      </div>
-
-      {/* Image */}
-      {card.image && (
-        <div style={{padding:'8px 14px 0'}}>
-          <img src={card.image} style={{width:'100%',borderRadius:4,maxHeight:200,objectFit:'cover'}} alt=""/>
-        </div>
-      )}
-
-      {/* Color swatch */}
-      {card.type==='color' && card.color && (
-        <div style={{margin:'8px 14px 0',height:48,borderRadius:4,background:card.color}}/>
-      )}
-
-      {/* Body */}
-      <div style={{padding:'8px 14px 10px'}}>
-        <p style={{fontSize:13,color:'#bbb',lineHeight:1.55,fontWeight:300}}>{card.body}</p>
-      </div>
-
-      {/* Footer */}
-      <div style={{padding:'0 14px 10px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-        <span style={{fontSize:11,color:'#555',fontWeight:300}}>{card.author}</span>
-        <div style={{display:'flex',gap:8,alignItems:'center'}}>
-          <button onClick={(e)=>{e.stopPropagation();setShowComments(!showComments)}} style={{background:'none',border:'none',color:'#555',fontSize:12,cursor:'pointer',fontFamily:'inherit',display:'flex',alignItems:'center',gap:4}}>
-            💬 {(card.comments||[]).length}
-          </button>
-          <span style={{fontSize:10,color:'#444',background:'#1a1a1a',padding:'2px 6px',borderRadius:3,textTransform:'uppercase',letterSpacing:'.05em'}}>{cat.label}</span>
-        </div>
-      </div>
-
-      {/* Comments panel */}
-      {showComments && (
-        <div style={{borderTop:'1px solid #222',padding:12,background:'#111'}} onClick={e=>e.stopPropagation()}>
-          {(card.comments||[]).map((c,i) => (
-            <div key={i} style={{marginBottom:8,paddingBottom:8,borderBottom:'1px solid #1a1a1a'}}>
-              <div style={{display:'flex',justifyContent:'space-between',marginBottom:2}}>
-                <span style={{fontSize:12,fontWeight:700,color:'#888'}}>{c.author}</span>
-                <span style={{fontSize:10,color:'#444'}}>{new Date(c.ts).toLocaleDateString('de-CH')}</span>
-              </div>
-              <p style={{fontSize:12,color:'#999',lineHeight:1.4,fontWeight:300}}>{c.text}</p>
-            </div>
-          ))}
-          <div style={{display:'flex',gap:6,marginTop:4}}>
-            <input value={newComment} onChange={e=>setNewComment(e.target.value)}
-              onKeyDown={e=>{if(e.key==='Enter')addComment()}}
-              placeholder="Add comment..."
-              style={{flex:1,background:'#1a1a1a',border:'1px solid #333',borderRadius:3,padding:'5px 8px',color:'#ccc',fontSize:12,outline:'none',fontFamily:'inherit'}}
-            />
-            <button onClick={addComment} style={{background:'#eb0000',color:'#fff',border:'none',borderRadius:3,padding:'5px 10px',fontSize:11,cursor:'pointer',fontWeight:700}}>Add</button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+/* ── Resize ── */
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  generateShapePoints();
 }
+window.addEventListener('resize', resize);
 
-/* ══════════════════════════════════════════
-   CANVAS (with pan/zoom)
-   ══════════════════════════════════════════ */
-function Canvas({cards, setCards, connections, setConnections, selectedId, setSelectedId}) {
-  const canvasRef = useRef(null);
-  const [pan, setPan] = useState({x:0,y:0});
-  const [panning, setPanning] = useState(false);
-  const panStart = useRef({x:0,y:0,panX:0,panY:0});
-  const [connectFrom, setConnectFrom] = useState(null);
-  const [zoom, setZoom] = useState(1);
+/* ═══════════════════════════════════════════════
+   GENERATE SBB SIGNET SHAPE POINTS
+   Sample positions from the signet SVG
+   ═══════════════════════════════════════════════ */
+function generateShapePoints() {
+  shapePoints = [];
+  // Render signet to offscreen canvas, sample pixel positions
+  const offscreen = document.createElement('canvas');
+  const scale = Math.min(W * 0.55, H * 0.65) / 48; // scale to fill good portion of screen
+  const sw = Math.round(142 * scale);
+  const sh = Math.round(48 * scale);
+  offscreen.width = sw;
+  offscreen.height = sh;
+  const octx = offscreen.getContext('2d');
 
-  /* Pan on middle-click or empty area drag */
-  const onCanvasMouseDown = (e) => {
-    if (e.target === canvasRef.current || e.target.dataset.canvas) {
-      setSelectedId(null);
-      if (e.button === 0 || e.button === 1) {
-        setPanning(true);
-        panStart.current = {x:e.clientX,y:e.clientY,panX:pan.x,panY:pan.y};
-      }
-    }
-  };
-  useEffect(() => {
-    const onMove = (e) => {
-      if (panning) {
-        setPan({
-          x: panStart.current.panX + (e.clientX - panStart.current.x),
-          y: panStart.current.panY + (e.clientY - panStart.current.y),
+  // Draw the signet: red background + white arrow
+  // First fill red
+  octx.fillStyle = '#eb0000';
+  octx.fillRect(0, 0, sw, sh);
+
+  // Draw white arrow (scaled path)
+  octx.save();
+  octx.scale(scale, scale);
+  const arrowPath = new Path2D('M87 40h9.3L83.8 27.7h15.5V40h7.4V27.7h15.6L109.7 40h9.3l16-16-15.9-16h-9.3l12.5 12.3h-15.6V8h-7.4v12.3H83.8L96.3 8H87L71 24l16 16z');
+  octx.fillStyle = '#ffffff';
+  octx.fill(arrowPath);
+  octx.restore();
+
+  // Sample pixels
+  const imageData = octx.getImageData(0, 0, sw, sh);
+  const data = imageData.data;
+  const offsetX = (W - sw) / 2;
+  const offsetY = (H - sh) / 2 - 20;
+  const spacing = Math.max(8, Math.round(14 - scale * 0.5));
+
+  for (let y = 0; y < sh; y += spacing) {
+    for (let x = 0; x < sw; x += spacing) {
+      const idx = (y * sw + x) * 4;
+      const r = data[idx], g = data[idx+1], b = data[idx+2];
+      // Is it red area or white arrow?
+      const isWhite = r > 200 && g > 200 && b > 200;
+      const isRed = r > 200 && g < 50 && b < 50;
+      if (isWhite || isRed) {
+        shapePoints.push({
+          x: x + offsetX,
+          y: y + offsetY,
+          isArrow: isWhite,
+          taken: false,
         });
       }
-    };
-    const onUp = () => setPanning(false);
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
-    return () => { window.removeEventListener('mousemove',onMove); window.removeEventListener('mouseup',onUp); };
-  }, [panning]);
+    }
+  }
 
-  /* Zoom */
-  useEffect(() => {
-    const el = canvasRef.current;
-    if (!el) return;
-    const onWheel = (e) => {
+  // Shuffle for organic feel
+  for (let i = shapePoints.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shapePoints[i], shapePoints[j]] = [shapePoints[j], shapePoints[i]];
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   PARTICLE CLASS
+   ═══════════════════════════════════════════════ */
+function createParticle(opts) {
+  const available = shapePoints.filter(p => !p.taken);
+  if (available.length === 0) return null;
+
+  // Prefer arrow points for certain categories, red for others
+  let target;
+  const arrowCats = ['feeling','culture','story','sound'];
+  const prefer = arrowCats.includes(opts.cat) ? available.filter(p=>p.isArrow) : available.filter(p=>!p.isArrow);
+  target = prefer.length > 0 ? prefer[Math.floor(Math.random()*prefer.length)] : available[Math.floor(Math.random()*available.length)];
+
+  target.taken = true;
+
+  const p = {
+    id: 'p' + Date.now() + Math.random(),
+    // Start from bottom center (prompt bar area)
+    x: W/2 + (Math.random()-0.5)*100,
+    y: H - 60,
+    // Target position
+    tx: target.x + (Math.random()-0.5)*4,
+    ty: target.y + (Math.random()-0.5)*4,
+    isArrow: target.isArrow,
+    // Visual
+    radius: 3 + Math.random()*2,
+    cat: opts.cat || 'visual',
+    color: CATS[opts.cat]?.color || '#eb0000',
+    baseColor: target.isArrow ? '#ffffff' : '#eb0000',
+    // Content
+    title: opts.title || '',
+    body: opts.body || '',
+    image: opts.image || null,
+    imageLoaded: null,
+    soundFreq: opts.soundFreq || null,
+    // State
+    progress: 0, // 0 = at start, 1 = at target
+    pulse: Math.random() * Math.PI * 2,
+    connections: [],
+    alive: true,
+    birth: Date.now(),
+  };
+
+  // Load image if URL
+  if (p.image) {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { p.imageLoaded = img; };
+    img.src = p.image;
+  }
+
+  particles.push(p);
+  updateSideList();
+  updateCounter();
+  return p;
+}
+
+/* ═══════════════════════════════════════════════
+   AUTO-CONNECT nearby particles
+   ═══════════════════════════════════════════════ */
+function autoConnect(p) {
+  const maxDist = 80;
+  const maxConn = 3;
+  let count = 0;
+  for (const other of particles) {
+    if (other === p || count >= maxConn) break;
+    const dx = p.tx - other.tx;
+    const dy = p.ty - other.ty;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < maxDist && !p.connections.includes(other.id)) {
+      p.connections.push(other.id);
+      other.connections.push(p.id);
+      count++;
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER
+   ═══════════════════════════════════════════════ */
+function render() {
+  time += 0.016;
+  ctx.fillStyle = '#0a0a0a';
+  ctx.fillRect(0, 0, W, H);
+
+  // Draw faint structural dots for empty shape positions
+  for (const sp of shapePoints) {
+    if (!sp.taken) {
+      const pulse = Math.sin(time * 0.5 + sp.x * 0.01 + sp.y * 0.01) * 0.3 + 0.7;
+      ctx.beginPath();
+      ctx.arc(sp.x, sp.y, 1.5, 0, Math.PI*2);
+      ctx.fillStyle = sp.isArrow
+        ? `rgba(255,255,255,${0.04 * pulse})`
+        : `rgba(235,0,0,${0.06 * pulse})`;
+      ctx.fill();
+    }
+  }
+
+  // Draw connections
+  for (const p of particles) {
+    if (p.progress < 0.5) continue;
+    const alpha = Math.min(1, (p.progress - 0.5) * 2) * 0.15;
+    for (const cid of p.connections) {
+      const other = particles.find(q => q.id === cid);
+      if (!other || other.progress < 0.5) continue;
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(other.x, other.y);
+      ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+  }
+
+  // Draw and update particles
+  hoveredParticle = null;
+  const mx = mouseX, my = mouseY;
+
+  for (const p of particles) {
+    // Animate toward target
+    if (p.progress < 1) {
+      p.progress = Math.min(1, p.progress + 0.015);
+      const ease = 1 - Math.pow(1 - p.progress, 3); // cubic ease out
+      p.x = p.x + (p.tx - p.x) * 0.04;
+      p.y = p.y + (p.ty - p.y) * 0.04;
+    } else {
+      // Gentle breathing
+      const breathe = Math.sin(time * 1.2 + p.pulse) * 0.8;
+      p.x = p.tx + breathe;
+      p.y = p.ty + Math.cos(time * 0.9 + p.pulse) * 0.6;
+    }
+
+    // Check hover
+    const dx = mx - p.x, dy = my - p.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    const isHovered = dist < 18;
+    if (isHovered) hoveredParticle = p;
+
+    // Draw glow for hovered
+    if (isHovered) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 20, 0, Math.PI*2);
+      const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 20);
+      glow.addColorStop(0, p.color + '44');
+      glow.addColorStop(1, 'transparent');
+      ctx.fillStyle = glow;
+      ctx.fill();
+    }
+
+    // Draw particle
+    const r = isHovered ? p.radius * 2 : p.radius + Math.sin(time * 2 + p.pulse) * 0.5;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, r, 0, Math.PI*2);
+
+    // Color: blend between base shape color and category color based on content
+    if (p.title) {
+      ctx.fillStyle = isHovered ? '#ffffff' : p.color;
+    } else {
+      ctx.fillStyle = p.baseColor === '#ffffff'
+        ? `rgba(255,255,255,${0.3 + Math.sin(time + p.pulse)*0.1})`
+        : `rgba(235,0,0,${0.4 + Math.sin(time + p.pulse)*0.1})`;
+    }
+    ctx.fill();
+
+    // Show image thumbnail on hover
+    if (isHovered && p.imageLoaded) {
+      const iw = 120, ih = 80;
+      const ix = p.x - iw/2, iy = p.y - ih - 16;
+      ctx.save();
+      ctx.globalAlpha = 0.95;
+      ctx.beginPath();
+      ctx.roundRect(ix-2, iy-2, iw+4, ih+4, 6);
+      ctx.fillStyle = '#000';
+      ctx.fill();
+      ctx.drawImage(p.imageLoaded, ix, iy, iw, ih);
+      ctx.restore();
+    }
+
+    // Show title on hover
+    if (isHovered && p.title && !p.imageLoaded) {
+      ctx.save();
+      ctx.font = '12px SBBWeb, system-ui';
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.fillText(p.title, p.x, p.y - 16);
+      ctx.restore();
+    }
+  }
+
+  // Cursor
+  canvas.style.cursor = hoveredParticle ? 'pointer' : 'default';
+
+  requestAnimationFrame(render);
+}
+
+/* ═══════════════════════════════════════════════
+   SOUND ENGINE
+   ═══════════════════════════════════════════════ */
+function initAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+function playTone(freq, duration = 0.5, type = 'sine') {
+  initAudio();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + duration);
+}
+
+function playSBBChime() {
+  initAudio();
+  // Approximate the SBB 3-tone station chime: G5-C6-E6
+  const notes = [784, 1047, 1319];
+  notes.forEach((f,i) => {
+    setTimeout(() => playTone(f, 0.8, 'sine'), i * 350);
+  });
+}
+
+function playChord(baseFreq) {
+  initAudio();
+  [baseFreq, baseFreq * 1.25, baseFreq * 1.5].forEach(f => playTone(f, 1.2, 'triangle'));
+}
+
+/* ═══════════════════════════════════════════════
+   DETAIL PANEL
+   ═══════════════════════════════════════════════ */
+function showDetail(p) {
+  const det = document.getElementById('detail');
+  const cat = CATS[p.cat];
+  det.querySelector('.detail-color').style.background = cat.color;
+  document.getElementById('det-cat').textContent = cat.icon + ' ' + cat.label;
+  document.getElementById('det-cat').style.color = cat.color;
+  document.getElementById('det-title').textContent = p.title;
+  document.getElementById('det-text').textContent = p.body;
+
+  const imgWrap = document.getElementById('det-img-wrap');
+  imgWrap.innerHTML = '';
+  if (p.imageLoaded) {
+    const img = document.createElement('img');
+    img.src = p.image;
+    img.className = 'detail-img';
+    imgWrap.appendChild(img);
+  }
+
+  const soundWrap = document.getElementById('det-sound-wrap');
+  soundWrap.innerHTML = '';
+  if (p.soundFreq || p.cat === 'sound') {
+    const btn = document.createElement('button');
+    btn.textContent = '▶ Play Sound';
+    btn.onclick = () => {
+      if (p.soundFreq) playChord(p.soundFreq);
+      else playSBBChime();
+    };
+    const div = document.createElement('div');
+    div.className = 'detail-sound';
+    div.appendChild(btn);
+    soundWrap.appendChild(div);
+  }
+
+  det.className = 'show';
+}
+
+function closeDetail() {
+  document.getElementById('detail').className = '';
+}
+
+/* ═══════════════════════════════════════════════
+   SIDE LIST
+   ═══════════════════════════════════════════════ */
+function updateSideList() {
+  const list = document.getElementById('side-list');
+  const contentParticles = particles.filter(p => p.title);
+  list.innerHTML = contentParticles.map(p => {
+    const cat = CATS[p.cat];
+    return `<div class="item" onclick="focusParticle('${p.id}')">
+      <div class="item-dot" style="background:${cat.color}"></div>
+      <div class="item-title">${cat.icon} ${p.title}</div>
+    </div>`;
+  }).join('');
+}
+
+function focusParticle(id) {
+  const p = particles.find(q => q.id === id);
+  if (p) showDetail(p);
+}
+
+function updateCounter() {
+  const content = particles.filter(p => p.title).length;
+  const total = particles.length;
+  document.getElementById('counter').textContent =
+    `${content} elements · ${particles.reduce((s,p)=>s+p.connections.length,0)/2|0} connections · ${shapePoints.filter(p=>!p.taken).length} positions available`;
+}
+
+/* ═══════════════════════════════════════════════
+   INPUT HANDLING
+   ═══════════════════════════════════════════════ */
+const input = document.getElementById('input');
+
+// Category buttons
+document.querySelectorAll('.cat-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeCat = btn.dataset.cat;
+    document.querySelectorAll('.cat-btn').forEach(b => b.style.background = 'none');
+    btn.style.background = 'rgba(255,255,255,.08)';
+    input.focus();
+  });
+});
+
+// Submit
+input.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter' || !input.value.trim()) return;
+  const val = input.value.trim();
+
+  // Check if it's an image URL
+  const isImage = /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(val) || val.startsWith('data:image');
+
+  const p = createParticle({
+    cat: activeCat,
+    title: isImage ? 'Image' : val,
+    body: isImage ? val : '',
+    image: isImage ? val : null,
+    soundFreq: activeCat === 'sound' ? 200 + Math.random() * 600 : null,
+  });
+
+  if (p) {
+    setTimeout(() => autoConnect(p), 500);
+    // Play a subtle tone on add
+    initAudio();
+    playTone(400 + particles.length * 20, 0.3, 'sine');
+  }
+
+  input.value = '';
+});
+
+// Paste images
+window.addEventListener('paste', (e) => {
+  const items = e.clipboardData?.items;
+  if (!items) return;
+  for (const item of items) {
+    if (item.type.startsWith('image/')) {
       e.preventDefault();
-      setZoom(z => Math.max(0.3, Math.min(2, z - e.deltaY * 0.001)));
-    };
-    el.addEventListener('wheel', onWheel, {passive:false});
-    return () => el.removeEventListener('wheel', onWheel);
-  }, []);
-
-  /* Paste images */
-  useEffect(() => {
-    const onPaste = (e) => {
-      const items = e.clipboardData?.items;
-      if (!items) return;
-      for (const item of items) {
-        if (item.type.startsWith('image/')) {
-          e.preventDefault();
-          const file = item.getAsFile();
-          const reader = new FileReader();
-          reader.onload = (ev) => {
-            const newCard = {
-              id: uid(), x: 200 - pan.x/zoom, y: 200 - pan.y/zoom, w: 300,
-              cat: 'visual', title: 'Pasted Image', body: '',
-              image: ev.target.result, author: 'Me',
-              comments: [], ts: Date.now(),
-            };
-            setCards(prev => [...prev, newCard]);
-          };
-          reader.readAsDataURL(file);
-          return;
-        }
-      }
-    };
-    window.addEventListener('paste', onPaste);
-    return () => window.removeEventListener('paste', onPaste);
-  }, [pan, zoom]);
-
-  /* Drop images */
-  const onDrop = useCallback((e) => {
-    e.preventDefault();
-    const files = e.dataTransfer?.files;
-    if (!files) return;
-    for (const file of files) {
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          const rect = canvasRef.current.getBoundingClientRect();
-          const x = (e.clientX - rect.left - pan.x) / zoom;
-          const y = (e.clientY - rect.top - pan.y) / zoom;
-          setCards(prev => [...prev, {
-            id:uid(), x, y, w:300, cat:'visual', title:file.name.replace(/\.[^.]+$/,''),
-            body:'', image:ev.target.result, author:'Me', comments:[], ts:Date.now(),
-          }]);
-        };
-        reader.readAsDataURL(file);
-      }
+      const file = item.getAsFile();
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const p = createParticle({
+          cat: 'visual',
+          title: 'Pasted Image',
+          body: '',
+          image: ev.target.result,
+        });
+        if (p) setTimeout(() => autoConnect(p), 500);
+      };
+      reader.readAsDataURL(file);
+      return;
     }
-  }, [pan, zoom]);
+  }
+});
 
-  const moveCard = useCallback((id,x,y) => {
-    setCards(prev => prev.map(c => c.id===id ? {...c, x, y} : c));
-  }, []);
-
-  const updateCard = useCallback((id, updates) => {
-    setCards(prev => prev.map(c => c.id===id ? {...c,...updates} : c));
-  }, []);
-
-  const deleteCard = useCallback((id) => {
-    setCards(prev => prev.filter(c => c.id!==id));
-    setConnections(prev => prev.filter(c => c.from!==id && c.to!==id));
-  }, []);
-
-  const startConnect = (id) => setConnectFrom(id);
-  const endConnect = (id) => {
-    if (connectFrom && connectFrom !== id) {
-      const exists = connections.some(c => (c.from===connectFrom&&c.to===id)||(c.from===id&&c.to===connectFrom));
-      if (!exists) setConnections(prev => [...prev, {from:connectFrom, to:id}]);
+// Drop images
+document.body.addEventListener('dragover', e => e.preventDefault());
+document.body.addEventListener('drop', (e) => {
+  e.preventDefault();
+  for (const file of (e.dataTransfer?.files || [])) {
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const p = createParticle({
+          cat: 'visual',
+          title: file.name.replace(/\.[^.]+$/,''),
+          body: '',
+          image: ev.target.result,
+        });
+        if (p) setTimeout(() => autoConnect(p), 500);
+      };
+      reader.readAsDataURL(file);
     }
-    setConnectFrom(null);
-  };
+  }
+});
 
-  /* Render connection lines */
-  const lines = connections.map((conn, i) => {
-    const from = cards.find(c=>c.id===conn.from);
-    const to = cards.find(c=>c.id===conn.to);
-    if (!from || !to) return null;
-    const x1 = from.x + (from.w||280)/2;
-    const y1 = from.y + 60;
-    const x2 = to.x + (to.w||280)/2;
-    const y2 = to.y + 60;
-    return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#333" strokeWidth={1.5} strokeDasharray="6,4"/>;
-  }).filter(Boolean);
+// Mouse tracking
+window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
 
-  return (
-    <div ref={canvasRef} data-canvas="true"
-      onMouseDown={onCanvasMouseDown}
-      onDrop={onDrop}
-      onDragOver={e=>e.preventDefault()}
-      style={{flex:1,position:'relative',overflow:'hidden',cursor:panning?'grabbing':'default',background:'#0a0a0a',
-        backgroundImage:'radial-gradient(circle,#1a1a1a 1px,transparent 1px)',backgroundSize:`${20*zoom}px ${20*zoom}px`,
-        backgroundPosition:`${pan.x}px ${pan.y}px`,
-      }}
-    >
-      {/* Connecting mode indicator */}
-      {connectFrom && (
-        <div style={{position:'absolute',top:12,left:'50%',transform:'translateX(-50)',zIndex:200,background:'rgba(16,185,129,.15)',border:'1px solid #10b981',borderRadius:4,padding:'6px 16px',fontSize:13,color:'#10b981',fontWeight:700}}>
-          Click another card to connect — or Esc to cancel
-        </div>
-      )}
+// Click to show detail
+canvas.addEventListener('click', () => {
+  if (hoveredParticle && hoveredParticle.title) {
+    showDetail(hoveredParticle);
+    // Play sound for sound items
+    if (hoveredParticle.cat === 'sound') {
+      if (hoveredParticle.soundFreq) playChord(hoveredParticle.soundFreq);
+      else playSBBChime();
+    }
+  }
+});
 
-      <div style={{transform:`translate(${pan.x}px,${pan.y}px) scale(${zoom})`,transformOrigin:'0 0',position:'absolute',top:0,left:0,width:'100%',height:'100%'}}>
-        {/* SVG layer for connections */}
-        <svg style={{position:'absolute',top:0,left:0,width:'5000px',height:'5000px',pointerEvents:'none',zIndex:5}}>
-          {lines}
-        </svg>
+// Escape to close
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeDetail();
+});
 
-        {/* Cards */}
-        {cards.map(card => (
-          <Card key={card.id} card={card}
-            selected={selectedId===card.id}
-            onSelect={setSelectedId}
-            onMove={moveCard}
-            onUpdate={updateCard}
-            onDelete={deleteCard}
-            onStartConnect={startConnect}
-            onEndConnect={endConnect}
-            connecting={!!connectFrom}
-          />
-        ))}
-      </div>
+/* ═══════════════════════════════════════════════
+   SEED DEFAULT CONTENT
+   ═══════════════════════════════════════════════ */
+function seedDefaults() {
+  const defaults = [
+    {cat:'visual',title:'SBB Rot #eb0000',body:'The single most recognizable element. Red as identity, not decoration. Pantone 485C.'},
+    {cat:'feeling',title:'Vertrauen',body:'Precision, reliability, Swiss punctuality. The brand feeling is trust — trains run on time.'},
+    {cat:'culture',title:'4 Languages',body:'DE/FR/IT/EN — the brand speaks all Swiss languages natively. Not translation, cultural adaptation.'},
+    {cat:'sound',title:'Station Chime',body:'The 3-tone SBB announcement jingle. Heard 1000× daily. Click to play.',soundFreq:null},
+    {cat:'texture',title:'Brushed Steel',body:'Platform steel, glass canopies, concrete pillars. Industrial Swiss precision made material.'},
+    {cat:'story',title:'Since 1902',body:'Swiss Federal Railways — 120+ years of national infrastructure. The brand carries history.'},
+    {cat:'rule',title:'Logo Protection',body:'Minimum clear space = Bildmarke height. Never crop, rotate, recolor, or partially use.'},
+    {cat:'mcp',title:'brand.validate()',body:'MCP tool: validates designs against all brand rules. Returns compliance score + violations.'},
+    {cat:'visual',title:'Rotes Fenster',body:'The Red Window — rectangular frame element used for text isolation. Signature layout device.'},
+    {cat:'mcp',title:'brand.search()',body:'Semantic search across all brand knowledge. "Can I use blue for headlines?" → structured answer.'},
+    {cat:'feeling',title:'Heimat',body:'Home. The feeling of arriving at Zürich HB or Bern. The brand IS Swiss infrastructure.'},
+    {cat:'sound',title:'Doors Closing',body:'The pneumatic door-close sound. Pavlovian Swiss response: urgency + reliability.',soundFreq:320},
+    {cat:'texture',title:'SBBWeb Typeface',body:'Custom font family: UltraLight to Bold. Designed for Swiss clarity. Every letter is precision.'},
+    {cat:'culture',title:'Mondaine Clock',body:'The iconic Swiss railway clock. Licensed worldwide. 1944 design by Hans Hilfiker. Time itself branded.'},
+  ];
 
-      {/* Zoom indicator */}
-      <div style={{position:'absolute',bottom:12,right:12,background:'rgba(0,0,0,.6)',borderRadius:4,padding:'4px 10px',fontSize:12,color:'#666',zIndex:50}}>
-        {Math.round(zoom*100)}%
-      </div>
-
-      {/* Drop zone hint */}
-      <div style={{position:'absolute',bottom:12,left:12,color:'#333',fontSize:12,zIndex:50,fontWeight:300}}>
-        Drag images here · Ctrl+V to paste · Scroll to zoom · Drag to pan
-      </div>
-    </div>
-  );
+  let delay = 0;
+  defaults.forEach((d, i) => {
+    setTimeout(() => {
+      const p = createParticle(d);
+      if (p) setTimeout(() => autoConnect(p), 800);
+    }, delay);
+    delay += 150;
+  });
 }
 
-/* ══════════════════════════════════════════
-   SIDEBAR — Add Cards & Brand DNA
-   ══════════════════════════════════════════ */
-function Sidebar({cards, setCards, connections, view, setView}) {
-  const [addOpen, setAddOpen] = useState(false);
-  const [newTitle, setNewTitle] = useState('');
-  const [newBody, setNewBody] = useState('');
-  const [newCat, setNewCat] = useState('visual');
-  const [newAuthor, setNewAuthor] = useState('Daniel');
-  const [searchQ, setSearchQ] = useState('');
-  const [searchResults, setSearchResults] = useState(null);
-  const [searching, setSearching] = useState(false);
-
-  const addCard = () => {
-    if (!newTitle.trim()) return;
-    const maxX = Math.max(0, ...cards.map(c=>c.x));
-    setCards(prev => [...prev, {
-      id:uid(), x:maxX>800?100:maxX+320, y:100, w:280,
-      cat:newCat, title:newTitle, body:newBody,
-      author:newAuthor, comments:[], ts:Date.now(),
-    }]);
-    setNewTitle(''); setNewBody(''); setAddOpen(false);
-  };
-
-  const search = async () => {
-    if (!searchQ.trim()) return;
-    setSearching(true);
-    const r = await fetch(API+'/api/search?q='+encodeURIComponent(searchQ));
-    const d = await r.json();
-    setSearchResults(d);
-    setSearching(false);
-  };
-
-  const importResult = (r) => {
-    setCards(prev => [...prev, {
-      id:uid(), x:100+Math.random()*200, y:100+Math.random()*200, w:300,
-      cat:'rule', title:r.metadata?.section_title || 'Brand Rule',
-      body:r.chunk_text, author:'API', comments:[], ts:Date.now(),
-    }]);
-  };
-
-  /* Count by category */
-  const catCounts = {};
-  cards.forEach(c => { catCounts[c.cat] = (catCounts[c.cat]||0)+1; });
-
-  return (
-    <div style={{width:300,background:'#111',borderLeft:'1px solid #222',display:'flex',flexDirection:'column',overflow:'hidden',flexShrink:0}}>
-      {/* Tabs */}
-      <div style={{display:'flex',borderBottom:'1px solid #222'}}>
-        {[{id:'add',label:'+ Add'},{id:'dna',label:'Brand DNA'},{id:'search',label:'Search'}].map(t=>(
-          <button key={t.id} onClick={()=>setView(t.id)} style={{
-            flex:1,background:'none',border:'none',borderBottom:`2px solid ${view===t.id?'#eb0000':'transparent'}`,
-            color:view===t.id?'#fff':'#666',padding:'10px 0',fontSize:12,fontWeight:view===t.id?700:400,cursor:'pointer',fontFamily:'inherit',
-          }}>{t.label}</button>
-        ))}
-      </div>
-
-      <div style={{flex:1,overflow:'auto',padding:16}}>
-        {/* ADD VIEW */}
-        {view==='add' && (
-          <div>
-            <p style={{fontSize:12,color:'#666',marginBottom:16,fontWeight:300}}>Add elements to the canvas — images, notes, textures, sounds, feelings, MCP tools.</p>
-
-            {/* Quick add by category */}
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:6,marginBottom:20}}>
-              {Object.entries(CATEGORIES).map(([key,cat])=>(
-                <button key={key} onClick={()=>{setNewCat(key);setAddOpen(true)}} style={{
-                  background:'#1a1a1a',border:'1px solid #2a2a2a',borderRadius:4,padding:'10px',
-                  cursor:'pointer',textAlign:'left',borderLeft:`3px solid ${cat.color}`,transition:'all .15s',
-                }} onMouseOver={e=>e.currentTarget.style.borderColor='#444'} onMouseOut={e=>e.currentTarget.style.borderColor='#2a2a2a'}>
-                  <span style={{fontSize:14}}>{cat.icon}</span>
-                  <span style={{fontSize:12,color:'#ccc',marginLeft:6,fontWeight:400}}>{cat.label}</span>
-                </button>
-              ))}
-            </div>
-
-            {/* Add form */}
-            {addOpen && (
-              <div style={{background:'#1a1a1a',border:'1px solid #2a2a2a',borderRadius:6,padding:16,animation:'fadeIn .2s ease'}}>
-                <div style={{display:'flex',gap:6,marginBottom:10}}>
-                  {['Daniel','Nicolas'].map(n=>(
-                    <button key={n} onClick={()=>setNewAuthor(n)} style={{
-                      background:newAuthor===n?(n==='Daniel'?'#eb0000':'#2d327d'):'#222',
-                      color:newAuthor===n?'#fff':'#888',border:'none',borderRadius:3,padding:'4px 12px',
-                      fontSize:12,fontWeight:newAuthor===n?700:400,cursor:'pointer',fontFamily:'inherit',
-                    }}>{n}</button>
-                  ))}
-                </div>
-                <select value={newCat} onChange={e=>setNewCat(e.target.value)} style={{width:'100%',background:'#222',border:'1px solid #333',borderRadius:3,padding:'6px 8px',color:'#ccc',fontSize:13,marginBottom:8,outline:'none'}}>
-                  {Object.entries(CATEGORIES).map(([k,v])=><option key={k} value={k}>{v.icon} {v.label}</option>)}
-                </select>
-                <input value={newTitle} onChange={e=>setNewTitle(e.target.value)} placeholder="Title"
-                  style={{width:'100%',background:'#222',border:'1px solid #333',borderRadius:3,padding:'6px 8px',color:'#fff',fontSize:14,fontWeight:700,marginBottom:8,outline:'none',fontFamily:'inherit'}}
-                />
-                <textarea value={newBody} onChange={e=>setNewBody(e.target.value)} placeholder="Description, notes, references..."
-                  rows={3} style={{width:'100%',background:'#222',border:'1px solid #333',borderRadius:3,padding:'6px 8px',color:'#ccc',fontSize:13,marginBottom:10,outline:'none',fontFamily:'inherit',resize:'vertical',fontWeight:300}}
-                />
-                <div style={{display:'flex',gap:6}}>
-                  <button onClick={addCard} style={{flex:1,background:'#eb0000',color:'#fff',border:'none',borderRadius:3,padding:'7px 0',fontSize:13,fontWeight:700,cursor:'pointer'}}>Add to Canvas</button>
-                  <button onClick={()=>setAddOpen(false)} style={{background:'#222',color:'#888',border:'1px solid #333',borderRadius:3,padding:'7px 12px',fontSize:13,cursor:'pointer'}}>Cancel</button>
-                </div>
-              </div>
-            )}
-
-            {/* Image upload */}
-            <div style={{marginTop:16,border:'1px dashed #333',borderRadius:6,padding:20,textAlign:'center'}}>
-              <p style={{color:'#555',fontSize:13,fontWeight:300,marginBottom:8}}>Drop images on canvas<br/>or Ctrl+V to paste</p>
-              <label style={{background:'#1a1a1a',border:'1px solid #333',borderRadius:3,padding:'6px 16px',fontSize:12,color:'#888',cursor:'pointer',display:'inline-block'}}>
-                Browse Files
-                <input type="file" accept="image/*" multiple style={{display:'none'}} onChange={e=>{
-                  for(const file of e.target.files){
-                    const reader = new FileReader();
-                    reader.onload = (ev) => {
-                      setCards(prev=>[...prev,{
-                        id:uid(),x:100+Math.random()*300,y:100+Math.random()*300,w:300,
-                        cat:'visual',title:file.name.replace(/\.[^.]+$/,''),body:'',
-                        image:ev.target.result,author:newAuthor,comments:[],ts:Date.now(),
-                      }]);
-                    };
-                    reader.readAsDataURL(file);
-                  }
-                }}/>
-              </label>
-            </div>
-          </div>
-        )}
-
-        {/* DNA VIEW */}
-        {view==='dna' && (
-          <div>
-            <p style={{fontSize:12,color:'#666',marginBottom:16,fontWeight:300}}>The brand DNA being assembled. Each category feeds into the .brand agent.</p>
-
-            {/* Stats */}
-            <div style={{background:'#1a1a1a',borderRadius:6,padding:14,marginBottom:16}}>
-              <div style={{display:'flex',justifyContent:'space-between',marginBottom:8}}>
-                <span style={{fontSize:14,fontWeight:700}}>SBB/CFF/FFS</span>
-                <span style={{fontSize:12,color:'#666'}}>{cards.length} elements</span>
-              </div>
-              <div style={{display:'flex',justifyContent:'space-between',marginBottom:4}}>
-                <span style={{fontSize:12,color:'#888'}}>Connections</span>
-                <span style={{fontSize:12,color:'#eb0000',fontWeight:700}}>{connections.length}</span>
-              </div>
-              <div style={{height:1,background:'#2a2a2a',margin:'10px 0'}}/>
-              {Object.entries(CATEGORIES).map(([key,cat])=>(
-                <div key={key} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'4px 0'}}>
-                  <div style={{display:'flex',alignItems:'center',gap:6}}>
-                    <span style={{color:cat.color,fontSize:12}}>{cat.icon}</span>
-                    <span style={{fontSize:12,color:'#aaa',fontWeight:300}}>{cat.label}</span>
-                  </div>
-                  <div style={{display:'flex',alignItems:'center',gap:8}}>
-                    <div style={{width:60,height:3,background:'#222',borderRadius:2,overflow:'hidden'}}>
-                      <div style={{height:'100%',background:cat.color,width:`${Math.min(100,(catCounts[key]||0)*20)}%`,borderRadius:2,transition:'width .3s'}}/>
-                    </div>
-                    <span style={{fontSize:12,color:'#666',fontWeight:700,minWidth:16,textAlign:'right'}}>{catCounts[key]||0}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* .brand file preview */}
-            <div style={{background:'#1a1a1a',borderRadius:6,padding:14}}>
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}}>
-                <span style={{fontSize:12,fontWeight:700,color:'#eb0000'}}>.brand file preview</span>
-              </div>
-              <pre style={{fontSize:11,color:'#888',lineHeight:1.6,fontFamily:'monospace',whiteSpace:'pre-wrap',fontWeight:300}}>{JSON.stringify({
-                name: "SBB/CFF/FFS",
-                version: "1.0.0",
-                type: "brand-identity-agent",
-                dna: {
-                  visuals: catCounts.visual||0,
-                  textures: catCounts.texture||0,
-                  sounds: catCounts.sound||0,
-                  culture: catCounts.culture||0,
-                  stories: catCounts.story||0,
-                  feelings: catCounts.feeling||0,
-                  rules: catCounts.rule||0,
-                  mcp_tools: catCounts.mcp||0,
-                },
-                connections: connections.length,
-                api: "sbb-brand-api.billowing-leaf-4d6a.workers.dev",
-              }, null, 2)}</pre>
-            </div>
-          </div>
-        )}
-
-        {/* SEARCH VIEW */}
-        {view==='search' && (
-          <div>
-            <p style={{fontSize:12,color:'#666',marginBottom:12,fontWeight:300}}>Search the brand API and import results as cards.</p>
-            <div style={{display:'flex',gap:6,marginBottom:16}}>
-              <input value={searchQ} onChange={e=>setSearchQ(e.target.value)} onKeyDown={e=>e.key==='Enter'&&search()}
-                placeholder="Search brand knowledge..."
-                style={{flex:1,background:'#1a1a1a',border:'1px solid #333',borderRadius:3,padding:'7px 10px',color:'#fff',fontSize:13,outline:'none',fontFamily:'inherit'}}
-              />
-              <button onClick={search} style={{background:'#eb0000',color:'#fff',border:'none',borderRadius:3,padding:'0 14px',fontSize:12,fontWeight:700,cursor:'pointer'}}>Go</button>
-            </div>
-            {searching && <p style={{color:'#666',fontSize:12,animation:'pulse 1s infinite'}}>Searching...</p>}
-            {searchResults && searchResults.results.map((r,i) => (
-              <div key={i} style={{background:'#1a1a1a',border:'1px solid #2a2a2a',borderRadius:4,padding:12,marginBottom:8}}>
-                <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:6}}>
-                  <span style={{fontSize:12,color:r.score>.7?'#eb0000':'#666',fontWeight:700,fontFamily:'monospace'}}>{(r.score*100).toFixed(0)}%</span>
-                  <button onClick={()=>importResult(r)} style={{background:'#222',border:'1px solid #444',borderRadius:3,padding:'2px 8px',color:'#aaa',fontSize:11,cursor:'pointer',fontFamily:'inherit'}}>+ Add</button>
-                </div>
-                <p style={{fontSize:12,color:'#999',lineHeight:1.5,fontWeight:300}}>{r.chunk_text.substring(0,200)}{r.chunk_text.length>200?'...':''}</p>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-/* ══════════════════════════════════════════
-   APP
-   ══════════════════════════════════════════ */
-function App() {
-  const [cards, setCards] = useState(DEFAULT_CARDS);
-  const [connections, setConnections] = useState(DEFAULT_CONNECTIONS);
-  const [selectedId, setSelectedId] = useState(null);
-  const [sideView, setSideView] = useState('add');
-
-  /* Escape to cancel connection */
-  useEffect(() => {
-    const onKey = (e) => { if(e.key==='Escape') setSelectedId(null); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, []);
-
-  return (
-    <div style={{height:'100vh',display:'flex',flexDirection:'column'}}>
-      {/* Header */}
-      <div style={{height:3,background:'#eb0000'}}/>
-      <header style={{
-        padding:'8px 20px', display:'flex', justifyContent:'space-between', alignItems:'center',
-        background:'#111', borderBottom:'1px solid #222', flexShrink:0,
-      }}>
-        <div style={{display:'flex',alignItems:'center',gap:14}}>
-          <SBBSignet size={22}/>
-          <div style={{width:1,height:20,background:'#333'}}/>
-          <span style={{fontSize:15,fontWeight:700,letterSpacing:'-0.01em'}}><span style={{color:'#eb0000'}}>.</span>brand Studio</span>
-          <span style={{fontSize:12,color:'#555',fontWeight:300}}>SBB/CFF/FFS</span>
-        </div>
-        <div style={{display:'flex',alignItems:'center',gap:12}}>
-          <span style={{width:6,height:6,borderRadius:'50%',background:'#10b981',display:'inline-block'}}/>
-          <span style={{fontSize:11,color:'#555',fontWeight:300}}>API connected</span>
-          <a href={API+'/api'} target="_blank" rel="noopener" style={{color:'#555',textDecoration:'none',fontSize:12}}>API →</a>
-          <a href="https://github.com/nordspot/sbb-brand-api" target="_blank" rel="noopener" style={{color:'#555',textDecoration:'none',fontSize:12}}>GitHub →</a>
-        </div>
-      </header>
-
-      {/* Main area */}
-      <div style={{flex:1,display:'flex',overflow:'hidden'}}>
-        <Canvas
-          cards={cards} setCards={setCards}
-          connections={connections} setConnections={setConnections}
-          selectedId={selectedId} setSelectedId={setSelectedId}
-        />
-        <Sidebar
-          cards={cards} setCards={setCards}
-          connections={connections}
-          view={sideView} setView={setSideView}
-        />
-      </div>
-    </div>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+/* ═══════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════ */
+resize();
+render();
+setTimeout(seedDefaults, 500);
 </script>
 </body>
 </html>

@@ -336,6 +336,40 @@
   .vis-evening .sbb-section-title{font-size:20px}
   .vis-evening .sbb-offer-card.highlight{background:rgba(235,0,0,.03);border:1px solid rgba(235,0,0,.15)}
 
+  /* Young / student mode — vibrant, bold accents, playful density */
+  .vis-young .sbb-section-title{font-size:24px;font-weight:700;padding:20px 16px 10px;letter-spacing:-.02em}
+  .vis-young .sbb-offer-card{margin:0 14px 6px;border-radius:16px;padding:14px 16px}
+  .vis-young .sbb-offer-card.highlight{border-left:4px solid var(--sbb-red);background:linear-gradient(90deg,rgba(235,0,0,.04),transparent)}
+  .vis-young .sbb-pill{border-radius:20px;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+  .vis-young .sbb-btn-red{border-radius:14px;font-size:14px;padding:10px;margin:12px 14px 6px}
+  .vis-young .sbb-red-zone{background:var(--sbb-red);padding:10px 16px 36px}
+
+  /* Onboarding mode — guided, warm, clear hierarchy */
+  .vis-onboard .sbb-section-title{font-size:24px;padding:24px 16px 12px;font-weight:300}
+  .vis-onboard .sbb-offer-card{margin:0 16px 10px;padding:18px;border-radius:14px;border:1px solid var(--sbb-cloud)}
+  .vis-onboard .sbb-offer-card.highlight{border:2px solid var(--sbb-red);background:rgba(235,0,0,.02)}
+  .vis-onboard .sbb-offer-title{font-size:16px}
+  .vis-onboard .sbb-offer-desc{font-size:14px;line-height:1.65}
+  .vis-onboard .sbb-btn-red{border-radius:28px;font-size:16px;padding:14px}
+
+  /* Activity / outdoor mode — airy, nature-inspired spacing */
+  .vis-activity .sbb-section-title{font-size:22px;font-weight:300;padding:20px 16px 10px}
+  .vis-activity .sbb-offer-card{margin:0 16px 10px;padding:16px;border-radius:12px;border:none;background:var(--sbb-milk)}
+  .vis-activity .sbb-offer-card.highlight{background:linear-gradient(135deg,var(--sbb-milk),rgba(235,0,0,.04));border-left:3px solid var(--sbb-red)}
+  .vis-activity .sbb-info-row{background:var(--sbb-milk);border-radius:8px;margin:0 16px 8px;border:none}
+  .vis-activity .sbb-pill{background:var(--sbb-milk);border-color:var(--sbb-granite)}
+
+  /* Family mode — warm, generous, easy to scan */
+  .vis-family .sbb-section-title{font-size:26px;padding:28px 16px 14px}
+  .vis-family .sbb-offer-card{margin:0 16px 12px;padding:20px;border-radius:16px;border:1px solid var(--sbb-cloud)}
+  .vis-family .sbb-offer-card.highlight{border:2px solid var(--sbb-red);border-radius:16px}
+  .vis-family .sbb-offer-icon{width:32px;height:32px;margin-bottom:12px}
+  .vis-family .sbb-offer-icon img{width:32px;height:32px}
+  .vis-family .sbb-offer-title{font-size:17px}
+  .vis-family .sbb-offer-desc{font-size:15px;line-height:1.6}
+  .vis-family .sbb-btn-red{padding:14px;font-size:16px;border-radius:28px}
+  .vis-family .sbb-pill{font-size:14px;padding:8px 18px}
+
   /* Hero card — first card gets special treatment */
   .hero-card{margin:0 16px 12px;padding:24px 20px;border-radius:14px;background:var(--sbb-milk);border:none}
   .hero-card .sbb-offer-icon{width:36px;height:36px;margin-bottom:14px}
@@ -723,7 +757,7 @@ const BILDMARKE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142 48" 
 const personas = [
   {
     id:'lena', name:'Lena, 22', icon:'user-group-medium', label:'Student, Lausanne',
-    vis:{cls:'',zone:'',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},
+    vis:{cls:'vis-young',zone:'',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},
     lang:'fr', from:'Lausanne', to:'Zürich HB',
     info:'Trafic normal sur tout le réseau.',
     title:'Pour toi.',
@@ -741,9 +775,9 @@ const personas = [
       {tag:'product',cat:'Product',text:'Sparbillette prominent — budget-sensitive student segment'},
     ],
     annoRight:[
-      {tag:'typo',cat:'Typography',text:'SBBWeb Light 22px — section titles always Light weight, never Bold'},
-      {tag:'color',cat:'Color',text:'#eb0000 CTA only — SBB Red reserved for primary actions'},
-      {tag:'layout',cat:'Layout',text:'3 cards + CTA — high density for digital-native scrolling habits'},
+      {tag:'typo',cat:'Typography',text:'Bold 24px titles — young mode uses heavier weight for energy'},
+      {tag:'color',cat:'Color',text:'Gradient highlight card — red accent bleeds into card background'},
+      {tag:'layout',cat:'Layout',text:'Tight 6px card gaps — digital-native density, fast vertical scan'},
     ],
     reasoning:'Lena is francophone — the entire interface switches to French. As a student with Halbtax, discounted tickets (Sparbillette) lead the content. Her eco-conscious profile triggers the CO₂ comparison and Green Class. EasyRide speaks to digital natives. The tone is direct, using "tu" (informal you), no formality. The emotional anchor: independence and responsibility.',
   },
@@ -801,7 +835,7 @@ const personas = [
   },
   {
     id:'mueller', name:'Familie Müller', icon:'user-group-medium', label:'Family, Luzern',
-    vis:{cls:'',zone:'',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:true},
+    vis:{cls:'vis-family',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:true,zoneText:'Ihr Familienausflug'},
     lang:'de', from:'Luzern', to:'Engelberg',
     info:'Aktuelle Betriebslage: Normalbetrieb.',
     title:'Familienausflüge.',
@@ -819,9 +853,9 @@ const personas = [
       {tag:'product',cat:'Product',text:'Budget-first — family savings card leads, Junior-Karte benefit repeated'},
     ],
     annoRight:[
-      {tag:'typo',cat:'Typography',text:'"Familienausflüge." — section title mirrors SBB "Top-Angebote." convention'},
-      {tag:'color',cat:'Color',text:'Red highlight on lead card — draws attention to best-value offer'},
-      {tag:'layout',cat:'Layout',text:'RailAway combis — experience + transport bundles ideal for families'},
+      {tag:'typo',cat:'Typography',text:'Family mode — 26px titles, 17px body, generous 16px radius cards'},
+      {tag:'color',cat:'Color',text:'"Ihr Familienausflug" greeting + tall red zone — warm, welcoming entry'},
+      {tag:'layout',cat:'Layout',text:'Hero first card + savings badge + 32px icons — family-friendly scannability'},
     ],
     reasoning:'Family format: the Familien-Spartageskarte leads because budget is the primary factor. The Kinder-Spielwagen is practical information parents need. The Junior-Karte benefit is reinforced. RailAway combos combine travel with experiences — perfect for family outings. Warm but factual tone. Emotional anchor: togetherness and adventure.',
   },
@@ -879,7 +913,7 @@ const personas = [
   },
   {
     id:'ahmed', name:'Ahmed, 35', icon:'translate-medium', label:'Expat, Geneva',
-    vis:{cls:'',zone:'',heroCard:true,timeDisplay:null,stepIndicator:true,savingsBadge:false},
+    vis:{cls:'vis-onboard',zone:'',heroCard:true,timeDisplay:null,stepIndicator:true,savingsBadge:false},
     lang:'en', from:'Genève', to:'Lausanne',
     info:'All lines operating normally.',
     title:'Getting started.',
@@ -899,7 +933,7 @@ const personas = [
     annoRight:[
       {tag:'typo',cat:'Typography',text:'"Getting started." — onboarding frame, not the usual commuter view'},
       {tag:'color',cat:'Color',text:'Highlight on guide card — visual priority on the most helpful action'},
-      {tag:'layout',cat:'Layout',text:'Weekend trips as exploration — helping him discover Switzerland'},
+      {tag:'layout',cat:'Layout',text:'Onboard mode — step dots, 2px red border on guide, larger text for clarity'},
     ],
     reasoning:'Ahmed is new to Switzerland — English interface, onboarding-first. "How to ride" is the lead, not an afterthought. His new Halbtax activation is confirmed (reassurance). Supersaver tickets teach the system. Weekend suggestions help him explore. The tone is welcoming, supportive, assumes zero prior knowledge. Emotional anchor: belonging and discovery.',
   },
@@ -931,7 +965,7 @@ const personas = [
   },
   {
     id:'reto', name:'Reto, 42', icon:'bicycle-medium', label:'Cyclist, Thun',
-    vis:{cls:'',zone:'tall',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'22°C · Berner Oberland · Velowetter'},
+    vis:{cls:'vis-activity',zone:'tall',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'22°C · Berner Oberland · Velowetter'},
     lang:'de', from:'Thun', to:'Spiez',
     info:'Normalbetrieb. Veloplätze verfügbar.',
     title:'Deine Tour.',
@@ -950,8 +984,8 @@ const personas = [
     ],
     annoRight:[
       {tag:'typo',cat:'Typography',text:'"Deine Tour." — possessive, activity-framed section title'},
-      {tag:'color',cat:'Color',text:'Status info enriched — "Veloplätze verfügbar" added to standard ops line'},
-      {tag:'layout',cat:'Layout',text:'No action buttons on weather/status — pure information, zero friction'},
+      {tag:'color',cat:'Color',text:'Activity mode — cards lose borders, use milk backgrounds for outdoor feel'},
+      {tag:'layout',cat:'Layout',text:'No action buttons on info cards — gradient highlight on bike reservation'},
     ],
     reasoning:'Reto gets cycling-centric content: bike space status, weather for the tour, Rent a Bike at the destination. The service status explicitly mentions "bike spaces available" — for him, the most critical information. Thunersee route with elevation and return time. No business content, no family offers. Emotional anchor: freedom and nature.',
   },

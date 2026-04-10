@@ -3,649 +3,885 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>.brand Studio — SBB/CFF/FFS</title>
+<title>.brand — SBB/CFF/FFS</title>
+<meta name="description" content="A living brand identity agent. Ask the SBB brand anything.">
 <style>
+  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-UltraLight.woff2') format('woff2');font-weight:100}
+  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Thin.woff2') format('woff2');font-weight:200}
   @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Light.woff2') format('woff2');font-weight:300}
   @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Roman.woff2') format('woff2');font-weight:400}
   @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Bold.woff2') format('woff2');font-weight:700}
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'SBBWeb',system-ui,sans-serif;background:#0a0a0a;color:#fff;overflow:hidden;height:100vh;-webkit-font-smoothing:antialiased}
-  ::selection{background:#eb0000;color:#fff}
-  canvas{display:block;position:absolute;top:0;left:0}
 
-  #ui{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10}
+  :root {
+    --red: #eb0000;
+    --red-dark: #c40000;
+    --bg: #0a0a0a;
+    --bg-card: #111;
+    --bg-card-hover: #181818;
+    --text: #e8e8e8;
+    --text-dim: #888;
+    --text-faint: #444;
+    --border: #222;
+  }
 
-  #header{position:absolute;top:0;left:0;right:0;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;pointer-events:auto}
-  #header .brand{display:flex;align-items:center;gap:12px}
-  #header .brand h1{font-size:16px;font-weight:700;letter-spacing:-.01em}
-  #header .brand h1 span{color:#eb0000}
-  #header .brand small{font-size:12px;color:#555;font-weight:300}
-  #header .links{display:flex;gap:14px;align-items:center}
-  #header .links a{color:#555;text-decoration:none;font-size:12px;font-weight:300}
-  #header .links .dot{width:6px;height:6px;border-radius:50%;background:#10b981}
+  * { margin:0; padding:0; box-sizing:border-box }
+  html { scroll-behavior: smooth }
+  body {
+    font-family: 'SBBWeb', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--red); color: #fff }
 
-  #prompt-bar{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);width:600px;max-width:calc(100% - 48px);pointer-events:auto}
-  #prompt-bar .input-wrap{display:flex;background:rgba(20,20,20,.9);border:1px solid #333;border-radius:8px;backdrop-filter:blur(20px);overflow:hidden;transition:border-color .2s}
-  #prompt-bar .input-wrap:focus-within{border-color:#eb0000}
-  #prompt-bar input{flex:1;background:none;border:none;padding:14px 18px;color:#fff;font-size:15px;font-family:inherit;font-weight:300;outline:none}
-  #prompt-bar input::placeholder{color:#555}
-  #prompt-bar .cats{display:flex;gap:4px;padding:8px 10px;align-items:center}
-  #prompt-bar .cat-btn{width:28px;height:28px;border-radius:4px;border:1px solid #333;background:none;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .15s}
-  #prompt-bar .cat-btn:hover,.prompt-bar .cat-btn.active{border-color:currentColor;background:rgba(255,255,255,.05)}
-  #prompt-bar .hint{text-align:center;color:#333;font-size:11px;margin-top:8px;font-weight:300}
+  /* ═══ NAV ═══ */
+  nav {
+    position: fixed; top:0; left:0; right:0; z-index:100;
+    padding: 16px 32px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(10,10,10,.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    transition: background .3s;
+  }
+  nav .logo { display:flex; align-items:center; gap:12px }
+  nav .logo h1 { font-size:15px; font-weight:700; letter-spacing:-.01em }
+  nav .logo h1 span { color:var(--red) }
+  nav .logo small { font-size:11px; color:var(--text-faint); font-weight:300 }
+  nav .nav-links { display:flex; gap:24px; align-items:center }
+  nav .nav-links a { color:var(--text-dim); text-decoration:none; font-size:12px; font-weight:300; letter-spacing:.03em; transition: color .2s }
+  nav .nav-links a:hover { color:#fff }
+  nav .live-dot { width:6px; height:6px; border-radius:50%; background:#10b981; animation: livePulse 2s infinite }
+  @keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 
-  #detail{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,10,10,.95);border:1px solid #333;border-radius:12px;padding:0;max-width:500px;width:90%;backdrop-filter:blur(30px);pointer-events:auto;display:none;overflow:hidden;z-index:100}
-  #detail.show{display:block;animation:popIn .3s cubic-bezier(.16,1,.3,1)}
-  #detail .detail-color{height:4px}
-  #detail .detail-body{padding:24px}
-  #detail .detail-title{font-size:20px;font-weight:700;margin-bottom:4px}
-  #detail .detail-cat{font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;font-weight:400}
-  #detail .detail-text{font-size:14px;color:#aaa;line-height:1.7;font-weight:300}
-  #detail .detail-img{width:100%;max-height:300px;object-fit:cover;margin-bottom:16px;border-radius:6px}
-  #detail .detail-sound{margin:12px 0}
-  #detail .detail-sound button{background:#eb0000;color:#fff;border:none;border-radius:4px;padding:8px 20px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:700}
-  #detail .detail-close{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:4px;border:1px solid #333;background:none;color:#666;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-  #detail .detail-close:hover{border-color:#666;color:#fff}
+  /* ═══ HERO ═══ */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+  #hero canvas {
+    position: absolute; top:0; left:0; width:100%; height:100%;
+  }
+  #hero-content {
+    position: relative; z-index:2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    flex:1; padding: 120px 32px 60px;
+    text-align: center;
+  }
+  #hero-tagline {
+    font-size: clamp(14px, 2vw, 18px);
+    font-weight: 300;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+  }
+  #hero-title {
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 100;
+    line-height: 1.05;
+    margin-bottom: 16px;
+    letter-spacing: -.03em;
+  }
+  #hero-title em {
+    font-style: normal;
+    color: var(--red);
+    font-weight: 700;
+  }
+  #hero-subtitle {
+    font-size: clamp(16px, 2.2vw, 22px);
+    font-weight: 300;
+    color: var(--text-dim);
+    max-width: 600px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+  }
 
-  #side-list{position:absolute;right:0;top:52px;bottom:80px;width:220px;overflow-y:auto;pointer-events:auto;padding:8px}
-  #side-list::-webkit-scrollbar{width:3px}
-  #side-list::-webkit-scrollbar-thumb{background:#222;border-radius:2px}
-  #side-list .item{padding:8px 10px;border-radius:4px;cursor:pointer;transition:background .15s;display:flex;align-items:center;gap:8px}
-  #side-list .item:hover{background:rgba(255,255,255,.03)}
-  #side-list .item .item-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-  #side-list .item .item-title{font-size:12px;color:#888;font-weight:300;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* ═══ SEARCH / CONVERSATION ═══ */
+  #search-box {
+    width: 100%; max-width: 640px;
+    position: relative;
+  }
+  #search-box .input-wrap {
+    display: flex;
+    background: rgba(17,17,17,.9);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    backdrop-filter: blur(20px);
+    overflow: hidden;
+    transition: border-color .3s, box-shadow .3s;
+  }
+  #search-box .input-wrap:focus-within {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(235,0,0,.15);
+  }
+  #search-box input {
+    flex:1; background:none; border:none;
+    padding: 18px 24px;
+    color: #fff; font-size:16px; font-family:inherit; font-weight:300;
+    outline:none;
+  }
+  #search-box input::placeholder { color:var(--text-faint) }
+  #search-box button {
+    background: var(--red); border:none; color:#fff;
+    padding: 0 24px; font-family:inherit; font-weight:700;
+    font-size:14px; cursor:pointer; letter-spacing:.03em;
+    transition: background .2s;
+  }
+  #search-box button:hover { background: var(--red-dark) }
+  #search-box .hint {
+    text-align:center; color:var(--text-faint);
+    font-size:12px; margin-top:12px; font-weight:300;
+  }
 
-  #counter{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);text-align:center;color:#333;font-size:12px;pointer-events:none;font-weight:300}
+  /* ═══ SEARCH RESULTS ═══ */
+  #search-results {
+    width: 100%; max-width: 640px;
+    margin-top: 24px;
+    display: none;
+  }
+  #search-results.active { display:block }
+  .search-result {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 10px;
+    transition: border-color .2s, background .2s;
+    cursor: default;
+  }
+  .search-result:hover { border-color: #333; background: var(--bg-card-hover) }
+  .search-result .sr-score {
+    display:inline-block;
+    background: var(--red);
+    color:#fff;
+    font-size:11px; font-weight:700;
+    padding: 2px 8px; border-radius:4px;
+    margin-bottom: 8px;
+  }
+  .search-result .sr-section {
+    font-size:11px; color:var(--text-faint);
+    text-transform:uppercase; letter-spacing:.08em;
+    margin-bottom: 6px;
+  }
+  .search-result .sr-text {
+    font-size:14px; color:var(--text-dim);
+    line-height:1.7; font-weight:300;
+  }
+  #search-loading {
+    text-align:center; padding:24px;
+    color:var(--text-faint); font-size:14px; font-weight:300;
+    display:none;
+  }
+  #search-loading.active { display:block }
+  .search-intro {
+    font-size:13px; color:var(--text-dim); font-weight:300;
+    margin-bottom:16px; line-height:1.6;
+    border-left:2px solid var(--red); padding-left:14px;
+  }
 
-  @keyframes popIn{from{opacity:0;transform:translate(-50%,-50%) scale(.95)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+  /* ═══ SCROLL INDICATOR ═══ */
+  #scroll-indicator {
+    position: absolute; bottom:32px; left:50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 8px;
+    animation: scrollBounce 2s infinite;
+  }
+  #scroll-indicator span { font-size:11px; color:var(--text-faint); font-weight:300; letter-spacing:.1em }
+  @keyframes scrollBounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+  /* ═══ SECTIONS ═══ */
+  section {
+    padding: 100px 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .section-label {
+    font-size:11px; color:var(--red);
+    text-transform:uppercase; letter-spacing:.2em;
+    font-weight:700;
+    margin-bottom:12px;
+  }
+  .section-title {
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 100;
+    letter-spacing: -.02em;
+    margin-bottom: 12px;
+    line-height: 1.1;
+  }
+  .section-subtitle {
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--text-dim);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+  }
+
+  /* ═══ COLOR GRID ═══ */
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+  .color-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color .2s, transform .2s;
+  }
+  .color-card:hover { border-color:#333; transform: translateY(-2px) }
+  .color-swatch { height:80px; position:relative }
+  .color-swatch .color-hex {
+    position:absolute; bottom:8px; right:10px;
+    font-size:12px; font-weight:700;
+    background:rgba(0,0,0,.5); color:#fff;
+    padding:2px 8px; border-radius:4px;
+    backdrop-filter:blur(6px);
+  }
+  .color-info { padding:14px 16px; background:var(--bg-card) }
+  .color-info .color-name { font-size:14px; font-weight:700; margin-bottom:4px }
+  .color-info .color-specs { font-size:11px; color:var(--text-faint); font-weight:300; line-height:1.6 }
+  .color-info .color-cat {
+    display:inline-block; font-size:10px;
+    text-transform:uppercase; letter-spacing:.08em;
+    color:var(--text-faint); background:rgba(255,255,255,.04);
+    padding:2px 8px; border-radius:3px; margin-top:6px;
+  }
+
+  /* ═══ TYPOGRAPHY ═══ */
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  .type-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    transition: border-color .2s;
+  }
+  .type-card:hover { border-color:#333 }
+  .type-sample {
+    font-size: 32px;
+    margin-bottom: 12px;
+    line-height: 1.2;
+    min-height: 44px;
+  }
+  .type-name { font-size:14px; font-weight:700; margin-bottom:4px }
+  .type-meta { font-size:12px; color:var(--text-faint); font-weight:300; line-height:1.6 }
+
+  /* ═══ VALUES ═══ */
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .value-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--red);
+    border-radius: 10px;
+    padding: 24px;
+    transition: border-color .2s, transform .2s;
+  }
+  .value-card:hover { transform:translateY(-2px); border-color:#333 }
+  .value-de { font-size:22px; font-weight:700; margin-bottom:6px }
+  .value-fr { font-size:14px; color:var(--text-dim); font-weight:300; font-style:italic; margin-bottom:10px }
+  .value-desc { font-size:13px; color:var(--text-faint); font-weight:300; line-height:1.6 }
+
+  /* ═══ RULES ═══ */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 12px;
+  }
+  .rule-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    transition: border-color .2s;
+  }
+  .rule-card:hover { border-color:#333 }
+  .rule-type {
+    display:inline-block; font-size:10px;
+    text-transform:uppercase; letter-spacing:.08em;
+    font-weight:700; padding:3px 10px; border-radius:4px;
+    margin-bottom:10px;
+  }
+  .rule-type.principle { background:rgba(59,130,246,.15); color:#60a5fa }
+  .rule-type.usage { background:rgba(16,185,129,.15); color:#34d399 }
+  .rule-type.restriction { background:rgba(235,0,0,.15); color:#f87171 }
+  .rule-type.exception { background:rgba(245,158,11,.15); color:#fbbf24 }
+  .rule-type.technical { background:rgba(139,92,246,.15); color:#a78bfa }
+  .rule-text { font-size:14px; color:var(--text-dim); font-weight:300; line-height:1.7 }
+  .rule-section { font-size:11px; color:var(--text-faint); margin-top:8px; font-weight:300 }
+
+  /* ═══ ABOUT / .BRAND ═══ */
+  #about {
+    border-top: 1px solid var(--border);
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  @media (max-width:768px) { .about-grid { grid-template-columns:1fr } }
+  .about-text { font-size:15px; color:var(--text-dim); font-weight:300; line-height:1.8 }
+  .about-text p { margin-bottom:16px }
+  .about-text strong { color:#fff; font-weight:700 }
+
+  .layers-list { list-style:none; }
+  .layers-list li {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex; gap:16px; align-items:start;
+  }
+  .layers-list li:last-child { border-bottom:none }
+  .layer-num {
+    font-size:28px; font-weight:100; color:var(--red);
+    min-width:40px;
+  }
+  .layer-title { font-size:15px; font-weight:700; margin-bottom:4px }
+  .layer-desc { font-size:13px; color:var(--text-dim); font-weight:300; line-height:1.6 }
+
+  /* ═══ FOOTER ═══ */
+  footer {
+    padding: 48px 32px;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+  footer .footer-brand {
+    font-size: 13px; color: var(--text-faint); font-weight:300;
+    margin-bottom:8px;
+  }
+  footer .footer-meta {
+    font-size:11px; color: var(--text-faint); font-weight:300;
+    opacity:.5;
+  }
+  footer a { color:var(--red); text-decoration:none }
+  footer a:hover { text-decoration:underline }
+
+  /* ═══ LOADING SHIMMER ═══ */
+  .shimmer {
+    background: linear-gradient(90deg, var(--bg-card) 25%, #1a1a1a 50%, var(--bg-card) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 8px;
+  }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+  /* ═══ CHIME BUTTON ═══ */
+  .chime-btn {
+    background: none; border: 1px solid var(--border);
+    color: var(--text-dim); padding: 10px 20px;
+    border-radius: 8px; font-family:inherit; font-size:13px;
+    font-weight:300; cursor:pointer;
+    transition: all .2s;
+    margin-top: 12px;
+  }
+  .chime-btn:hover { border-color:var(--red); color:#fff }
+
+  /* ═══ STATS BAR ═══ */
+  .stats-bar {
+    display:flex; gap:32px; flex-wrap:wrap;
+    margin-bottom:48px;
+  }
+  .stat { display:flex; flex-direction:column }
+  .stat-value { font-size:36px; font-weight:100; color:var(--red) }
+  .stat-label { font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:.1em; font-weight:300; margin-top:2px }
 </style>
 </head>
 <body>
-<canvas id="c"></canvas>
-<div id="ui">
-  <div id="header">
-    <div class="brand">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142 48" width="60" height="20"><path fill="#eb0000" d="M1 47h141V1H1v46z"/><path fill="#fff" d="M87 40h9.3L83.8 27.7h15.5V40h7.4V27.7h15.6L109.7 40h9.3l16-16-15.9-16h-9.3l12.5 12.3h-15.6V8h-7.4v12.3H83.8L96.3 8H87L71 24l16 16z"/></svg>
-      <div><h1><span>.</span>brand Studio</h1><small>SBB/CFF/FFS — living brand identity</small></div>
-    </div>
-    <div class="links">
-      <div class="dot"></div>
-      <a href="https://sbb-brand-api.billowing-leaf-4d6a.workers.dev/api" target="_blank">API →</a>
-      <a href="https://github.com/nordspot/sbb-brand-api" target="_blank">GitHub →</a>
+
+<!-- ═══════════════════════════════════════════════
+     NAVIGATION
+     ═══════════════════════════════════════════════ -->
+<nav>
+  <div class="logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142 48" width="56" height="19"><path fill="#eb0000" d="M1 47h141V1H1v46z"/><path fill="#fff" d="M87 40h9.3L83.8 27.7h15.5V40h7.4V27.7h15.6L109.7 40h9.3l16-16-15.9-16h-9.3l12.5 12.3h-15.6V8h-7.4v12.3H83.8L96.3 8H87L71 24l16 16z"/></svg>
+    <div>
+      <h1><span>.</span>brand</h1>
+      <small>living brand identity agent</small>
     </div>
   </div>
+  <div class="nav-links">
+    <div class="live-dot" title="API live"></div>
+    <a href="#colors">Colors</a>
+    <a href="#typography">Type</a>
+    <a href="#values">Values</a>
+    <a href="#rules">Rules</a>
+    <a href="#about">About</a>
+    <a href="https://sbb-brand-api.billowing-leaf-4d6a.workers.dev/api" target="_blank">API ↗</a>
+  </div>
+</nav>
 
-  <div id="prompt-bar">
-    <div class="input-wrap">
-      <input id="input" type="text" placeholder="Add a mood, texture, sound, feeling, image URL..." autocomplete="off"/>
-      <div class="cats">
-        <button class="cat-btn" data-cat="visual" style="color:#eb0000" title="Visual">◆</button>
-        <button class="cat-btn" data-cat="texture" style="color:#f59e0b" title="Texture">▦</button>
-        <button class="cat-btn" data-cat="sound" style="color:#8b5cf6" title="Sound">♪</button>
-        <button class="cat-btn" data-cat="culture" style="color:#3b82f6" title="Culture">⬡</button>
-        <button class="cat-btn" data-cat="story" style="color:#10b981" title="Story">¶</button>
-        <button class="cat-btn" data-cat="feeling" style="color:#ec4899" title="Feeling">◎</button>
-        <button class="cat-btn" data-cat="rule" style="color:#6b7280" title="Rule">§</button>
-        <button class="cat-btn" data-cat="mcp" style="color:#06b6d4" title="MCP">⚙</button>
+<!-- ═══════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════ -->
+<div id="hero">
+  <canvas id="c"></canvas>
+  <div id="hero-content">
+    <div id="hero-tagline">SBB/CFF/FFS .brand agent</div>
+    <h2 id="hero-title">Ask the brand<em>.</em></h2>
+    <p id="hero-subtitle">I'm a living brand identity — not a PDF.
+      I know my colors, my rules, my history, my feelings.
+      Ask me anything.</p>
+
+    <div id="search-box">
+      <div class="input-wrap">
+        <input id="search-input" type="text" placeholder="Can I modify the SBB logo?" autocomplete="off"/>
+        <button id="search-btn">Ask</button>
       </div>
+      <div class="hint">Try: "What colors can I use?" · "Logo protection rules" · "Brand values" · "Typography system"</div>
     </div>
-    <div class="hint">Type to add elements · Paste or drop images · Click dots to explore</div>
+
+    <div id="search-loading" class="shimmer" style="width:100%;max-width:640px;height:60px;margin-top:24px"></div>
+
+    <div id="search-results"></div>
   </div>
 
-  <div id="side-list"></div>
-  <div id="counter"></div>
-
-  <div id="detail">
-    <div class="detail-color"></div>
-    <button class="detail-close" onclick="closeDetail()">×</button>
-    <div class="detail-body">
-      <div class="detail-cat" id="det-cat"></div>
-      <div class="detail-title" id="det-title"></div>
-      <div id="det-img-wrap"></div>
-      <div id="det-sound-wrap"></div>
-      <div class="detail-text" id="det-text"></div>
-    </div>
+  <div id="scroll-indicator">
+    <span>Explore the brand DNA</span>
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10l6 6 6-6" stroke="#444" stroke-width="1.5"/></svg>
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════
+     COLORS
+     ═══════════════════════════════════════════════ -->
+<section id="colors">
+  <div class="section-label">Layer 1 — Brand Architecture</div>
+  <h2 class="section-title">Farben</h2>
+  <p class="section-subtitle">Every color is specified to the last digit — Pantone, RAL, CMYK, RGB. No approximations. Swiss precision.</p>
+  <div class="stats-bar" id="color-stats"></div>
+  <div class="color-grid" id="color-grid">
+    <div class="shimmer" style="height:160px"></div>
+    <div class="shimmer" style="height:160px"></div>
+    <div class="shimmer" style="height:160px"></div>
+    <div class="shimmer" style="height:160px"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     TYPOGRAPHY
+     ═══════════════════════════════════════════════ -->
+<section id="typography">
+  <div class="section-label">Layer 1 — Brand Architecture</div>
+  <h2 class="section-title">Typografie</h2>
+  <p class="section-subtitle">SBBWeb — a typeface family designed for clarity at every scale, from platform signage to mobile screens.</p>
+  <div class="type-grid" id="type-grid">
+    <div class="shimmer" style="height:140px"></div>
+    <div class="shimmer" style="height:140px"></div>
+    <div class="shimmer" style="height:140px"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     VALUES
+     ═══════════════════════════════════════════════ -->
+<section id="values">
+  <div class="section-label">Layer 2 — Emotional Identity</div>
+  <h2 class="section-title">Werte</h2>
+  <p class="section-subtitle">The feelings that define the brand. Not adjectives in a document — lived experiences at every touchpoint.</p>
+  <div class="values-grid" id="values-grid">
+    <div class="shimmer" style="height:120px"></div>
+    <div class="shimmer" style="height:120px"></div>
+    <div class="shimmer" style="height:120px"></div>
+  </div>
+  <button class="chime-btn" id="chime-btn" style="margin-top:32px">▶ Play the SBB station chime</button>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     RULES
+     ═══════════════════════════════════════════════ -->
+<section id="rules">
+  <div class="section-label">Layer 1 — Creative Guardrails</div>
+  <h2 class="section-title">Regeln</h2>
+  <p class="section-subtitle">23 rules — principles, usage guidelines, restrictions, exceptions, technical specs. The hard edges of creative freedom.</p>
+  <div class="rules-grid" id="rules-grid">
+    <div class="shimmer" style="height:120px"></div>
+    <div class="shimmer" style="height:120px"></div>
+    <div class="shimmer" style="height:120px"></div>
+    <div class="shimmer" style="height:120px"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     ABOUT .BRAND
+     ═══════════════════════════════════════════════ -->
+<section id="about">
+  <div class="section-label">.brand — The Seventh Typology</div>
+  <h2 class="section-title">What is this?</h2>
+  <p class="section-subtitle">A .brand file is not a document. It's an agent.</p>
+
+  <div class="about-grid">
+    <div class="about-text">
+      <p>This page is a <strong>.brand agent</strong> — a living brand identity powered by semantic AI. The SBB brand isn't stored as a PDF or a style guide. It's an MCP (Model Context Protocol) server that any AI tool can connect to.</p>
+      <p>When you asked a question above, you queried the brand's semantic memory — 768-dimensional vector embeddings of every guideline, rule, and cultural value. The brand <strong>understands</strong> what you're asking, not just keyword-matching.</p>
+      <p>This is the <strong>seventh typology</strong> of dynamic brand identity — after Conteneur, Transformatif, Génératif, Réactif, Participatif, and Évolutif. The conscious identity. A brand that doesn't just change — it thinks.</p>
+      <p><strong>Tu poc la marque — elle te poc back.</strong></p>
+    </div>
+    <div>
+      <ul class="layers-list">
+        <li>
+          <span class="layer-num">01</span>
+          <div>
+            <div class="layer-title">Hybrid Brand Architecture</div>
+            <div class="layer-desc">Structured knowledge + semantic understanding. Colors, typography, rules, values — queryable by any AI system through MCP.</div>
+          </div>
+        </li>
+        <li>
+          <span class="layer-num">02</span>
+          <div>
+            <div class="layer-title">Emotional Targeting</div>
+            <div class="layer-desc">Anthropological, sensory, neuro. The brand adapts to who it's talking to — not just what's correct, but what resonates.</div>
+          </div>
+        </li>
+        <li>
+          <span class="layer-num">03</span>
+          <div>
+            <div class="layer-title">Live Optimization</div>
+            <div class="layer-desc">Every interaction generates signal. A/B testing, feedback loops, the brand gets smarter with every conversation.</div>
+          </div>
+        </li>
+        <li>
+          <span class="layer-num">04</span>
+          <div>
+            <div class="layer-title">Multi-Channel Deployment</div>
+            <div class="layer-desc">Digital, physical, spatial — total coherence across every touchpoint. The last mile is automated but never generic.</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-brand">
+    <strong style="color:var(--red)">.</strong>brand — <a href="https://nord.spot" target="_blank">Nord.spot</a> × <a href="https://brigade.studio" target="_blank">Brigade Studio</a> — Fribourg
+  </div>
+  <div class="footer-meta">
+    SBB/CFF/FFS brand data used for research & proof of concept · API: <a href="https://sbb-brand-api.billowing-leaf-4d6a.workers.dev/api" target="_blank">sbb-brand-api</a> · <a href="https://github.com/nordspot" target="_blank">GitHub</a>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════
+     SCRIPTS
+     ═══════════════════════════════════════════════ -->
 <script>
+const API = 'https://sbb-brand-api.billowing-leaf-4d6a.workers.dev';
+
 /* ═══════════════════════════════════════════════
-   CORE ENGINE
+   PARTICLE SIGNET (background canvas)
    ═══════════════════════════════════════════════ */
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
-let W, H;
+let W, H, shapePoints = [], particles = [], time = 0;
 
-const CATS = {
-  visual:  {label:'Visual',  color:'#eb0000', icon:'◆'},
-  texture: {label:'Texture', color:'#f59e0b', icon:'▦'},
-  sound:   {label:'Sound',   color:'#8b5cf6', icon:'♪'},
-  culture: {label:'Culture', color:'#3b82f6', icon:'⬡'},
-  story:   {label:'Story',   color:'#10b981', icon:'¶'},
-  feeling: {label:'Feeling', color:'#ec4899', icon:'◎'},
-  rule:    {label:'Rule',    color:'#6b7280', icon:'§'},
-  mcp:     {label:'MCP',     color:'#06b6d4', icon:'⚙'},
-};
-
-let activeCat = 'feeling';
-let particles = [];
-let shapePoints = []; // points sampled from the SBB signet
-let mouseX = 0, mouseY = 0;
-let hoveredParticle = null;
-let audioCtx = null;
-let time = 0;
-
-/* ── Resize ── */
-function resize() {
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-  generateShapePoints();
+function resizeCanvas() {
+  const hero = document.getElementById('hero');
+  W = canvas.width = hero.offsetWidth;
+  H = canvas.height = hero.offsetHeight;
+  generateShape();
 }
-window.addEventListener('resize', resize);
 
-/* ═══════════════════════════════════════════════
-   GENERATE SBB SIGNET SHAPE POINTS
-   Sample positions from the signet SVG
-   ═══════════════════════════════════════════════ */
-function generateShapePoints() {
+function generateShape() {
   shapePoints = [];
-  // Render signet to offscreen canvas, sample pixel positions
-  const offscreen = document.createElement('canvas');
-  const scale = Math.min(W * 0.55, H * 0.65) / 48; // scale to fill good portion of screen
-  const sw = Math.round(142 * scale);
-  const sh = Math.round(48 * scale);
-  offscreen.width = sw;
-  offscreen.height = sh;
-  const octx = offscreen.getContext('2d');
+  const off = document.createElement('canvas');
+  const scale = Math.min(W * 0.45, H * 0.5) / 48;
+  const sw = Math.round(142 * scale), sh = Math.round(48 * scale);
+  off.width = sw; off.height = sh;
+  const octx = off.getContext('2d');
 
-  // Draw the signet: red background + white arrow
-  // First fill red
   octx.fillStyle = '#eb0000';
   octx.fillRect(0, 0, sw, sh);
-
-  // Draw white arrow (scaled path)
-  octx.save();
-  octx.scale(scale, scale);
-  const arrowPath = new Path2D('M87 40h9.3L83.8 27.7h15.5V40h7.4V27.7h15.6L109.7 40h9.3l16-16-15.9-16h-9.3l12.5 12.3h-15.6V8h-7.4v12.3H83.8L96.3 8H87L71 24l16 16z');
-  octx.fillStyle = '#ffffff';
-  octx.fill(arrowPath);
+  octx.save(); octx.scale(scale, scale);
+  octx.fillStyle = '#fff';
+  octx.fill(new Path2D('M87 40h9.3L83.8 27.7h15.5V40h7.4V27.7h15.6L109.7 40h9.3l16-16-15.9-16h-9.3l12.5 12.3h-15.6V8h-7.4v12.3H83.8L96.3 8H87L71 24l16 16z'));
   octx.restore();
 
-  // Sample pixels
-  const imageData = octx.getImageData(0, 0, sw, sh);
-  const data = imageData.data;
-  const offsetX = (W - sw) / 2;
-  const offsetY = (H - sh) / 2 - 20;
-  const spacing = Math.max(8, Math.round(14 - scale * 0.5));
+  const d = octx.getImageData(0, 0, sw, sh).data;
+  const ox = (W - sw) / 2, oy = (H - sh) / 2;
+  const sp = Math.max(10, Math.round(16 - scale * 0.4));
 
-  for (let y = 0; y < sh; y += spacing) {
-    for (let x = 0; x < sw; x += spacing) {
-      const idx = (y * sw + x) * 4;
-      const r = data[idx], g = data[idx+1], b = data[idx+2];
-      // Is it red area or white arrow?
-      const isWhite = r > 200 && g > 200 && b > 200;
-      const isRed = r > 200 && g < 50 && b < 50;
-      if (isWhite || isRed) {
-        shapePoints.push({
-          x: x + offsetX,
-          y: y + offsetY,
-          isArrow: isWhite,
-          taken: false,
-        });
+  for (let y = 0; y < sh; y += sp) {
+    for (let x = 0; x < sw; x += sp) {
+      const i = (y * sw + x) * 4;
+      const isW = d[i] > 200 && d[i+1] > 200 && d[i+2] > 200;
+      const isR = d[i] > 200 && d[i+1] < 50 && d[i+2] < 50;
+      if (isW || isR) shapePoints.push({ x: x+ox, y: y+oy, isArrow: isW });
+    }
+  }
+
+  // Create structural particles
+  particles = shapePoints.map(sp => ({
+    x: sp.x + (Math.random()-.5)*200,
+    y: sp.y + (Math.random()-.5)*200,
+    tx: sp.x, ty: sp.y,
+    isArrow: sp.isArrow,
+    progress: 0,
+    phase: Math.random() * Math.PI * 2,
+  }));
+}
+
+function renderCanvas() {
+  time += 0.016;
+  ctx.clearRect(0, 0, W, H);
+
+  // Draw connections between nearby particles (subtle)
+  ctx.lineWidth = 0.3;
+  for (let i = 0; i < particles.length; i += 3) {
+    const p = particles[i];
+    if (p.progress < 0.8) continue;
+    for (let j = i + 1; j < particles.length; j += 3) {
+      const q = particles[j];
+      if (q.progress < 0.8) continue;
+      const dx = p.x - q.x, dy = p.y - q.y;
+      const dist = dx*dx + dy*dy;
+      if (dist < 3600) { // 60px
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(q.x, q.y);
+        ctx.strokeStyle = `rgba(${p.isArrow ? '255,255,255' : '235,0,0'},${0.06 * (1 - dist/3600)})`;
+        ctx.stroke();
       }
     }
   }
 
-  // Shuffle for organic feel
-  for (let i = shapePoints.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shapePoints[i], shapePoints[j]] = [shapePoints[j], shapePoints[i]];
-  }
-}
-
-/* ═══════════════════════════════════════════════
-   PARTICLE CLASS
-   ═══════════════════════════════════════════════ */
-function createParticle(opts) {
-  const available = shapePoints.filter(p => !p.taken);
-  if (available.length === 0) return null;
-
-  // Prefer arrow points for certain categories, red for others
-  let target;
-  const arrowCats = ['feeling','culture','story','sound'];
-  const prefer = arrowCats.includes(opts.cat) ? available.filter(p=>p.isArrow) : available.filter(p=>!p.isArrow);
-  target = prefer.length > 0 ? prefer[Math.floor(Math.random()*prefer.length)] : available[Math.floor(Math.random()*available.length)];
-
-  target.taken = true;
-
-  const p = {
-    id: 'p' + Date.now() + Math.random(),
-    // Start from bottom center (prompt bar area)
-    x: W/2 + (Math.random()-0.5)*100,
-    y: H - 60,
-    // Target position
-    tx: target.x + (Math.random()-0.5)*4,
-    ty: target.y + (Math.random()-0.5)*4,
-    isArrow: target.isArrow,
-    // Visual
-    radius: 3 + Math.random()*2,
-    cat: opts.cat || 'visual',
-    color: CATS[opts.cat]?.color || '#eb0000',
-    baseColor: target.isArrow ? '#ffffff' : '#eb0000',
-    // Content
-    title: opts.title || '',
-    body: opts.body || '',
-    image: opts.image || null,
-    imageLoaded: null,
-    soundFreq: opts.soundFreq || null,
-    // State
-    progress: 0, // 0 = at start, 1 = at target
-    pulse: Math.random() * Math.PI * 2,
-    connections: [],
-    alive: true,
-    birth: Date.now(),
-  };
-
-  // Load image if URL
-  if (p.image) {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => { p.imageLoaded = img; };
-    img.src = p.image;
-  }
-
-  particles.push(p);
-  updateSideList();
-  updateCounter();
-  return p;
-}
-
-/* ═══════════════════════════════════════════════
-   AUTO-CONNECT nearby particles
-   ═══════════════════════════════════════════════ */
-function autoConnect(p) {
-  const maxDist = 80;
-  const maxConn = 3;
-  let count = 0;
-  for (const other of particles) {
-    if (other === p || count >= maxConn) break;
-    const dx = p.tx - other.tx;
-    const dy = p.ty - other.ty;
-    const dist = Math.sqrt(dx*dx + dy*dy);
-    if (dist < maxDist && !p.connections.includes(other.id)) {
-      p.connections.push(other.id);
-      other.connections.push(p.id);
-      count++;
-    }
-  }
-}
-
-/* ═══════════════════════════════════════════════
-   RENDER
-   ═══════════════════════════════════════════════ */
-function render() {
-  time += 0.016;
-  ctx.fillStyle = '#0a0a0a';
-  ctx.fillRect(0, 0, W, H);
-
-  // Draw faint structural dots for empty shape positions
-  for (const sp of shapePoints) {
-    if (!sp.taken) {
-      const pulse = Math.sin(time * 0.5 + sp.x * 0.01 + sp.y * 0.01) * 0.3 + 0.7;
-      ctx.beginPath();
-      ctx.arc(sp.x, sp.y, 1.5, 0, Math.PI*2);
-      ctx.fillStyle = sp.isArrow
-        ? `rgba(255,255,255,${0.04 * pulse})`
-        : `rgba(235,0,0,${0.06 * pulse})`;
-      ctx.fill();
-    }
-  }
-
-  // Draw connections
+  // Draw particles
   for (const p of particles) {
-    if (p.progress < 0.5) continue;
-    const alpha = Math.min(1, (p.progress - 0.5) * 2) * 0.15;
-    for (const cid of p.connections) {
-      const other = particles.find(q => q.id === cid);
-      if (!other || other.progress < 0.5) continue;
-      ctx.beginPath();
-      ctx.moveTo(p.x, p.y);
-      ctx.lineTo(other.x, other.y);
-      ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
-      ctx.lineWidth = 0.5;
-      ctx.stroke();
-    }
-  }
-
-  // Draw and update particles
-  hoveredParticle = null;
-  const mx = mouseX, my = mouseY;
-
-  for (const p of particles) {
-    // Animate toward target
     if (p.progress < 1) {
-      p.progress = Math.min(1, p.progress + 0.015);
-      const ease = 1 - Math.pow(1 - p.progress, 3); // cubic ease out
-      p.x = p.x + (p.tx - p.x) * 0.04;
-      p.y = p.y + (p.ty - p.y) * 0.04;
+      p.progress = Math.min(1, p.progress + 0.008);
+      const e = 1 - Math.pow(1 - p.progress, 4);
+      p.x += (p.tx - p.x) * 0.03;
+      p.y += (p.ty - p.y) * 0.03;
     } else {
-      // Gentle breathing
-      const breathe = Math.sin(time * 1.2 + p.pulse) * 0.8;
-      p.x = p.tx + breathe;
-      p.y = p.ty + Math.cos(time * 0.9 + p.pulse) * 0.6;
+      p.x = p.tx + Math.sin(time * 0.8 + p.phase) * 0.6;
+      p.y = p.ty + Math.cos(time * 0.6 + p.phase) * 0.5;
     }
 
-    // Check hover
-    const dx = mx - p.x, dy = my - p.y;
-    const dist = Math.sqrt(dx*dx + dy*dy);
-    const isHovered = dist < 18;
-    if (isHovered) hoveredParticle = p;
-
-    // Draw glow for hovered
-    if (isHovered) {
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 20, 0, Math.PI*2);
-      const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 20);
-      glow.addColorStop(0, p.color + '44');
-      glow.addColorStop(1, 'transparent');
-      ctx.fillStyle = glow;
-      ctx.fill();
-    }
-
-    // Draw particle
-    const r = isHovered ? p.radius * 2 : p.radius + Math.sin(time * 2 + p.pulse) * 0.5;
+    const pulse = Math.sin(time * 1.5 + p.phase) * 0.15 + 0.85;
+    const alpha = p.isArrow ? 0.12 * pulse : 0.18 * pulse;
     ctx.beginPath();
-    ctx.arc(p.x, p.y, r, 0, Math.PI*2);
-
-    // Color: blend between base shape color and category color based on content
-    if (p.title) {
-      ctx.fillStyle = isHovered ? '#ffffff' : p.color;
-    } else {
-      ctx.fillStyle = p.baseColor === '#ffffff'
-        ? `rgba(255,255,255,${0.3 + Math.sin(time + p.pulse)*0.1})`
-        : `rgba(235,0,0,${0.4 + Math.sin(time + p.pulse)*0.1})`;
-    }
+    ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+    ctx.fillStyle = p.isArrow
+      ? `rgba(255,255,255,${alpha})`
+      : `rgba(235,0,0,${alpha})`;
     ctx.fill();
-
-    // Show image thumbnail on hover
-    if (isHovered && p.imageLoaded) {
-      const iw = 120, ih = 80;
-      const ix = p.x - iw/2, iy = p.y - ih - 16;
-      ctx.save();
-      ctx.globalAlpha = 0.95;
-      ctx.beginPath();
-      ctx.roundRect(ix-2, iy-2, iw+4, ih+4, 6);
-      ctx.fillStyle = '#000';
-      ctx.fill();
-      ctx.drawImage(p.imageLoaded, ix, iy, iw, ih);
-      ctx.restore();
-    }
-
-    // Show title on hover
-    if (isHovered && p.title && !p.imageLoaded) {
-      ctx.save();
-      ctx.font = '12px SBBWeb, system-ui';
-      ctx.fillStyle = '#fff';
-      ctx.textAlign = 'center';
-      ctx.fillText(p.title, p.x, p.y - 16);
-      ctx.restore();
-    }
   }
 
-  // Cursor
-  canvas.style.cursor = hoveredParticle ? 'pointer' : 'default';
-
-  requestAnimationFrame(render);
+  requestAnimationFrame(renderCanvas);
 }
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+renderCanvas();
 
 /* ═══════════════════════════════════════════════
    SOUND ENGINE
    ═══════════════════════════════════════════════ */
-function initAudio() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-}
+let audioCtx = null;
+function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
 
-function playTone(freq, duration = 0.5, type = 'sine') {
+function playTone(freq, dur = 0.8, type = 'sine', vol = 0.12) {
   initAudio();
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = type;
-  osc.frequency.value = freq;
-  gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  osc.start();
-  osc.stop(audioCtx.currentTime + duration);
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = type; o.frequency.value = freq;
+  g.gain.setValueAtTime(vol, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(); o.stop(audioCtx.currentTime + dur);
 }
 
 function playSBBChime() {
-  initAudio();
-  // Approximate the SBB 3-tone station chime: G5-C6-E6
-  const notes = [784, 1047, 1319];
-  notes.forEach((f,i) => {
-    setTimeout(() => playTone(f, 0.8, 'sine'), i * 350);
-  });
+  [784, 1047, 1319].forEach((f,i) => setTimeout(() => playTone(f, 1, 'sine', 0.1), i * 380));
 }
 
-function playChord(baseFreq) {
-  initAudio();
-  [baseFreq, baseFreq * 1.25, baseFreq * 1.5].forEach(f => playTone(f, 1.2, 'triangle'));
-}
+document.getElementById('chime-btn').addEventListener('click', playSBBChime);
 
 /* ═══════════════════════════════════════════════
-   DETAIL PANEL
+   SEMANTIC SEARCH
    ═══════════════════════════════════════════════ */
-function showDetail(p) {
-  const det = document.getElementById('detail');
-  const cat = CATS[p.cat];
-  det.querySelector('.detail-color').style.background = cat.color;
-  document.getElementById('det-cat').textContent = cat.icon + ' ' + cat.label;
-  document.getElementById('det-cat').style.color = cat.color;
-  document.getElementById('det-title').textContent = p.title;
-  document.getElementById('det-text').textContent = p.body;
+const searchInput = document.getElementById('search-input');
+const searchBtn = document.getElementById('search-btn');
+const searchResults = document.getElementById('search-results');
+const searchLoading = document.getElementById('search-loading');
 
-  const imgWrap = document.getElementById('det-img-wrap');
-  imgWrap.innerHTML = '';
-  if (p.imageLoaded) {
-    const img = document.createElement('img');
-    img.src = p.image;
-    img.className = 'detail-img';
-    imgWrap.appendChild(img);
-  }
+async function doSearch() {
+  const q = searchInput.value.trim();
+  if (!q) return;
 
-  const soundWrap = document.getElementById('det-sound-wrap');
-  soundWrap.innerHTML = '';
-  if (p.soundFreq || p.cat === 'sound') {
-    const btn = document.createElement('button');
-    btn.textContent = '▶ Play Sound';
-    btn.onclick = () => {
-      if (p.soundFreq) playChord(p.soundFreq);
-      else playSBBChime();
-    };
-    const div = document.createElement('div');
-    div.className = 'detail-sound';
-    div.appendChild(btn);
-    soundWrap.appendChild(div);
-  }
+  searchResults.className = '';
+  searchResults.innerHTML = '';
+  searchLoading.className = 'shimmer active';
 
-  det.className = 'show';
-}
+  try {
+    const res = await fetch(`${API}/api/search?q=${encodeURIComponent(q)}&top_k=5`);
+    const data = await res.json();
 
-function closeDetail() {
-  document.getElementById('detail').className = '';
-}
+    searchLoading.className = '';
+    searchResults.className = 'active';
 
-/* ═══════════════════════════════════════════════
-   SIDE LIST
-   ═══════════════════════════════════════════════ */
-function updateSideList() {
-  const list = document.getElementById('side-list');
-  const contentParticles = particles.filter(p => p.title);
-  list.innerHTML = contentParticles.map(p => {
-    const cat = CATS[p.cat];
-    return `<div class="item" onclick="focusParticle('${p.id}')">
-      <div class="item-dot" style="background:${cat.color}"></div>
-      <div class="item-title">${cat.icon} ${p.title}</div>
-    </div>`;
-  }).join('');
-}
-
-function focusParticle(id) {
-  const p = particles.find(q => q.id === id);
-  if (p) showDetail(p);
-}
-
-function updateCounter() {
-  const content = particles.filter(p => p.title).length;
-  const total = particles.length;
-  document.getElementById('counter').textContent =
-    `${content} elements · ${particles.reduce((s,p)=>s+p.connections.length,0)/2|0} connections · ${shapePoints.filter(p=>!p.taken).length} positions available`;
-}
-
-/* ═══════════════════════════════════════════════
-   INPUT HANDLING
-   ═══════════════════════════════════════════════ */
-const input = document.getElementById('input');
-
-// Category buttons
-document.querySelectorAll('.cat-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    activeCat = btn.dataset.cat;
-    document.querySelectorAll('.cat-btn').forEach(b => b.style.background = 'none');
-    btn.style.background = 'rgba(255,255,255,.08)';
-    input.focus();
-  });
-});
-
-// Submit
-input.addEventListener('keydown', (e) => {
-  if (e.key !== 'Enter' || !input.value.trim()) return;
-  const val = input.value.trim();
-
-  // Check if it's an image URL
-  const isImage = /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(val) || val.startsWith('data:image');
-
-  const p = createParticle({
-    cat: activeCat,
-    title: isImage ? 'Image' : val,
-    body: isImage ? val : '',
-    image: isImage ? val : null,
-    soundFreq: activeCat === 'sound' ? 200 + Math.random() * 600 : null,
-  });
-
-  if (p) {
-    setTimeout(() => autoConnect(p), 500);
-    // Play a subtle tone on add
-    initAudio();
-    playTone(400 + particles.length * 20, 0.3, 'sine');
-  }
-
-  input.value = '';
-});
-
-// Paste images
-window.addEventListener('paste', (e) => {
-  const items = e.clipboardData?.items;
-  if (!items) return;
-  for (const item of items) {
-    if (item.type.startsWith('image/')) {
-      e.preventDefault();
-      const file = item.getAsFile();
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const p = createParticle({
-          cat: 'visual',
-          title: 'Pasted Image',
-          body: '',
-          image: ev.target.result,
-        });
-        if (p) setTimeout(() => autoConnect(p), 500);
-      };
-      reader.readAsDataURL(file);
-      return;
+    if (data.results && data.results.length > 0) {
+      searchResults.innerHTML =
+        `<div class="search-intro">The brand found <strong>${data.results.length}</strong> relevant knowledge chunks for your query. Semantic similarity via 768-dimensional vector embeddings.</div>` +
+        data.results.map(r => `
+          <div class="search-result">
+            <span class="sr-score">${(r.score * 100).toFixed(1)}% match</span>
+            ${r.metadata?.section_title ? `<div class="sr-section">${r.metadata.section_title}</div>` : ''}
+            <div class="sr-text">${escapeHtml(r.chunk_text || 'No text available')}</div>
+          </div>
+        `).join('');
+    } else {
+      searchResults.innerHTML = '<div class="search-intro">No results found. Try a different question about the SBB brand.</div>';
     }
+  } catch (err) {
+    searchLoading.className = '';
+    searchResults.className = 'active';
+    searchResults.innerHTML = `<div class="search-intro" style="border-color:#f87171">Error querying the brand agent: ${err.message}</div>`;
   }
-});
+}
 
-// Drop images
-document.body.addEventListener('dragover', e => e.preventDefault());
-document.body.addEventListener('drop', (e) => {
-  e.preventDefault();
-  for (const file of (e.dataTransfer?.files || [])) {
-    if (file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const p = createParticle({
-          cat: 'visual',
-          title: file.name.replace(/\.[^.]+$/,''),
-          body: '',
-          image: ev.target.result,
-        });
-        if (p) setTimeout(() => autoConnect(p), 500);
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-});
+searchBtn.addEventListener('click', doSearch);
+searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch() });
 
-// Mouse tracking
-window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
-
-// Click to show detail
-canvas.addEventListener('click', () => {
-  if (hoveredParticle && hoveredParticle.title) {
-    showDetail(hoveredParticle);
-    // Play sound for sound items
-    if (hoveredParticle.cat === 'sound') {
-      if (hoveredParticle.soundFreq) playChord(hoveredParticle.soundFreq);
-      else playSBBChime();
-    }
-  }
-});
-
-// Escape to close
-window.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeDetail();
-});
-
-/* ═══════════════════════════════════════════════
-   SEED DEFAULT CONTENT
-   ═══════════════════════════════════════════════ */
-function seedDefaults() {
-  const defaults = [
-    {cat:'visual',title:'SBB Rot #eb0000',body:'The single most recognizable element. Red as identity, not decoration. Pantone 485C.'},
-    {cat:'feeling',title:'Vertrauen',body:'Precision, reliability, Swiss punctuality. The brand feeling is trust — trains run on time.'},
-    {cat:'culture',title:'4 Languages',body:'DE/FR/IT/EN — the brand speaks all Swiss languages natively. Not translation, cultural adaptation.'},
-    {cat:'sound',title:'Station Chime',body:'The 3-tone SBB announcement jingle. Heard 1000× daily. Click to play.',soundFreq:null},
-    {cat:'texture',title:'Brushed Steel',body:'Platform steel, glass canopies, concrete pillars. Industrial Swiss precision made material.'},
-    {cat:'story',title:'Since 1902',body:'Swiss Federal Railways — 120+ years of national infrastructure. The brand carries history.'},
-    {cat:'rule',title:'Logo Protection',body:'Minimum clear space = Bildmarke height. Never crop, rotate, recolor, or partially use.'},
-    {cat:'mcp',title:'brand.validate()',body:'MCP tool: validates designs against all brand rules. Returns compliance score + violations.'},
-    {cat:'visual',title:'Rotes Fenster',body:'The Red Window — rectangular frame element used for text isolation. Signature layout device.'},
-    {cat:'mcp',title:'brand.search()',body:'Semantic search across all brand knowledge. "Can I use blue for headlines?" → structured answer.'},
-    {cat:'feeling',title:'Heimat',body:'Home. The feeling of arriving at Zürich HB or Bern. The brand IS Swiss infrastructure.'},
-    {cat:'sound',title:'Doors Closing',body:'The pneumatic door-close sound. Pavlovian Swiss response: urgency + reliability.',soundFreq:320},
-    {cat:'texture',title:'SBBWeb Typeface',body:'Custom font family: UltraLight to Bold. Designed for Swiss clarity. Every letter is precision.'},
-    {cat:'culture',title:'Mondaine Clock',body:'The iconic Swiss railway clock. Licensed worldwide. 1944 design by Hans Hilfiker. Time itself branded.'},
-  ];
-
-  let delay = 0;
-  defaults.forEach((d, i) => {
-    setTimeout(() => {
-      const p = createParticle(d);
-      if (p) setTimeout(() => autoConnect(p), 800);
-    }, delay);
-    delay += 150;
-  });
+function escapeHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
 }
 
 /* ═══════════════════════════════════════════════
-   INIT
+   LOAD LIVE DATA FROM API
    ═══════════════════════════════════════════════ */
-resize();
-render();
-setTimeout(seedDefaults, 500);
+
+// ── Colors ──
+async function loadColors() {
+  try {
+    const res = await fetch(`${API}/api/colors`);
+    const data = await res.json();
+
+    // Stats
+    const cats = [...new Set(data.colors.map(c => c.category))];
+    document.getElementById('color-stats').innerHTML = `
+      <div class="stat"><span class="stat-value">${data.count}</span><span class="stat-label">Colors</span></div>
+      <div class="stat"><span class="stat-value">${cats.length}</span><span class="stat-label">Categories</span></div>
+    `;
+
+    // Grid
+    document.getElementById('color-grid').innerHTML = data.colors.map(c => {
+      const specs = [
+        c.pantone && `Pantone ${c.pantone}`,
+        c.ral && `RAL ${c.ral}`,
+        c.cmyk,
+      ].filter(Boolean).join(' · ');
+
+      return `
+        <div class="color-card">
+          <div class="color-swatch" style="background:${c.hex}">
+            <span class="color-hex">${c.hex}</span>
+          </div>
+          <div class="color-info">
+            <div class="color-name">${c.name}</div>
+            ${specs ? `<div class="color-specs">${specs}</div>` : ''}
+            <span class="color-cat">${c.category}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (err) {
+    document.getElementById('color-grid').innerHTML = '<p style="color:var(--text-faint)">Failed to load colors from API.</p>';
+  }
+}
+
+// ── Typography ──
+async function loadTypography() {
+  try {
+    const res = await fetch(`${API}/api/typography`);
+    const data = await res.json();
+
+    document.getElementById('type-grid').innerHTML = data.typography.map(t => {
+      const weight = t.name.toLowerCase().includes('ultra') ? 100 :
+                     t.name.toLowerCase().includes('thin') ? 200 :
+                     t.name.toLowerCase().includes('light') ? 300 :
+                     t.name.toLowerCase().includes('bold') ? 700 : 400;
+      return `
+        <div class="type-card">
+          <div class="type-sample" style="font-weight:${weight}">${t.name}</div>
+          <div class="type-name">${t.name}</div>
+          <div class="type-meta">${t.usage || ''} ${t.weight_range ? '· ' + t.weight_range : ''} ${t.line_height ? '· Line height: ' + t.line_height : ''}</div>
+        </div>
+      `;
+    }).join('');
+  } catch (err) {
+    document.getElementById('type-grid').innerHTML = '<p style="color:var(--text-faint)">Failed to load typography from API.</p>';
+  }
+}
+
+// ── Values ──
+async function loadValues() {
+  try {
+    const res = await fetch(`${API}/api/values`);
+    const data = await res.json();
+
+    document.getElementById('values-grid').innerHTML = data.values.map(v => `
+      <div class="value-card">
+        <div class="value-de">${v.name_de || v.name || ''}</div>
+        <div class="value-fr">${v.name_fr || ''}</div>
+        <div class="value-desc">${v.description || v.description_de || ''}</div>
+      </div>
+    `).join('');
+  } catch (err) {
+    document.getElementById('values-grid').innerHTML = '<p style="color:var(--text-faint)">Failed to load values from API.</p>';
+  }
+}
+
+// ── Rules ──
+async function loadRules() {
+  try {
+    const res = await fetch(`${API}/api/rules`);
+    const data = await res.json();
+
+    document.getElementById('rules-grid').innerHTML = data.rules.map(r => `
+      <div class="rule-card">
+        <span class="rule-type ${r.rule_type}">${r.rule_type}</span>
+        <div class="rule-text">${escapeHtml(r.rule_text || r.content || '')}</div>
+        ${r.section_title ? `<div class="rule-section">${r.section_title}</div>` : ''}
+      </div>
+    `).join('');
+  } catch (err) {
+    document.getElementById('rules-grid').innerHTML = '<p style="color:var(--text-faint)">Failed to load rules from API.</p>';
+  }
+}
+
+// ── Init all ──
+loadColors();
+loadTypography();
+loadValues();
+loadRules();
+
+/* ═══════════════════════════════════════════════
+   SCROLL: HIDE INDICATOR
+   ═══════════════════════════════════════════════ */
+const scrollInd = document.getElementById('scroll-indicator');
+window.addEventListener('scroll', () => {
+  scrollInd.style.opacity = window.scrollY > 100 ? '0' : '1';
+  scrollInd.style.transition = 'opacity .3s';
+}, { passive: true });
 </script>
 </body>
 </html>

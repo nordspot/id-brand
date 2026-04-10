@@ -258,15 +258,20 @@
   .anno-col-left .anno-line{margin-left:auto;background:linear-gradient(to right,transparent,rgba(255,255,255,.15))}
   .anno-col-right .anno-line{background:linear-gradient(to right,rgba(255,255,255,.15),transparent)}
 
-  /* Persona image banner inside phone */
+  /* Persona visual banner inside phone */
   .sbb-persona-banner{
-    width:100%;height:120px;
-    background-size:cover;background-position:center;
-    position:relative;
+    width:100%;height:100px;
+    position:relative;overflow:hidden;
   }
   .sbb-persona-banner::after{
-    content:'';position:absolute;bottom:0;left:0;right:0;height:40px;
+    content:'';position:absolute;bottom:0;left:0;right:0;height:32px;
     background:linear-gradient(transparent,#fff);
+  }
+  .sbb-persona-banner .banner-label{
+    position:absolute;bottom:36px;left:16px;
+    font-size:11px;font-weight:700;color:rgba(255,255,255,.9);
+    text-transform:uppercase;letter-spacing:.1em;
+    text-shadow:0 1px 4px rgba(0,0,0,.3);
   }
 
   /* Phone */
@@ -796,7 +801,7 @@ const BILDMARKE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142 48" 
 const personas = [
   {
     id:'lena', name:'Lena, 22', icon:'user-group-medium', label:'Student, Lausanne',
-    bannerImg:'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=800&h=300&fit=crop',
+    banner:{bg:'linear-gradient(135deg,#2d327d 0%,#5b61a5 50%,#8b91d1 100%)',label:'Lausanne · EPFL · Halbtax'},
     vis:{cls:'vis-young',zone:'',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},
     lang:'fr', from:'Lausanne', to:'Zürich HB',
     info:'Trafic normal sur tout le réseau.',
@@ -823,7 +828,7 @@ const personas = [
   },
   {
     id:'thomas', name:'Thomas, 54', icon:'user-medium', label:'Executive, Bern',
-    bannerImg:null,
+    banner:null,
     vis:{cls:'vis-premium',zone:'',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},
     lang:'de', from:'Bern', to:'Zürich HB',
     info:'Aktuelle Betriebslage: Normalbetrieb.',
@@ -850,7 +855,7 @@ const personas = [
   },
   {
     id:'yuki', name:'Yuki, 31', icon:'globe-medium', label:'Tourist, Tokyo',
-    bannerImg:'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&h=300&fit=crop&crop=bottom',
+    banner:{bg:'linear-gradient(160deg,#1a6b4a 0%,#2d8f63 30%,#87ceeb 70%,#f0f8ff 100%)',label:'Swiss Alps · Jungfraujoch'},
     vis:{cls:'vis-discovery',zone:'scenic',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Swiss Travel Pass — unlimited travel'},
     lang:'en', from:'Zürich HB', to:'Interlaken Ost',
     info:'All lines operating normally.',
@@ -877,7 +882,7 @@ const personas = [
   },
   {
     id:'mueller', name:'Familie Müller', icon:'user-group-medium', label:'Family, Luzern',
-    bannerImg:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=300&fit=crop',
+    banner:{bg:'linear-gradient(135deg,#4a90d9 0%,#87ceeb 50%,#98d4a2 100%)',label:'Engelberg · Familienausflug'},
     vis:{cls:'vis-family',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:true,zoneText:'Ihr Familienausflug'},
     lang:'de', from:'Luzern', to:'Engelberg',
     info:'Aktuelle Betriebslage: Normalbetrieb.',
@@ -904,7 +909,7 @@ const personas = [
   },
   {
     id:'marco', name:'Marco, 28', icon:'smartphone-medium', label:'Tech, Zürich',
-    bannerImg:null,
+    banner:null,
     vis:{cls:'vis-dashboard',zone:'slim',heroCard:false,timeDisplay:'07:43',timeSub:'IR 75 → Zug · Gleis 5',stepIndicator:false,savingsBadge:false},
     lang:'de', from:'Zürich HB', to:'Zug',
     info:'Normalbetrieb.',
@@ -931,7 +936,7 @@ const personas = [
   },
   {
     id:'isabelle', name:'Isabelle, 67', icon:'heart-medium', label:'Retiree, Bellinzona',
-    bannerImg:'https://images.unsplash.com/photo-1573108037329-37aa135a142e?w=800&h=300&fit=crop',
+    banner:{bg:'linear-gradient(180deg,#e8d5b7 0%,#c9a96e 40%,#5a8f7b 100%)',label:'Lago Maggiore · Ticino'},
     vis:{cls:'vis-senior',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Buongiorno, Isabelle'},
     lang:'it', from:'Bellinzona', to:'Locarno',
     info:'Traffico regolare su tutta la rete.',
@@ -958,7 +963,7 @@ const personas = [
   },
   {
     id:'ahmed', name:'Ahmed, 35', icon:'translate-medium', label:'Expat, Geneva',
-    bannerImg:null,
+    banner:null,
     vis:{cls:'vis-onboard',zone:'',heroCard:true,timeDisplay:null,stepIndicator:true,savingsBadge:false},
     lang:'en', from:'Genève', to:'Lausanne',
     info:'All lines operating normally.',
@@ -985,7 +990,7 @@ const personas = [
   },
   {
     id:'sophie', name:'Sophie, 17', icon:'music-notes-medium', label:'Teenager, Biel',
-    bannerImg:null,
+    banner:{bg:'linear-gradient(135deg,#1a1a2e 0%,#16213e 40%,#0f3460 70%,#533483 100%)',label:'Bern · Nachtleben'},
     vis:{cls:'vis-evening',zone:'evening',heroCard:false,timeDisplay:'23:47',timeSub:'Dernier S3 → Biel/Bienne',stepIndicator:false,savingsBadge:false},
     lang:'fr', from:'Biel/Bienne', to:'Bern',
     info:'Trafic normal.',
@@ -1012,7 +1017,7 @@ const personas = [
   },
   {
     id:'reto', name:'Reto, 42', icon:'bicycle-medium', label:'Cyclist, Thun',
-    bannerImg:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&h=300&fit=crop',
+    banner:{bg:'linear-gradient(160deg,#2d6a4f 0%,#52b788 40%,#95d5b2 70%,#d8f3dc 100%)',label:'Thunersee · Berner Oberland'},
     vis:{cls:'vis-activity',zone:'tall',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'22°C · Berner Oberland · Velowetter'},
     lang:'de', from:'Thun', to:'Spiez',
     info:'Normalbetrieb. Veloplätze verfügbar.',
@@ -1039,7 +1044,7 @@ const personas = [
   },
   {
     id:'chen', name:'Chen Wei, 45', icon:'diamond-medium', label:'VIP, Davos',
-    bannerImg:null,
+    banner:{bg:'linear-gradient(135deg,#2c3e50 0%,#3d5a80 50%,#98c1d9 100%)',label:'Davos · First Class'},
     vis:{cls:'vis-premium',zone:'slim',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},
     lang:'en', from:'Zürich Flughafen', to:'Davos Platz',
     info:'All services on time.',
@@ -1066,7 +1071,7 @@ const personas = [
   },
   {
     id:'petra', name:'Petra, 38', icon:'piggy-bank-medium', label:'Commuter, Winterthur',
-    bannerImg:null,
+    banner:null,
     vis:{cls:'vis-compact',zone:'slim',heroCard:false,timeDisplay:'07:23',timeSub:'S12 → Zürich HB · Gleis 2',stepIndicator:false,savingsBadge:true},
     lang:'de', from:'Winterthur', to:'Zürich HB',
     info:'S12 fährt pünktlich.',
@@ -1093,7 +1098,7 @@ const personas = [
   },
   {
     id:'luigi', name:'Luigi, 72', icon:'clock-medium', label:'Pensioner, Lugano',
-    bannerImg:'https://images.unsplash.com/photo-1515488764276-beab7607c1e6?w=800&h=300&fit=crop',
+    banner:{bg:'linear-gradient(180deg,#d4a574 0%,#c19456 40%,#4a7c59 100%)',label:'Lugano · Lago · Gottardo'},
     vis:{cls:'vis-senior',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Buongiorno, Signor Luigi'},
     lang:'it', from:'Lugano', to:'Milano Centrale',
     info:'Traffico regolare.',
@@ -1168,8 +1173,8 @@ function render(p) {
     ? `<div class="step-indicator"><div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div></div>`
     : '';
 
-  const bannerEl = p.bannerImg
-    ? `<div class="sbb-persona-banner" style="background-image:url('${p.bannerImg}')"></div>`
+  const bannerEl = p.banner
+    ? `<div class="sbb-persona-banner" style="background:${p.banner.bg}"><span class="banner-label">${p.banner.label}</span></div>`
     : '';
 
   s.innerHTML = `

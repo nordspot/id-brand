@@ -31,8 +31,8 @@
     padding:14px 40px;display:flex;justify-content:space-between;align-items:center;
   }
   .nav-left{display:flex;align-items:center;gap:0}
-  .nav h1{font-size:18px;font-weight:300;letter-spacing:-.01em}
-  .nav h1 strong{color:var(--sbb-red);font-weight:700;font-size:22px}
+  .nav h1{font-size:28px;font-weight:300;letter-spacing:-.02em}
+  .nav h1 strong{color:var(--sbb-red);font-weight:700;font-size:34px}
   .nav-links{display:flex;gap:24px;align-items:center}
   .nav-links a{color:var(--sbb-granite);text-decoration:none;font-size:14px;font-weight:300;transition:color .2s}
   .nav-links a:hover{color:var(--sbb-black)}
@@ -41,47 +41,66 @@
 
   /* ═══ HERO ═══ */
   .hero{
-    padding:140px 40px 80px;
-    max-width:1100px;margin:0 auto;
+    padding:160px 60px 100px;
+    max-width:1200px;margin:0 auto;
   }
   .hero-eyebrow{
     font-size:13px;color:var(--sbb-granite);text-transform:uppercase;
-    letter-spacing:.18em;font-weight:400;margin-bottom:32px;
+    letter-spacing:.18em;font-weight:400;margin-bottom:40px;
+    opacity:0;transform:translateY(20px);animation:heroIn .8s .1s ease forwards;
   }
+  @keyframes heroIn{to{opacity:1;transform:translateY(0)}}
   .hero h2{
-    font-size:68px;font-weight:300;line-height:1.08;
-    letter-spacing:-.03em;margin-bottom:36px;max-width:850px;
+    font-size:clamp(48px,7vw,88px);font-weight:200;line-height:1.05;
+    letter-spacing:-.04em;margin-bottom:44px;max-width:950px;
+    opacity:0;transform:translateY(30px);animation:heroIn .8s .25s ease forwards;
   }
-  .hero h2 em{font-style:normal;color:var(--sbb-red);font-weight:300}
+  .hero h2 em{font-style:normal;color:var(--sbb-red);font-weight:200}
   .hero-sub{
-    font-size:21px;font-weight:300;color:var(--sbb-anthracite);
-    line-height:1.65;max-width:640px;margin-bottom:56px;
+    font-size:22px;font-weight:300;color:var(--sbb-anthracite);
+    line-height:1.65;max-width:680px;margin-bottom:64px;
+    opacity:0;transform:translateY(20px);animation:heroIn .8s .45s ease forwards;
   }
   .hero-meta{
-    display:flex;gap:48px;padding-top:28px;border-top:1px solid var(--sbb-cloud);
+    display:flex;gap:56px;padding-top:32px;border-top:1px solid var(--sbb-cloud);
+    opacity:0;animation:heroIn .8s .6s ease forwards;
   }
-  .hero-meta-item{font-size:14px;color:var(--sbb-granite);font-weight:300;line-height:1.5}
-  .hero-meta-item strong{color:var(--sbb-black);font-weight:400;display:block}
+  .hero-meta-item{font-size:15px;color:var(--sbb-granite);font-weight:300;line-height:1.5}
+  .hero-meta-item strong{color:var(--sbb-black);font-weight:400;display:block;font-size:16px;margin-bottom:2px}
   .hero-scroll{
-    margin-top:56px;display:flex;align-items:center;gap:10px;
+    margin-top:64px;display:flex;align-items:center;gap:10px;
     font-size:13px;color:var(--sbb-storm);font-weight:300;letter-spacing:.05em;
+    opacity:0;animation:heroIn .8s .75s ease forwards;
   }
-  .hero-scroll-line{width:28px;height:1px;background:var(--sbb-storm)}
+  .hero-scroll-line{width:40px;height:1px;background:var(--sbb-storm)}
+  .hero-scroll-arrow{
+    width:16px;height:16px;border-right:1px solid var(--sbb-storm);border-bottom:1px solid var(--sbb-storm);
+    transform:rotate(45deg);animation:scrollBounce 2s infinite;
+  }
+  @keyframes scrollBounce{0%,100%{transform:rotate(45deg) translate(0,0)}50%{transform:rotate(45deg) translate(3px,3px)}}
+
+  /* ═══ SCROLL REVEAL ═══ */
+  .reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+  .reveal-delay-1{transition-delay:.1s}
+  .reveal-delay-2{transition-delay:.2s}
+  .reveal-delay-3{transition-delay:.3s}
+  .reveal-delay-4{transition-delay:.4s}
 
   /* ═══ SECTION COMMON ═══ */
-  section{padding:100px 40px}
-  .section-inner{max-width:1100px;margin:0 auto}
+  section{padding:120px 60px}
+  .section-inner{max-width:1200px;margin:0 auto}
   .section-eyebrow{
     font-size:12px;color:var(--sbb-red);text-transform:uppercase;
     letter-spacing:.2em;font-weight:700;margin-bottom:16px;
   }
   .section-title{
-    font-size:42px;font-weight:300;line-height:1.15;
-    letter-spacing:-.02em;margin-bottom:20px;
+    font-size:clamp(32px,4.5vw,50px);font-weight:200;line-height:1.12;
+    letter-spacing:-.03em;margin-bottom:24px;
   }
   .section-lead{
     font-size:20px;font-weight:300;color:var(--sbb-anthracite);
-    line-height:1.65;max-width:700px;margin-bottom:48px;
+    line-height:1.65;max-width:720px;margin-bottom:56px;
   }
 
   /* ═══ IDEA SECTION ═══ */
@@ -167,7 +186,7 @@
   .arch-l4 .arch-layer-num{background:var(--sbb-black)}
 
   /* ═══ DEMO SECTION ═══ */
-  .demo-section{background:var(--sbb-black);color:#fff;padding:100px 40px 120px}
+  .demo-section{background:var(--sbb-black);color:#fff;padding:120px 40px 140px}
   .demo-section .section-eyebrow{color:var(--sbb-red)}
   .demo-section .section-title{color:#fff}
   .demo-section .section-lead{color:var(--sbb-storm)}
@@ -193,13 +212,13 @@
   /* Demo layout: annotations — phone — annotations */
   .demo-stage{
     display:flex;align-items:flex-start;justify-content:center;
-    gap:0;position:relative;margin-top:20px;
-    min-height:820px;
+    gap:40px;position:relative;margin-top:20px;
+    min-height:860px;
   }
   .anno-col{
-    width:280px;flex-shrink:0;
+    width:300px;flex-shrink:0;
     display:flex;flex-direction:column;
-    padding-top:20px;
+    padding-top:60px;
   }
   .anno-col-left{align-items:flex-end;text-align:right}
   .anno-col-right{align-items:flex-start;text-align:left}
@@ -229,15 +248,26 @@
   .anno-tag.layout{background:rgba(255,255,255,.1);color:var(--sbb-storm)}
 
   .anno-text{
-    font-size:14px;font-weight:300;color:#ccc;line-height:1.5;
-    max-width:240px;
+    font-size:14px;font-weight:300;color:#bbb;line-height:1.55;
+    max-width:260px;
   }
   .anno-col-left .anno-text{margin-left:auto}
   .anno-line{
-    width:40px;height:1px;margin:8px 0;
+    width:48px;height:1px;margin:8px 0;
   }
-  .anno-col-left .anno-line{margin-left:auto;background:linear-gradient(to right,transparent,#555)}
-  .anno-col-right .anno-line{background:linear-gradient(to right,#555,transparent)}
+  .anno-col-left .anno-line{margin-left:auto;background:linear-gradient(to right,transparent,rgba(255,255,255,.15))}
+  .anno-col-right .anno-line{background:linear-gradient(to right,rgba(255,255,255,.15),transparent)}
+
+  /* Persona image banner inside phone */
+  .sbb-persona-banner{
+    width:100%;height:120px;
+    background-size:cover;background-position:center;
+    position:relative;
+  }
+  .sbb-persona-banner::after{
+    content:'';position:absolute;bottom:0;left:0;right:0;height:40px;
+    background:linear-gradient(transparent,#fff);
+  }
 
   /* Phone */
   .demo-phone-wrap{
@@ -484,9 +514,13 @@
   .footer-right{font-size:13px;font-weight:300;color:#555}
 
   /* ═══ RESPONSIVE ═══ */
+  @media(max-width:1300px){
+    .anno-col{width:240px}
+    .demo-stage{gap:24px}
+  }
   @media(max-width:1100px){
     .anno-col{display:none}
-    .demo-stage{justify-content:center}
+    .demo-stage{justify-content:center;gap:0}
   }
   @media(max-width:900px){
     .hero h2{font-size:48px}
@@ -496,6 +530,8 @@
     .typo-seventh{flex-direction:column;gap:24px}
     .landscape-grid{grid-template-columns:1fr}
     .hero-meta{flex-direction:column;gap:16px}
+    section{padding:80px 32px}
+    .hero{padding:140px 32px 80px}
   }
   @media(max-width:600px){
     .hero h2{font-size:36px}
@@ -505,6 +541,8 @@
     .phone-screen{max-height:684px;min-height:684px}
     .typo-grid{grid-template-columns:1fr}
     .next-phases{flex-direction:column}
+    .nav h1{font-size:22px}
+    .nav h1 strong{font-size:26px}
   }
 </style>
 </head>
@@ -528,7 +566,7 @@
 <!-- ═══ HERO ═══ -->
 <section class="hero" id="top">
   <div class="hero-eyebrow">A concept by Nord.spot &times; Brigade Studio</div>
-  <h2>When the brand becomes <em>the agent.</em></h2>
+  <h2>When the brand<br>becomes <em>the&nbsp;agent.</em></h2>
   <p class="hero-sub">
     A .brand file is not a document. It is a living intelligence &mdash; an MCP agent that embodies a brand's identity, speaks to consumers directly, adapts to every audience, and learns from every interaction.
   </p>
@@ -540,19 +578,20 @@
   <div class="hero-scroll">
     <div class="hero-scroll-line"></div>
     Scroll to explore
+    <div class="hero-scroll-arrow"></div>
   </div>
 </section>
 
 <!-- ═══ THE IDEA ═══ -->
 <section id="idea">
   <div class="section-inner">
-    <div class="section-eyebrow">The shift</div>
-    <h3 class="section-title">Brand guidelines can't talk to AI agents.</h3>
-    <p class="section-lead">
-      AI agents are becoming the primary interface between consumers and brands. A 200-page PDF doesn't negotiate with a shopping assistant. A Frontify library doesn't adapt its tone for a 22-year-old in Lausanne versus a 55-year-old in Bern. The tools we have manage brand assets. What we need is something that embodies brand intelligence.
+    <div class="section-eyebrow reveal">The shift</div>
+    <h3 class="section-title reveal reveal-delay-1">Brand guidelines can&rsquo;t talk<br>to AI&nbsp;agents.</h3>
+    <p class="section-lead reveal reveal-delay-2">
+      AI agents are becoming the primary interface between consumers and brands. A 200-page PDF doesn&rsquo;t negotiate with a shopping assistant. A Frontify library doesn&rsquo;t adapt its tone for a 22-year-old in Lausanne versus a 55-year-old in Bern. The tools we have manage brand assets. What we need is something that embodies brand intelligence.
     </p>
 
-    <div class="idea-grid">
+    <div class="idea-grid reveal reveal-delay-3">
       <div class="idea-card problem">
         <h4>Today: static guidelines</h4>
         <p>PDFs, digital asset platforms, compliance checklists. One-directional. The brand transmits, the consumer receives. AI agents scrape and approximate. No understanding, no adaptation, no conversation.</p>
@@ -563,7 +602,7 @@
       </div>
     </div>
 
-    <div class="idea-quote">
+    <div class="idea-quote reveal">
       <blockquote>&laquo; Tu poc la marque &mdash; elle te poc back. &raquo;</blockquote>
       <cite>Nicolas Paupe, Brigade Studio &mdash; You poke the brand, it pokes you back.</cite>
     </div>
@@ -573,13 +612,13 @@
 <!-- ═══ TYPOLOGIES ═══ -->
 <section class="typo-section" id="typologies">
   <div class="section-inner">
-    <div class="section-eyebrow">Theoretical foundation</div>
-    <h3 class="section-title">The seventh typology of dynamic identity.</h3>
+    <div class="section-eyebrow reveal">Theoretical foundation</div>
+    <h3 class="section-title reveal reveal-delay-1">The seventh typology<br>of dynamic&nbsp;identity.</h3>
     <p class="section-lead">
       Building on Irene van Nes' foundational work in <em>Dynamic Identities</em>, six typologies describe brand systems that change. None of them understand <em>why</em> they change. None can explain their own rules. None talk back.
     </p>
 
-    <div class="typo-grid">
+    <div class="typo-grid reveal reveal-delay-2">
       <div class="typo-card"><div class="typo-num">01</div><div class="typo-name">Container</div><div class="typo-desc">Fixed shape, variable content. The logo as frame. MTV, AOL.</div></div>
       <div class="typo-card"><div class="typo-num">02</div><div class="typo-name">Transformative</div><div class="typo-desc">The logo itself mutates. Google Doodles.</div></div>
       <div class="typo-card"><div class="typo-num">03</div><div class="typo-name">Generative</div><div class="typo-desc">Algorithmically created from parameters. Nordkyn, Casa da Música.</div></div>
@@ -588,7 +627,7 @@
       <div class="typo-card"><div class="typo-num">06</div><div class="typo-name">Evolutive</div><div class="typo-desc">Changes over time, lives and ages. Seed Media, EDP.</div></div>
     </div>
 
-    <div class="typo-seventh">
+    <div class="typo-seventh reveal">
       <div class="typo-seventh-num">07</div>
       <div>
         <h4>Conscious Identity</h4>
@@ -601,13 +640,13 @@
 <!-- ═══ ARCHITECTURE ═══ -->
 <section id="architecture">
   <div class="section-inner">
-    <div class="section-eyebrow">Strategic architecture &mdash; Nicolas Paupe</div>
-    <h3 class="section-title">Four layers of a living brand.</h3>
+    <div class="section-eyebrow reveal">Strategic architecture &mdash; Nicolas Paupe</div>
+    <h3 class="section-title reveal reveal-delay-1">Four layers of<br>a living&nbsp;brand.</h3>
     <p class="section-lead">
       An operating system for brands that think. Not rigidity &mdash; a spectrum of creative freedom with hard edges.
     </p>
 
-    <div class="arch-layers">
+    <div class="arch-layers reveal reveal-delay-2">
       <div class="arch-layer arch-l1">
         <div class="arch-layer-num">1</div>
         <div class="arch-layer-body">
@@ -643,9 +682,9 @@
 <!-- ═══ LIVE DEMO ═══ -->
 <section class="demo-section" id="demo">
   <div class="section-inner">
-    <div class="section-eyebrow">Live demo &mdash; SBB/CFF/FFS as test case</div>
-    <h3 class="section-title">One brand, twelve people.</h3>
-    <p class="section-lead">Same brand rules, radically different experience. Select a persona &mdash; watch the .brand agent adapt language, tone, content, and product positioning in real time. The annotations reveal which brand decisions are firing.</p>
+    <div class="section-eyebrow reveal">Live demo &mdash; SBB/CFF/FFS as test case</div>
+    <h3 class="section-title reveal reveal-delay-1">One brand,<br>twelve&nbsp;people.</h3>
+    <p class="section-lead reveal reveal-delay-2">Same brand rules, radically different experience. Select a persona &mdash; watch the .brand agent adapt language, tone, content, and visual expression in real time.</p>
 
     <div class="persona-strip" id="persona-strip"></div>
 
@@ -672,11 +711,11 @@
 <!-- ═══ COMPETITIVE LANDSCAPE ═══ -->
 <section id="landscape">
   <div class="section-inner">
-    <div class="section-eyebrow">Competitive landscape</div>
-    <h3 class="section-title">Nobody is building what we're building.</h3>
+    <div class="section-eyebrow reveal">Competitive landscape</div>
+    <h3 class="section-title reveal reveal-delay-1">Nobody is building<br>what we&rsquo;re&nbsp;building.</h3>
     <p class="section-lead">The market offers platforms. We're proposing a protocol.</p>
 
-    <div class="landscape-grid">
+    <div class="landscape-grid reveal reveal-delay-2">
       <div class="landscape-card">
         <h4>Frontify, Bynder, Brandpad</h4>
         <div class="lc-type">Digital asset management</div>
@@ -704,11 +743,11 @@
 <!-- ═══ WHAT'S NEXT ═══ -->
 <section id="next" style="background:var(--sbb-milk)">
   <div class="section-inner">
-    <div class="section-eyebrow">Roadmap</div>
-    <h3 class="section-title">What comes next.</h3>
+    <div class="section-eyebrow reveal">Roadmap</div>
+    <h3 class="section-title reveal reveal-delay-1">What comes next.</h3>
     <p class="section-lead">From proof of concept to ecosystem.</p>
 
-    <div class="next-phases">
+    <div class="next-phases reveal reveal-delay-2">
       <div class="next-phase active-phase">
         <h4>Phase 1 &mdash; Now</h4>
         <p>Brand knowledge API. Structured data, semantic search, natural language queries. SBB proof of concept live on Cloudflare edge.</p>
@@ -757,6 +796,7 @@ const BILDMARKE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142 48" 
 const personas = [
   {
     id:'lena', name:'Lena, 22', icon:'user-group-medium', label:'Student, Lausanne',
+    bannerImg:'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=800&h=300&fit=crop',
     vis:{cls:'vis-young',zone:'',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},
     lang:'fr', from:'Lausanne', to:'Zürich HB',
     info:'Trafic normal sur tout le réseau.',
@@ -783,6 +823,7 @@ const personas = [
   },
   {
     id:'thomas', name:'Thomas, 54', icon:'user-medium', label:'Executive, Bern',
+    bannerImg:null,
     vis:{cls:'vis-premium',zone:'',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},
     lang:'de', from:'Bern', to:'Zürich HB',
     info:'Aktuelle Betriebslage: Normalbetrieb.',
@@ -809,6 +850,7 @@ const personas = [
   },
   {
     id:'yuki', name:'Yuki, 31', icon:'globe-medium', label:'Tourist, Tokyo',
+    bannerImg:'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&h=300&fit=crop&crop=bottom',
     vis:{cls:'vis-discovery',zone:'scenic',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Swiss Travel Pass — unlimited travel'},
     lang:'en', from:'Zürich HB', to:'Interlaken Ost',
     info:'All lines operating normally.',
@@ -835,6 +877,7 @@ const personas = [
   },
   {
     id:'mueller', name:'Familie Müller', icon:'user-group-medium', label:'Family, Luzern',
+    bannerImg:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=300&fit=crop',
     vis:{cls:'vis-family',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:true,zoneText:'Ihr Familienausflug'},
     lang:'de', from:'Luzern', to:'Engelberg',
     info:'Aktuelle Betriebslage: Normalbetrieb.',
@@ -861,6 +904,7 @@ const personas = [
   },
   {
     id:'marco', name:'Marco, 28', icon:'smartphone-medium', label:'Tech, Zürich',
+    bannerImg:null,
     vis:{cls:'vis-dashboard',zone:'slim',heroCard:false,timeDisplay:'07:43',timeSub:'IR 75 → Zug · Gleis 5',stepIndicator:false,savingsBadge:false},
     lang:'de', from:'Zürich HB', to:'Zug',
     info:'Normalbetrieb.',
@@ -887,6 +931,7 @@ const personas = [
   },
   {
     id:'isabelle', name:'Isabelle, 67', icon:'heart-medium', label:'Retiree, Bellinzona',
+    bannerImg:'https://images.unsplash.com/photo-1573108037329-37aa135a142e?w=800&h=300&fit=crop',
     vis:{cls:'vis-senior',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Buongiorno, Isabelle'},
     lang:'it', from:'Bellinzona', to:'Locarno',
     info:'Traffico regolare su tutta la rete.',
@@ -913,6 +958,7 @@ const personas = [
   },
   {
     id:'ahmed', name:'Ahmed, 35', icon:'translate-medium', label:'Expat, Geneva',
+    bannerImg:null,
     vis:{cls:'vis-onboard',zone:'',heroCard:true,timeDisplay:null,stepIndicator:true,savingsBadge:false},
     lang:'en', from:'Genève', to:'Lausanne',
     info:'All lines operating normally.',
@@ -939,6 +985,7 @@ const personas = [
   },
   {
     id:'sophie', name:'Sophie, 17', icon:'music-notes-medium', label:'Teenager, Biel',
+    bannerImg:null,
     vis:{cls:'vis-evening',zone:'evening',heroCard:false,timeDisplay:'23:47',timeSub:'Dernier S3 → Biel/Bienne',stepIndicator:false,savingsBadge:false},
     lang:'fr', from:'Biel/Bienne', to:'Bern',
     info:'Trafic normal.',
@@ -965,6 +1012,7 @@ const personas = [
   },
   {
     id:'reto', name:'Reto, 42', icon:'bicycle-medium', label:'Cyclist, Thun',
+    bannerImg:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&h=300&fit=crop',
     vis:{cls:'vis-activity',zone:'tall',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'22°C · Berner Oberland · Velowetter'},
     lang:'de', from:'Thun', to:'Spiez',
     info:'Normalbetrieb. Veloplätze verfügbar.',
@@ -991,6 +1039,7 @@ const personas = [
   },
   {
     id:'chen', name:'Chen Wei, 45', icon:'diamond-medium', label:'VIP, Davos',
+    bannerImg:null,
     vis:{cls:'vis-premium',zone:'slim',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},
     lang:'en', from:'Zürich Flughafen', to:'Davos Platz',
     info:'All services on time.',
@@ -1017,6 +1066,7 @@ const personas = [
   },
   {
     id:'petra', name:'Petra, 38', icon:'piggy-bank-medium', label:'Commuter, Winterthur',
+    bannerImg:null,
     vis:{cls:'vis-compact',zone:'slim',heroCard:false,timeDisplay:'07:23',timeSub:'S12 → Zürich HB · Gleis 2',stepIndicator:false,savingsBadge:true},
     lang:'de', from:'Winterthur', to:'Zürich HB',
     info:'S12 fährt pünktlich.',
@@ -1043,6 +1093,7 @@ const personas = [
   },
   {
     id:'luigi', name:'Luigi, 72', icon:'clock-medium', label:'Pensioner, Lugano',
+    bannerImg:'https://images.unsplash.com/photo-1515488764276-beab7607c1e6?w=800&h=300&fit=crop',
     vis:{cls:'vis-senior',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Buongiorno, Signor Luigi'},
     lang:'it', from:'Lugano', to:'Milano Centrale',
     info:'Traffico regolare.',
@@ -1117,6 +1168,10 @@ function render(p) {
     ? `<div class="step-indicator"><div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div></div>`
     : '';
 
+  const bannerEl = p.bannerImg
+    ? `<div class="sbb-persona-banner" style="background-image:url('${p.bannerImg}')"></div>`
+    : '';
+
   s.innerHTML = `
     <div class="sbb-status"></div>
     <div class="sbb-header">
@@ -1128,6 +1183,7 @@ function render(p) {
       <div class="sbb-header-right">${BILDMARKE}</div>
     </div>
 
+    ${bannerEl}
     <div class="sbb-red-zone ${zoneCls}">${zoneText}</div>
 
     <div class="sbb-search-card" style="position:relative">
@@ -1203,6 +1259,18 @@ function render(p) {
 
 // Init
 render(personas[0]);
+
+/* ═══ SCROLL REVEAL OBSERVER ═══ */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 </script>
 </body>
 </html>

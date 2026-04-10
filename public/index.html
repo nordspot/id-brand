@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>.brand — SBB/CFF/FFS Living Identity Agent</title>
+<title>.brand — When the Brand Becomes the Agent</title>
 <style>
   @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-UltraLight.woff2') format('woff2');font-weight:100}
   @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Thin.woff2') format('woff2');font-weight:200}
@@ -11,142 +11,297 @@
   @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Roman.woff2') format('woff2');font-weight:400}
   @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Bold.woff2') format('woff2');font-weight:700}
 
-  :root{--sbb-red:#eb0000;--sbb-red-dark:#c40000;--sbb-black:#000;--sbb-anthracite:#4c4c4c;--sbb-blue:#2d327d;--sbb-white:#fff;--sbb-milk:#f6f6f6;--sbb-cloud:#e5e5e5;--sbb-granite:#686868;--sbb-iron:#767676;--sbb-storm:#a8a8a8}
+  :root{
+    --sbb-red:#eb0000;--sbb-red-dark:#c40000;--sbb-black:#000;
+    --sbb-anthracite:#4c4c4c;--sbb-blue:#2d327d;--sbb-white:#fff;
+    --sbb-milk:#f6f6f6;--sbb-cloud:#e5e5e5;--sbb-granite:#686868;
+    --sbb-iron:#767676;--sbb-storm:#a8a8a8;
+  }
 
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{font-family:'SBBWeb','Helvetica Neue',Helvetica,Arial,sans-serif;background:#fff;color:var(--sbb-black);-webkit-font-smoothing:antialiased;overflow-x:hidden}
   ::selection{background:var(--sbb-red);color:#fff}
 
-  /* ═══ OUTER FRAME ═══ */
-  .frame-nav{
+  /* ═══ NAV ═══ */
+  .nav{
     position:fixed;top:0;left:0;right:0;z-index:300;
-    background:var(--sbb-black);color:#fff;
-    padding:12px 24px;display:flex;justify-content:space-between;align-items:center;
+    background:rgba(255,255,255,.92);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--sbb-cloud);
+    padding:14px 40px;display:flex;justify-content:space-between;align-items:center;
   }
-  .frame-nav .fn-left{display:flex;align-items:center;gap:10px}
-  .frame-nav h1{font-size:14px;font-weight:300;letter-spacing:.02em}
-  .frame-nav h1 strong{color:var(--sbb-red);font-weight:700}
-  .frame-nav .fn-links{display:flex;gap:16px;align-items:center}
-  .frame-nav .fn-links a{color:var(--sbb-storm);text-decoration:none;font-size:11px;font-weight:300;transition:color .2s}
-  .frame-nav .fn-links a:hover{color:#fff}
-  .fn-dot{width:6px;height:6px;border-radius:50%;background:#10b981;animation:lp 2s infinite}
-  @keyframes lp{0%,100%{opacity:1}50%{opacity:.4}}
+  .nav-left{display:flex;align-items:center;gap:12px}
+  .nav-logo{display:flex;align-items:center;gap:10px}
+  .nav h1{font-size:16px;font-weight:300;letter-spacing:.01em}
+  .nav h1 strong{color:var(--sbb-red);font-weight:700}
+  .nav-links{display:flex;gap:24px;align-items:center}
+  .nav-links a{color:var(--sbb-granite);text-decoration:none;font-size:14px;font-weight:300;transition:color .2s}
+  .nav-links a:hover{color:var(--sbb-black)}
+  .nav-dot{width:7px;height:7px;border-radius:50%;background:#10b981;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-  /* ═══ MAIN LAYOUT ═══ */
-  .main{padding-top:44px;display:flex;min-height:100vh}
-
-  /* ═══ LEFT PANEL ═══ */
-  .panel{
-    width:380px;min-width:380px;
-    background:var(--sbb-milk);border-right:1px solid var(--sbb-cloud);
-    height:calc(100vh - 44px);position:sticky;top:44px;
-    display:flex;flex-direction:column;overflow:hidden;
+  /* ═══ HERO ═══ */
+  .hero{
+    padding:160px 40px 100px;
+    max-width:1100px;margin:0 auto;
   }
-  .panel-header{padding:24px 24px 16px;border-bottom:1px solid var(--sbb-cloud)}
-  .panel-header .ph-label{font-size:10px;color:var(--sbb-red);text-transform:uppercase;letter-spacing:.15em;font-weight:700;margin-bottom:4px}
-  .panel-header h2{font-size:22px;font-weight:300;line-height:1.2}
-  .panel-header p{font-size:13px;color:var(--sbb-granite);font-weight:300;line-height:1.5;margin-top:6px}
-
-  .persona-list{flex:1;overflow-y:auto;padding:8px}
-  .persona-list::-webkit-scrollbar{width:3px}
-  .persona-list::-webkit-scrollbar-thumb{background:var(--sbb-cloud);border-radius:2px}
-
-  .p-btn{
-    width:100%;display:flex;align-items:center;gap:12px;
-    padding:10px 14px;border-radius:8px;border:1px solid transparent;
-    background:transparent;cursor:pointer;font-family:inherit;text-align:left;
-    transition:all .15s;
+  .hero-eyebrow{
+    font-size:13px;color:var(--sbb-red);text-transform:uppercase;
+    letter-spacing:.2em;font-weight:700;margin-bottom:24px;
   }
-  .p-btn:hover{background:#fff;border-color:var(--sbb-cloud)}
-  .p-btn.active{background:#fff;border-color:var(--sbb-red);box-shadow:0 0 0 1px var(--sbb-red)}
-  .p-avatar{
-    width:36px;height:36px;border-radius:50%;
-    background:var(--sbb-cloud);
-    display:flex;align-items:center;justify-content:center;flex-shrink:0;
-    overflow:hidden;
+  .hero h2{
+    font-size:72px;font-weight:300;line-height:1.05;
+    letter-spacing:-.03em;margin-bottom:32px;max-width:900px;
   }
-  .p-avatar img{width:20px;height:20px;opacity:.6}
-  .p-btn.active .p-avatar{background:var(--sbb-red)}
-  .p-btn.active .p-avatar img{filter:brightness(0) invert(1);opacity:1}
-  .p-name{font-size:13px;font-weight:700;color:var(--sbb-black)}
-  .p-meta{font-size:11px;color:var(--sbb-granite);font-weight:300}
-
-  /* ═══ REASONING PANEL ═══ */
-  .reasoning{
-    border-top:1px solid var(--sbb-cloud);
-    padding:16px 24px;background:#fff;
-    max-height:220px;overflow-y:auto;
+  .hero h2 em{font-style:normal;color:var(--sbb-red);font-weight:300}
+  .hero-sub{
+    font-size:22px;font-weight:300;color:var(--sbb-anthracite);
+    line-height:1.6;max-width:680px;margin-bottom:48px;
   }
-  .reasoning h4{font-size:10px;color:var(--sbb-red);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:8px}
-  .reasoning p{font-size:12px;color:var(--sbb-anthracite);font-weight:300;line-height:1.65}
+  .hero-meta{
+    display:flex;gap:40px;padding-top:32px;border-top:1px solid var(--sbb-cloud);
+  }
+  .hero-meta-item{font-size:14px;color:var(--sbb-granite);font-weight:300}
+  .hero-meta-item strong{color:var(--sbb-black);font-weight:400}
+  .hero-scroll{
+    margin-top:60px;display:flex;align-items:center;gap:10px;
+    font-size:14px;color:var(--sbb-storm);font-weight:300;
+  }
+  .hero-scroll-line{width:24px;height:1px;background:var(--sbb-storm)}
 
-  /* ═══ CENTER: PHONE ═══ */
-  .center{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:40px 24px;background:#f0f0f0;min-height:calc(100vh - 44px)}
+  /* ═══ SECTION COMMON ═══ */
+  section{padding:100px 40px}
+  .section-inner{max-width:1100px;margin:0 auto}
+  .section-eyebrow{
+    font-size:12px;color:var(--sbb-red);text-transform:uppercase;
+    letter-spacing:.2em;font-weight:700;margin-bottom:16px;
+  }
+  .section-title{
+    font-size:42px;font-weight:300;line-height:1.15;
+    letter-spacing:-.02em;margin-bottom:20px;
+  }
+  .section-lead{
+    font-size:20px;font-weight:300;color:var(--sbb-anthracite);
+    line-height:1.65;max-width:700px;margin-bottom:48px;
+  }
 
+  /* ═══ IDEA SECTION ═══ */
+  .idea-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:60px;
+    margin-top:48px;
+  }
+  .idea-card{
+    padding:36px;border:1px solid var(--sbb-cloud);border-radius:12px;
+  }
+  .idea-card.problem{background:var(--sbb-milk)}
+  .idea-card.solution{background:#fff;border-color:var(--sbb-red);border-width:2px}
+  .idea-card h4{
+    font-size:13px;text-transform:uppercase;letter-spacing:.15em;
+    font-weight:700;margin-bottom:16px;
+  }
+  .idea-card.problem h4{color:var(--sbb-granite)}
+  .idea-card.solution h4{color:var(--sbb-red)}
+  .idea-card p{font-size:17px;font-weight:300;line-height:1.7;color:var(--sbb-anthracite)}
+  .idea-quote{
+    margin-top:60px;padding:40px 0;border-top:1px solid var(--sbb-cloud);
+    text-align:center;
+  }
+  .idea-quote blockquote{
+    font-size:32px;font-weight:300;font-style:italic;
+    color:var(--sbb-black);letter-spacing:-.01em;
+  }
+  .idea-quote cite{
+    display:block;margin-top:16px;font-size:15px;
+    font-weight:300;color:var(--sbb-granite);font-style:normal;
+  }
+
+  /* ═══ TYPOLOGIES ═══ */
+  .typo-section{background:var(--sbb-milk)}
+  .typo-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+    margin-bottom:40px;
+  }
+  .typo-card{
+    padding:28px;background:#fff;border-radius:10px;
+    border:1px solid var(--sbb-cloud);transition:all .2s;
+  }
+  .typo-card:hover{border-color:var(--sbb-storm)}
+  .typo-num{
+    font-size:13px;font-weight:700;color:var(--sbb-storm);margin-bottom:8px;
+  }
+  .typo-name{font-size:18px;font-weight:400;margin-bottom:6px}
+  .typo-desc{font-size:15px;font-weight:300;color:var(--sbb-granite);line-height:1.55}
+  .typo-seventh{
+    margin-top:40px;padding:48px;
+    background:var(--sbb-black);color:#fff;border-radius:12px;
+    display:flex;gap:48px;align-items:center;
+  }
+  .typo-seventh-num{
+    font-size:80px;font-weight:100;color:var(--sbb-red);
+    line-height:1;flex-shrink:0;
+  }
+  .typo-seventh h4{font-size:28px;font-weight:300;margin-bottom:12px}
+  .typo-seventh p{font-size:17px;font-weight:300;color:var(--sbb-storm);line-height:1.65}
+
+  /* ═══ ARCHITECTURE ═══ */
+  .arch-layers{display:flex;flex-direction:column;gap:2px;margin-top:48px}
+  .arch-layer{
+    display:flex;align-items:stretch;
+    border-radius:10px;overflow:hidden;
+    transition:all .2s;
+  }
+  .arch-layer:hover{transform:translateX(4px)}
+  .arch-layer-num{
+    width:80px;min-height:100px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:28px;font-weight:100;color:#fff;flex-shrink:0;
+  }
+  .arch-layer-body{
+    flex:1;padding:28px 32px;
+    background:var(--sbb-milk);
+  }
+  .arch-layer-body h4{font-size:19px;font-weight:400;margin-bottom:8px}
+  .arch-layer-body p{font-size:16px;font-weight:300;color:var(--sbb-anthracite);line-height:1.6}
+  .arch-l1 .arch-layer-num{background:var(--sbb-red)}
+  .arch-l2 .arch-layer-num{background:var(--sbb-blue)}
+  .arch-l3 .arch-layer-num{background:var(--sbb-anthracite)}
+  .arch-l4 .arch-layer-num{background:var(--sbb-black)}
+
+  /* ═══ DEMO SECTION ═══ */
+  .demo-section{background:var(--sbb-black);color:#fff;padding:100px 40px 120px}
+  .demo-section .section-eyebrow{color:var(--sbb-red)}
+  .demo-section .section-title{color:#fff}
+  .demo-section .section-lead{color:var(--sbb-storm)}
+
+  .persona-strip{
+    display:flex;gap:8px;overflow-x:auto;
+    padding:8px 0 32px;margin-bottom:16px;
+  }
+  .persona-strip::-webkit-scrollbar{height:0}
+  .p-chip{
+    flex-shrink:0;display:flex;align-items:center;gap:10px;
+    padding:10px 18px;border-radius:40px;
+    border:1px solid #333;background:transparent;
+    color:var(--sbb-storm);cursor:pointer;
+    font-family:inherit;font-size:15px;font-weight:300;
+    transition:all .2s;white-space:nowrap;
+  }
+  .p-chip:hover{border-color:#555;color:#fff}
+  .p-chip.active{border-color:var(--sbb-red);background:var(--sbb-red);color:#fff;font-weight:400}
+  .p-chip-icon{width:24px;height:24px;opacity:.5;filter:invert(1)}
+  .p-chip.active .p-chip-icon{opacity:1}
+
+  /* Demo layout: annotations — phone — annotations */
+  .demo-stage{
+    display:flex;align-items:flex-start;justify-content:center;
+    gap:0;position:relative;margin-top:20px;
+    min-height:820px;
+  }
+  .anno-col{
+    width:280px;flex-shrink:0;
+    display:flex;flex-direction:column;
+    padding-top:20px;
+  }
+  .anno-col-left{align-items:flex-end;text-align:right}
+  .anno-col-right{align-items:flex-start;text-align:left}
+
+  .anno-item{
+    position:relative;
+    margin-bottom:24px;
+    opacity:0;transform:translateY(8px);
+    animation:annoIn .4s ease forwards;
+  }
+  @keyframes annoIn{to{opacity:1;transform:translateY(0)}}
+  .anno-item:nth-child(1){animation-delay:.1s}
+  .anno-item:nth-child(2){animation-delay:.25s}
+  .anno-item:nth-child(3){animation-delay:.4s}
+  .anno-item:nth-child(4){animation-delay:.55s}
+
+  .anno-tag{
+    display:inline-block;font-size:10px;font-weight:700;
+    text-transform:uppercase;letter-spacing:.1em;
+    padding:3px 8px;border-radius:3px;margin-bottom:6px;
+  }
+  .anno-tag.color{background:rgba(235,0,0,.15);color:var(--sbb-red)}
+  .anno-tag.typo{background:rgba(45,50,125,.2);color:#7b8aff}
+  .anno-tag.tone{background:rgba(16,185,129,.15);color:#34d399}
+  .anno-tag.content{background:rgba(251,191,36,.15);color:#fbbf24}
+  .anno-tag.product{background:rgba(168,85,247,.15);color:#c084fc}
+  .anno-tag.layout{background:rgba(255,255,255,.1);color:var(--sbb-storm)}
+
+  .anno-text{
+    font-size:14px;font-weight:300;color:#ccc;line-height:1.5;
+    max-width:240px;
+  }
+  .anno-col-left .anno-text{margin-left:auto}
+  .anno-line{
+    width:40px;height:1px;margin:8px 0;
+  }
+  .anno-col-left .anno-line{margin-left:auto;background:linear-gradient(to right,transparent,#555)}
+  .anno-col-right .anno-line{background:linear-gradient(to right,#555,transparent)}
+
+  /* Phone */
+  .demo-phone-wrap{
+    flex-shrink:0;position:relative;z-index:2;
+  }
   .phone{
-    width:390px;min-height:760px;
-    border-radius:44px;border:8px solid #1a1a1a;
+    width:375px;min-height:780px;
+    border-radius:44px;border:8px solid #222;
     background:#fff;overflow:hidden;position:relative;
-    box-shadow:0 24px 80px rgba(0,0,0,.18),inset 0 0 0 2px #333;
+    box-shadow:0 0 0 2px #333,0 30px 80px rgba(0,0,0,.5);
   }
-  .phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:130px;height:30px;background:#1a1a1a;border-radius:0 0 18px 18px;z-index:10}
-  .phone-screen{width:100%;min-height:744px;overflow-y:auto;overflow-x:hidden;max-height:744px}
+  .phone-notch{
+    position:absolute;top:0;left:50%;transform:translateX(-50%);
+    width:126px;height:28px;background:#222;
+    border-radius:0 0 16px 16px;z-index:10;
+  }
+  .phone-screen{
+    width:100%;max-height:764px;min-height:764px;
+    overflow-y:auto;overflow-x:hidden;color:var(--sbb-black);
+  }
   .phone-screen::-webkit-scrollbar{width:0}
 
-  /* ═══ SBB APP UI — Faithful recreation ═══ */
-  .sbb-status{height:30px;background:#fff} /* notch space */
-
+  /* SBB App UI inside phone */
+  .sbb-status{height:28px;background:#fff}
   .sbb-header{
     display:flex;justify-content:space-between;align-items:center;
-    padding:4px 16px 10px;background:#fff;
+    padding:2px 16px 10px;background:#fff;
   }
   .sbb-header-left{display:flex;gap:14px;align-items:center}
-  .sbb-header-left img{width:24px;height:24px;opacity:.8}
-  .sbb-header-right{display:flex;align-items:center}
-
+  .sbb-header-left img{width:24px;height:24px;opacity:.7}
   .sbb-red-zone{background:var(--sbb-red);padding:12px 16px 40px}
-
   .sbb-search-card{
     margin:-28px 16px 0;position:relative;z-index:5;
     background:#fff;border-radius:16px;
-    box-shadow:0 2px 16px rgba(0,0,0,.08);
-    padding:4px 0;
+    box-shadow:0 2px 16px rgba(0,0,0,.08);padding:4px 0;
   }
-  .sbb-search-row{
-    display:flex;align-items:center;gap:10px;
-    padding:12px 16px;
-  }
+  .sbb-search-row{display:flex;align-items:center;gap:10px;padding:12px 16px}
   .sbb-search-row+.sbb-search-row{border-top:1px solid var(--sbb-milk)}
   .sbb-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--sbb-anthracite);flex-shrink:0}
   .sbb-dot.dest{background:var(--sbb-anthracite);border-color:var(--sbb-anthracite)}
   .sbb-search-text{font-size:15px;color:var(--sbb-black);font-weight:300;flex:1}
-  .sbb-search-text.empty{color:var(--sbb-storm)}
-  .sbb-swap{width:36px;height:36px;display:flex;align-items:center;justify-content:center;position:absolute;right:16px;top:50%;transform:translateY(-50%);background:var(--sbb-milk);border-radius:50%}
+  .sbb-swap{
+    width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+    position:absolute;right:16px;top:50%;transform:translateY(-50%);
+    background:var(--sbb-milk);border-radius:50%;
+  }
   .sbb-swap img{width:20px;height:20px;opacity:.7}
 
   .sbb-info-row{
     display:flex;align-items:center;gap:8px;
     padding:12px 16px;border-bottom:1px solid var(--sbb-milk);
   }
-  .sbb-info-row img{width:20px;height:20px;opacity:.5}
+  .sbb-info-row img{width:18px;height:18px;opacity:.5}
   .sbb-info-row span{font-size:13px;color:var(--sbb-granite);font-weight:300}
-  .sbb-info-row span a{color:var(--sbb-anthracite);text-decoration:none}
 
-  .sbb-section-title{
-    font-size:22px;font-weight:300;
-    padding:24px 16px 14px;
-    letter-spacing:-.01em;
-  }
+  .sbb-section-title{font-size:22px;font-weight:300;padding:24px 16px 14px;letter-spacing:-.01em}
 
-  /* Offer cards — matches real sbb.ch */
   .sbb-offer-card{
     margin:0 16px 8px;
     border:1px solid var(--sbb-cloud);border-radius:12px;
-    padding:16px;
-    transition:box-shadow .15s;
+    padding:16px;transition:box-shadow .15s;
   }
-  .sbb-offer-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  .sbb-offer-card.highlight{border-left:3px solid var(--sbb-red)}
   .sbb-offer-icon{width:28px;height:28px;margin-bottom:10px}
   .sbb-offer-icon img{width:28px;height:28px}
   .sbb-offer-title{font-size:15px;font-weight:700;margin-bottom:3px}
@@ -158,29 +313,22 @@
     border:1px solid var(--sbb-anthracite);color:var(--sbb-anthracite);
     background:transparent;
   }
-
-  /* CTA buttons */
   .sbb-btn-red{
     display:flex;align-items:center;justify-content:center;gap:8px;
     margin:16px 16px 8px;padding:12px;
     background:var(--sbb-red);color:#fff;
-    border-radius:28px;font-size:15px;font-weight:700;
-    font-family:inherit;
+    border-radius:28px;font-size:15px;font-weight:700;font-family:inherit;
   }
   .sbb-btn-red img{width:20px;height:20px;filter:brightness(0) invert(1)}
   .sbb-btn-outline{
     display:block;text-align:center;
     margin:0 16px 16px;padding:12px;
     border:1px solid var(--sbb-anthracite);color:var(--sbb-anthracite);
-    border-radius:28px;font-size:15px;font-weight:400;
-    font-family:inherit;
+    border-radius:28px;font-size:15px;font-weight:400;font-family:inherit;
   }
-
-  /* Bottom nav */
   .sbb-tab-bar{
     display:flex;justify-content:space-around;
-    padding:6px 0 4px;
-    border-top:1px solid var(--sbb-cloud);
+    padding:6px 0 4px;border-top:1px solid var(--sbb-cloud);
     background:#fff;position:sticky;bottom:0;
   }
   .sbb-tab{display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 8px;cursor:default}
@@ -189,442 +337,665 @@
   .sbb-tab.active img{opacity:1;filter:invert(12%) sepia(100%) saturate(7000%) hue-rotate(0deg) brightness(90%)}
   .sbb-tab.active span{color:var(--sbb-red);font-weight:700}
 
-  /* ═══ RIGHT PANEL — Brand Data ═══ */
-  .rpanel{
-    width:340px;min-width:340px;
-    background:#fff;border-left:1px solid var(--sbb-cloud);
-    height:calc(100vh - 44px);position:sticky;top:44px;
-    overflow-y:auto;
+  /* Reasoning below phone */
+  .demo-reasoning{
+    max-width:700px;margin:40px auto 0;
+    padding:28px 32px;
+    background:rgba(255,255,255,.04);border:1px solid #222;
+    border-radius:10px;
   }
-  .rpanel::-webkit-scrollbar{width:3px}
-  .rpanel::-webkit-scrollbar-thumb{background:var(--sbb-cloud);border-radius:2px}
-  .rpanel-section{padding:20px;border-bottom:1px solid var(--sbb-milk)}
-  .rpanel-section h3{font-size:10px;color:var(--sbb-red);text-transform:uppercase;letter-spacing:.15em;font-weight:700;margin-bottom:12px}
+  .demo-reasoning h4{
+    font-size:11px;color:var(--sbb-red);text-transform:uppercase;
+    letter-spacing:.15em;font-weight:700;margin-bottom:12px;
+  }
+  .demo-reasoning p{font-size:16px;font-weight:300;color:#aaa;line-height:1.7}
 
-  .rp-attr{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;border-bottom:1px solid var(--sbb-milk)}
-  .rp-attr:last-child{border-bottom:none}
-  .rp-label{color:var(--sbb-granite);font-weight:300}
-  .rp-value{color:var(--sbb-black);font-weight:400;text-align:right;max-width:180px}
+  /* ═══ LANDSCAPE ═══ */
+  .landscape-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:20px;
+    margin-top:48px;
+  }
+  .landscape-card{
+    padding:28px;border:1px solid var(--sbb-cloud);border-radius:10px;
+  }
+  .landscape-card h4{font-size:17px;font-weight:700;margin-bottom:4px}
+  .landscape-card .lc-type{font-size:13px;color:var(--sbb-granite);font-weight:300;margin-bottom:10px}
+  .landscape-card p{font-size:15px;font-weight:300;color:var(--sbb-anthracite);line-height:1.6}
+  .landscape-card.ours{border-color:var(--sbb-red);border-width:2px;background:rgba(235,0,0,.02)}
 
-  .rp-color-row{display:flex;align-items:center;gap:8px;padding:5px 0}
-  .rp-swatch{width:16px;height:16px;border-radius:3px;border:1px solid var(--sbb-cloud)}
-  .rp-color-name{font-size:11px;color:var(--sbb-anthracite);font-weight:300}
-
-  .rp-rule{padding:8px 0;border-bottom:1px solid var(--sbb-milk);font-size:11px;color:var(--sbb-anthracite);font-weight:300;line-height:1.5}
-  .rp-rule:last-child{border-bottom:none}
-  .rp-rule-type{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:1px 6px;border-radius:2px;margin-bottom:3px}
-  .rp-rule-type.restriction{background:#fde8e8;color:var(--sbb-red)}
-  .rp-rule-type.principle{background:#e8ecfd;color:var(--sbb-blue)}
-  .rp-rule-type.usage{background:#e8fde8;color:#15803d}
+  /* ═══ NEXT ═══ */
+  .next-phases{display:flex;gap:16px;margin-top:48px;overflow-x:auto;padding-bottom:8px}
+  .next-phase{
+    flex:1;min-width:200px;padding:28px;
+    background:var(--sbb-milk);border-radius:10px;
+    border-top:3px solid var(--sbb-cloud);
+  }
+  .next-phase.active-phase{border-top-color:var(--sbb-red)}
+  .next-phase h4{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--sbb-granite);font-weight:700;margin-bottom:10px}
+  .next-phase p{font-size:15px;font-weight:300;color:var(--sbb-anthracite);line-height:1.55}
 
   /* ═══ FOOTER ═══ */
-  .frame-footer{
+  footer{
     background:var(--sbb-black);color:var(--sbb-storm);
-    padding:24px;text-align:center;font-size:11px;font-weight:300;
+    padding:48px 40px;
   }
-  .frame-footer a{color:var(--sbb-red);text-decoration:none}
+  .footer-inner{
+    max-width:1100px;margin:0 auto;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .footer-left{font-size:15px;font-weight:300}
+  .footer-left strong{color:var(--sbb-red);font-weight:700}
+  .footer-left a{color:var(--sbb-storm);text-decoration:none}
+  .footer-left a:hover{color:#fff}
+  .footer-right{font-size:13px;font-weight:300;color:#555}
 
-  @media(max-width:1200px){.rpanel{display:none}}
-  @media(max-width:860px){.panel{width:280px;min-width:280px} .phone{width:340px;border-radius:36px;min-height:680px} .phone-screen{max-height:664px;min-height:664px}}
-  @media(max-width:660px){.main{flex-direction:column} .panel{width:100%;min-width:0;height:auto;position:static;max-height:300px} .center{padding:20px 12px} .reasoning{max-height:120px}}
+  /* ═══ RESPONSIVE ═══ */
+  @media(max-width:1100px){
+    .anno-col{display:none}
+    .demo-stage{justify-content:center}
+  }
+  @media(max-width:900px){
+    .hero h2{font-size:48px}
+    .section-title{font-size:32px}
+    .idea-grid{grid-template-columns:1fr}
+    .typo-grid{grid-template-columns:1fr 1fr}
+    .typo-seventh{flex-direction:column;gap:24px}
+    .landscape-grid{grid-template-columns:1fr}
+    .hero-meta{flex-direction:column;gap:16px}
+  }
+  @media(max-width:600px){
+    .hero h2{font-size:36px}
+    section{padding:60px 20px}
+    .hero{padding:120px 20px 60px}
+    .phone{width:340px;border-radius:36px;min-height:700px}
+    .phone-screen{max-height:684px;min-height:684px}
+    .typo-grid{grid-template-columns:1fr}
+    .next-phases{flex-direction:column}
+  }
 </style>
 </head>
 <body>
 
-<div class="frame-nav">
-  <div class="fn-left">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142 48" width="40" height="14"><path fill="#eb0000" d="M1 47h141V1H1v46z"/><path fill="#fff" d="M87 40h9.3L83.8 27.7h15.5V40h7.4V27.7h15.6L109.7 40h9.3l16-16-15.9-16h-9.3l12.5 12.3h-15.6V8h-7.4v12.3H83.8L96.3 8H87L71 24l16 16z"/></svg>
-    <h1><strong>.</strong>brand agent — SBB/CFF/FFS</h1>
+<!-- ═══ NAV ═══ -->
+<nav class="nav">
+  <div class="nav-left">
+    <div class="nav-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142 48" width="36" height="12"><path fill="#eb0000" d="M1 47h141V1H1v46z"/><path fill="#fff" d="M87 40h9.3L83.8 27.7h15.5V40h7.4V27.7h15.6L109.7 40h9.3l16-16-15.9-16h-9.3l12.5 12.3h-15.6V8h-7.4v12.3H83.8L96.3 8H87L71 24l16 16z"/></svg>
+    </div>
+    <h1><strong>.</strong>brand</h1>
   </div>
-  <div class="fn-links">
-    <div class="fn-dot"></div>
+  <div class="nav-links">
+    <div class="nav-dot"></div>
+    <a href="#idea">Concept</a>
+    <a href="#typologies">Theory</a>
+    <a href="#demo">Live demo</a>
     <a href="https://sbb-brand-api.billowing-leaf-4d6a.workers.dev/api" target="_blank">API</a>
-    <a href="https://github.com/nordspot" target="_blank">GitHub</a>
   </div>
-</div>
+</nav>
 
-<div class="main">
-  <!-- LEFT: Persona selector -->
-  <div class="panel">
-    <div class="panel-header">
-      <div class="ph-label">Layer 2 — Emotional targeting</div>
-      <h2>One brand, twelve people.</h2>
-      <p>Same rules, different experience. Select a persona — watch the SBB interface adapt.</p>
-    </div>
-    <div class="persona-list" id="persona-list"></div>
-    <div class="reasoning" id="reasoning"></div>
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="top">
+  <div class="hero-eyebrow">Nord.spot &times; Brigade Studio &mdash; Fribourg, 2026</div>
+  <h2>When the brand becomes <em>the agent.</em></h2>
+  <p class="hero-sub">
+    A .brand file is not a document. It is a living intelligence &mdash; an MCP agent that embodies a brand's identity, speaks to consumers directly, adapts to every audience, and learns from every interaction.
+  </p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><strong>Proof of concept</strong> &mdash; SBB/CFF/FFS</div>
+    <div class="hero-meta-item"><strong>Protocol</strong> &mdash; MCP (Model Context Protocol)</div>
+    <div class="hero-meta-item"><strong>Infrastructure</strong> &mdash; Cloudflare edge</div>
   </div>
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    Scroll to explore
+  </div>
+</section>
 
-  <!-- CENTER: Phone -->
-  <div class="center">
-    <div class="phone">
-      <div class="phone-notch"></div>
-      <div class="phone-screen" id="screen"></div>
+<!-- ═══ THE IDEA ═══ -->
+<section id="idea">
+  <div class="section-inner">
+    <div class="section-eyebrow">The shift</div>
+    <h3 class="section-title">Brand guidelines can't talk to AI agents.</h3>
+    <p class="section-lead">
+      AI agents are becoming the primary interface between consumers and brands. A 200-page PDF doesn't negotiate with a shopping assistant. A Frontify library doesn't adapt its tone for a 22-year-old in Lausanne versus a 55-year-old in Bern. The tools we have manage brand assets. What we need is something that embodies brand intelligence.
+    </p>
+
+    <div class="idea-grid">
+      <div class="idea-card problem">
+        <h4>Today: static guidelines</h4>
+        <p>PDFs, digital asset platforms, compliance checklists. One-directional. The brand transmits, the consumer receives. AI agents scrape and approximate. No understanding, no adaptation, no conversation.</p>
+      </div>
+      <div class="idea-card solution">
+        <h4>.brand: living identity agent</h4>
+        <p>An MCP server that any AI system can connect to. It doesn't describe a brand &mdash; it <em>is</em> one. It speaks, validates, generates, refuses, adapts, and learns. Not just colors and fonts &mdash; textures, sounds, feelings, stories, culture.</p>
+      </div>
+    </div>
+
+    <div class="idea-quote">
+      <blockquote>&laquo; Tu poc la marque &mdash; elle te poc back. &raquo;</blockquote>
+      <cite>Nicolas Paupe, Brigade Studio &mdash; You poke the brand, it pokes you back.</cite>
     </div>
   </div>
+</section>
 
-  <!-- RIGHT: Brand data -->
-  <div class="rpanel" id="rpanel">
-    <div class="rpanel-section">
-      <h3>Persona attributes</h3>
-      <div id="rp-attrs"></div>
+<!-- ═══ TYPOLOGIES ═══ -->
+<section class="typo-section" id="typologies">
+  <div class="section-inner">
+    <div class="section-eyebrow">Theoretical foundation</div>
+    <h3 class="section-title">The seventh typology of dynamic identity.</h3>
+    <p class="section-lead">
+      Building on Irene van Nes' foundational work in <em>Dynamic Identities</em>, six typologies describe brand systems that change. None of them understand <em>why</em> they change. None can explain their own rules. None talk back.
+    </p>
+
+    <div class="typo-grid">
+      <div class="typo-card"><div class="typo-num">01</div><div class="typo-name">Container</div><div class="typo-desc">Fixed shape, variable content. The logo as frame. MTV, AOL.</div></div>
+      <div class="typo-card"><div class="typo-num">02</div><div class="typo-name">Transformative</div><div class="typo-desc">The logo itself mutates. Google Doodles.</div></div>
+      <div class="typo-card"><div class="typo-num">03</div><div class="typo-name">Generative</div><div class="typo-desc">Algorithmically created from parameters. Nordkyn, Casa da Música.</div></div>
+      <div class="typo-card"><div class="typo-num">04</div><div class="typo-name">Reactive</div><div class="typo-desc">Responds to real-time stimuli. MIT Media Lab.</div></div>
+      <div class="typo-card"><div class="typo-num">05</div><div class="typo-name">Participative</div><div class="typo-desc">Co-created with users. John Maeda at RISD.</div></div>
+      <div class="typo-card"><div class="typo-num">06</div><div class="typo-name">Evolutive</div><div class="typo-desc">Changes over time, lives and ages. Seed Media, EDP.</div></div>
     </div>
-    <div class="rpanel-section">
-      <h3>Brand colors applied</h3>
-      <div id="rp-colors"></div>
-    </div>
-    <div class="rpanel-section">
-      <h3>Typography rules</h3>
-      <div id="rp-typo"></div>
-    </div>
-    <div class="rpanel-section">
-      <h3>Active guardrails</h3>
-      <div id="rp-rules"></div>
+
+    <div class="typo-seventh">
+      <div class="typo-seventh-num">07</div>
+      <div>
+        <h4>Conscious Identity</h4>
+        <p>Not just dynamic &mdash; autonomous. Not just reactive &mdash; intelligent. A brand that actively perceives its audience, understands context, makes decisions about how to present itself, and learns from the outcome. The .brand agent acts as a persistent influencer, maintaining coherence across all receivers without requiring a human brand manager in the loop.</p>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
-<div class="frame-footer">
-  <strong style="color:var(--sbb-red)">.</strong>brand — <a href="https://nord.spot">Nord.spot</a> &times; <a href="https://brigade.studio">Brigade Studio</a> — Fribourg &middot; SBB brand data for research &middot; <a href="https://sbb-brand-api.billowing-leaf-4d6a.workers.dev/api">API</a>
-</div>
+<!-- ═══ ARCHITECTURE ═══ -->
+<section id="architecture">
+  <div class="section-inner">
+    <div class="section-eyebrow">Strategic architecture &mdash; Nicolas Paupe</div>
+    <h3 class="section-title">Four layers of a living brand.</h3>
+    <p class="section-lead">
+      An operating system for brands that think. Not rigidity &mdash; a spectrum of creative freedom with hard edges.
+    </p>
+
+    <div class="arch-layers">
+      <div class="arch-layer arch-l1">
+        <div class="arch-layer-num">1</div>
+        <div class="arch-layer-body">
+          <h4>Hybrid Brand Architecture</h4>
+          <p>Clear parameters for artistic direction. AI operates autonomously within a defined segment of the brand universe &mdash; generating variations that are flexible without ever breaking recognition. Human creative direction sets the boundaries. AI explores within them.</p>
+        </div>
+      </div>
+      <div class="arch-layer arch-l2">
+        <div class="arch-layer-num">2</div>
+        <div class="arch-layer-body">
+          <h4>Emotional &amp; Authentic Targeting</h4>
+          <p>The brand reads its audience. Consumer typologies, personal memories, cultural narratives shape how the brand presents itself. Positioning is triple: anthropological, sensory, and neuro. It doesn't manipulate &mdash; it resonates.</p>
+        </div>
+      </div>
+      <div class="arch-layer arch-l3">
+        <div class="arch-layer-num">3</div>
+        <div class="arch-layer-body">
+          <h4>Live Monitoring &amp; Optimization</h4>
+          <p>Every interaction generates signal. A/B testing runs continuously. Content performance tracked in real time. The feedback loop is autonomous: signal in, optimization out, learning cycle back.</p>
+        </div>
+      </div>
+      <div class="arch-layer arch-l4">
+        <div class="arch-layer-num">4</div>
+        <div class="arch-layer-body">
+          <h4>Incremental &amp; Replicable Deployment</h4>
+          <p>Deploy across every channel &mdash; digital, physical, spatial &mdash; with total coherence. Adapts to each client's nature, replicates for similar profiles. The last mile is automated but never generic.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LIVE DEMO ═══ -->
+<section class="demo-section" id="demo">
+  <div class="section-inner">
+    <div class="section-eyebrow">Proof of concept &mdash; SBB/CFF/FFS</div>
+    <h3 class="section-title">One brand, twelve people.</h3>
+    <p class="section-lead">Same rules, different experience. Select a persona &mdash; watch the brand agent adapt language, tone, content, and product positioning in real time.</p>
+
+    <div class="persona-strip" id="persona-strip"></div>
+
+    <div class="demo-stage">
+      <!-- Left annotations -->
+      <div class="anno-col anno-col-left" id="anno-left"></div>
+
+      <!-- Phone -->
+      <div class="demo-phone-wrap">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen" id="screen"></div>
+        </div>
+      </div>
+
+      <!-- Right annotations -->
+      <div class="anno-col anno-col-right" id="anno-right"></div>
+    </div>
+
+    <div class="demo-reasoning" id="reasoning"></div>
+  </div>
+</section>
+
+<!-- ═══ COMPETITIVE LANDSCAPE ═══ -->
+<section id="landscape">
+  <div class="section-inner">
+    <div class="section-eyebrow">Competitive landscape</div>
+    <h3 class="section-title">Nobody is building what we're building.</h3>
+    <p class="section-lead">The market offers platforms. We're proposing a protocol.</p>
+
+    <div class="landscape-grid">
+      <div class="landscape-card">
+        <h4>Frontify, Bynder, Brandpad</h4>
+        <div class="lc-type">Digital asset management</div>
+        <p>Filing cabinets. They store brand assets, they don't understand them. They can't talk to AI agents.</p>
+      </div>
+      <div class="landscape-card">
+        <h4>brand.ai</h4>
+        <div class="lc-type">AI brand compliance</div>
+        <p>Closest to our vision. Machine-readable guidelines + AI generation. But it's a centralized SaaS, not a protocol. Focus is compliance, not emotional resonance.</p>
+      </div>
+      <div class="landscape-card">
+        <h4>Firsthand ($26M Series A)</h4>
+        <div class="lc-type">Brand agents for ads</div>
+        <p>Consumer-facing, right direction. But they come from ad-tech. Their agents are campaign tools, not embodiments of brand DNA.</p>
+      </div>
+      <div class="landscape-card ours">
+        <h4>.brand</h4>
+        <div class="lc-type">Open protocol &mdash; identity-first, consumer-facing, self-improving</div>
+        <p>An MCP standard the brand owns and deploys. Starts from brand DNA and emotional depth. Talks directly to people. Gets smarter over time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WHAT'S NEXT ═══ -->
+<section id="next" style="background:var(--sbb-milk)">
+  <div class="section-inner">
+    <div class="section-eyebrow">Roadmap</div>
+    <h3 class="section-title">What comes next.</h3>
+    <p class="section-lead">From proof of concept to ecosystem.</p>
+
+    <div class="next-phases">
+      <div class="next-phase active-phase">
+        <h4>Phase 1 &mdash; Now</h4>
+        <p>Brand knowledge API. Structured data, semantic search, natural language queries. SBB proof of concept live on Cloudflare edge.</p>
+      </div>
+      <div class="next-phase">
+        <h4>Phase 2</h4>
+        <p>MCP brand agent. The API becomes a proper .brand file any AI system can connect to. Serves both AI tools and consumers.</p>
+      </div>
+      <div class="next-phase">
+        <h4>Phase 3</h4>
+        <p>Optimization loop. Every interaction generates signal. A/B testing, performance monitoring. The brand gets smarter.</p>
+      </div>
+      <div class="next-phase">
+        <h4>Phase 4</h4>
+        <p>Multi-channel deployment. Digital, physical, spatial. Total coherence. Automated but never generic.</p>
+      </div>
+      <div class="next-phase">
+        <h4>Phase 5</h4>
+        <p>The .brand ecosystem. File format spec, marketplace, inter-brand communication. Brand consciousness networks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      <strong>.</strong>brand &mdash;
+      <a href="https://nord.spot">Nord.spot</a> &times; <a href="https://brigade.studio">Brigade Studio</a> &mdash; Fribourg
+    </div>
+    <div class="footer-right">SBB brand data used for research purposes &middot; <a href="https://sbb-brand-api.billowing-leaf-4d6a.workers.dev/api" style="color:#777">API</a></div>
+  </div>
+</footer>
 
 <script>
 const I = (name) => `https://icons.app.sbb.ch/icons/${name}.svg`;
 const API = 'https://sbb-brand-api.billowing-leaf-4d6a.workers.dev';
 
+/* SBB Bildmarke SVG — just the red square + white mark, no text */
+const BILDMARKE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142 48" width="50" height="17"><path fill="#eb0000" d="M1 47h141V1H1v46z"/><path fill="#fff" d="M87 40h9.3L83.8 27.7h15.5V40h7.4V27.7h15.6L109.7 40h9.3l16-16-15.9-16h-9.3l12.5 12.3h-15.6V8h-7.4v12.3H83.8L96.3 8H87L71 24l16 16z"/></svg>`;
+
 /* ═══════════════════════════════════════════════
-   12 PERSONAS — real SBB products, real language
+   12 PERSONAS — real SBB products, 4 languages
    ═══════════════════════════════════════════════ */
 const personas = [
   {
-    id:'lena', name:'Lena, 22', icon:'user-group-medium',
-    meta:'Halbtax, 2. Klasse, Lausanne',
-    lang:'fr', abo:'Halbtax', class:'2. Klasse',
-    segment:'Pendlerin / Studentin',
-    attrs:{'Sprache':'Français','Abo':'Demi-tarif','Klasse':'2e classe','Strecke':'Lausanne – Zürich HB','Alter':'22','Segment':'Junge Pendlerin'},
-    from:'Lausanne',to:'Zürich HB',
-    search_btn:'Chercher',
-    info_text:'Trafic normal sur tout le réseau.',
-    section_title:'Pour toi.',
+    id:'lena', name:'Lena, 22', icon:'user-group-medium', label:'Student, Lausanne',
+    lang:'fr', from:'Lausanne', to:'Zürich HB',
+    info:'Trafic normal sur tout le réseau.',
+    title:'Pour toi.',
     offers:[
-      {icon:'leaf-medium',title:'Bilan CO₂ de ton trajet.',desc:'Lausanne–Zürich: 4.2 kg de CO₂ économisés par rapport à la voiture.',btn:'Détails'},
+      {icon:'leaf-medium',title:'Bilan CO₂ de ton trajet.',desc:'Lausanne–Zürich: 4.2 kg de CO₂ économisés par rapport à la voiture.',btn:'Détails',hl:true},
       {icon:'ticket-percent-medium',title:'Billets dégriffés.',desc:'Dès CHF 10.90 sur ta ligne. Prochaines 48h.',btn:'Réserver'},
-      {icon:'smartphone-medium',title:'EasyRide.',desc:'Monte, descend. Le meilleur prix est calculé automatiquement.',btn:'Activer'},
+      {icon:'smartphone-medium',title:'EasyRide.',desc:'Monte, descend. Le meilleur prix automatiquement.',btn:'Activer'},
     ],
-    cta_label:'Mes billets',cta_icon:'ticket-route-medium',
-    secondary_label:'Toutes les offres',
-    section2_title:'Durabilité.',
-    offers2:[
-      {icon:'train-medium',title:'Green Class.',desc:'Combine abonnement de train et vélo électrique.',btn:'Découvrir'},
+    cta:'Mes billets', section2:'Durabilité.',
+    offers2:[{icon:'train-medium',title:'Green Class.',desc:'Abonnement + vélo électrique. Ton combo mobilité.',btn:'Découvrir'}],
+    tabs:{home:'Accueil',tt:'Horaire',tk:'Billets',pr:'Profil'},
+    annoLeft:[
+      {tag:'tone',cat:'Tone',text:'Tutoiement — informal "tu" address triggered by age < 30'},
+      {tag:'content',cat:'Content',text:'Eco-conscious lead — sustainability flag detected in profile'},
+      {tag:'product',cat:'Product',text:'Sparbillette prominent — budget-sensitive student segment'},
     ],
-    tabs:{home:'Accueil',timetable:'Horaire',tickets:'Billets',profile:'Profil'},
-    reasoning:'Lena est francophone — toute l\'interface passe en français. Étudiante avec Halbtax, les billets dégriffés (Sparbillette) sont mis en avant. Son profil éco-conscient déclenche le bilan CO₂ et Green Class. EasyRide pour les digital natives. Le ton est direct, tu-tutoiement, sans formalisme. Ancrage émotionnel: indépendance et responsabilité.',
+    annoRight:[
+      {tag:'typo',cat:'Typography',text:'SBBWeb Light 22px — section titles always Light weight, never Bold'},
+      {tag:'color',cat:'Color',text:'#eb0000 CTA only — SBB Red reserved for primary actions'},
+      {tag:'layout',cat:'Layout',text:'3 cards + CTA — high density for digital-native scrolling habits'},
+    ],
+    reasoning:'Lena is francophone — the entire interface switches to French. As a student with Halbtax, discounted tickets (Sparbillette) lead the content. Her eco-conscious profile triggers the CO₂ comparison and Green Class. EasyRide speaks to digital natives. The tone is direct, using "tu" (informal you), no formality. The emotional anchor: independence and responsibility.',
   },
   {
-    id:'thomas', name:'Thomas, 54', icon:'user-medium',
-    meta:'GA 1. Klasse, Bern',
-    lang:'de', abo:'GA Travelcard', class:'1. Klasse',
-    segment:'Geschäftsreisender',
-    attrs:{'Sprache':'Deutsch','Abo':'Generalabonnement','Klasse':'1. Klasse','Strecke':'Bern – Zürich HB','Alter':'54','Segment':'Geschäftsreisender'},
-    from:'Bern',to:'Zürich HB',
-    search_btn:'Suchen',
-    info_text:'Aktuelle Betriebslage: Normalbetrieb.',
-    section_title:'Für Sie.',
+    id:'thomas', name:'Thomas, 54', icon:'user-medium', label:'Executive, Bern',
+    lang:'de', from:'Bern', to:'Zürich HB',
+    info:'Aktuelle Betriebslage: Normalbetrieb.',
+    title:'Für Sie.',
     offers:[
-      {icon:'seat-window-medium',title:'Sitzplatzreservation.',desc:'Wagen 1, Platz 62. Ruhezone, Fenster. IC 724, 07:32.',btn:'Ändern'},
+      {icon:'seat-window-medium',title:'Sitzplatzreservation.',desc:'Wagen 1, Platz 62. Ruhezone, Fenster. IC 724, 07:32.',btn:'Ändern',hl:true},
       {icon:'cup-hot-medium',title:'SBB Business Lounge.',desc:'Bern, Gleis 12. Kaffee, Arbeitsplätze, Ladestationen.',btn:'Öffnungszeiten'},
       {icon:'timetable-medium',title:'Ihre Verbindung.',desc:'IC 724, ab 07:32, an 08:28. Auslastung tief.',btn:'Details'},
     ],
-    cta_label:'Meine Billette',cta_icon:'ticket-route-medium',
-    secondary_label:'Alle Angebote',
-    section2_title:'Business.',
-    offers2:[
-      {icon:'diamond-medium',title:'SBB Business Travel.',desc:'Reisekostenmanagement und Gruppenbuchungen für Unternehmen.',btn:'Informationen'},
+    cta:'Meine Billette', section2:'Business.',
+    offers2:[{icon:'diamond-medium',title:'SBB Business Travel.',desc:'Reisekostenmanagement für Unternehmen.',btn:'Informationen'}],
+    tabs:{home:'Home',tt:'Fahrplan',tk:'Billette',pr:'Profil'},
+    annoLeft:[
+      {tag:'tone',cat:'Tone',text:'Formal "Sie" — age 54 + business segment triggers formal address'},
+      {tag:'content',cat:'Content',text:'Seat reservation first — control and predictability are his priority'},
+      {tag:'product',cat:'Product',text:'Business Lounge, no prices — GA holders see services, not costs'},
     ],
-    tabs:{home:'Home',timetable:'Fahrplan',tickets:'Billette',profile:'Profil'},
-    reasoning:'Thomas wird gesiezt — formaler Ton für den Geschäftsreisenden. Als GA 1. Klasse-Inhaber erhält er Sitzplatzreservation und Business Lounge prominent. Seine Stammverbindung (IC 724 Bern–Zürich) wird vorgeschlagen. Keine Preise — beim GA irrelevant. Die Auslastungsanzeige ist sein primärer Entscheidungsfaktor. Emotionaler Anker: Kontrolle und Verlässlichkeit.',
+    annoRight:[
+      {tag:'typo',cat:'Typography',text:'Section title "Für Sie." — formal, period-terminated per SBB convention'},
+      {tag:'color',cat:'Color',text:'Minimal accent color — premium feel through restraint and whitespace'},
+      {tag:'layout',cat:'Layout',text:'Information-dense cards — exec wants data, not discovery'},
+    ],
+    reasoning:'Thomas gets the formal "Sie" address — the .brand agent recognizes a 54-year-old executive. As a GA 1st class holder, seat reservation and Business Lounge are front and center. His regular connection (IC 724 Bern–Zürich) is pre-suggested. No prices shown — irrelevant with a GA. The occupancy indicator is his primary decision factor. Emotional anchor: control and reliability.',
   },
   {
-    id:'yuki', name:'Yuki, 31', icon:'globe-medium',
-    meta:'Swiss Travel Pass, Tourist',
-    lang:'en', abo:'Swiss Travel Pass', class:'2nd class',
-    segment:'International tourist',
-    attrs:{'Language':'English','Pass':'Swiss Travel Pass','Class':'2nd class','Route':'Zürich HB – Interlaken Ost','Age':'31','Segment':'International tourist'},
-    from:'Zürich HB',to:'Interlaken Ost',
-    search_btn:'Search',
-    info_text:'All lines operating normally.',
-    section_title:'Discover Switzerland.',
+    id:'yuki', name:'Yuki, 31', icon:'globe-medium', label:'Tourist, Tokyo',
+    lang:'en', from:'Zürich HB', to:'Interlaken Ost',
+    info:'All lines operating normally.',
+    title:'Discover Switzerland.',
     offers:[
-      {icon:'mountain-sun-medium',title:'Jungfraujoch — Top of Europe.',desc:'25% discount with your Swiss Travel Pass. Next departure 08:02.',btn:'Book'},
+      {icon:'mountain-sun-medium',title:'Jungfraujoch — Top of Europe.',desc:'25% discount with your Swiss Travel Pass. Next departure 08:02.',btn:'Book',hl:true},
       {icon:'binoculars-medium',title:'GoldenPass Panoramic.',desc:'Montreux – Interlaken. Large window seats.',btn:'Reserve'},
-      {icon:'camera-medium',title:'Scenic routes.',desc:'Glacier Express, Bernina Express, GoldenPass. All included.',btn:'Explore'},
+      {icon:'camera-medium',title:'Scenic routes.',desc:'Glacier Express, Bernina Express. All included in your pass.',btn:'Explore'},
     ],
-    cta_label:'My tickets',cta_icon:'ticket-route-medium',
-    secondary_label:'All offers',
-    section2_title:'Good to know.',
-    offers2:[
-      {icon:'circle-information-medium',title:'How Swiss trains work.',desc:'Zones, platforms, connections. A quick guide for visitors.',btn:'Read'},
+    cta:'My tickets', section2:'Good to know.',
+    offers2:[{icon:'circle-information-medium',title:'How Swiss trains work.',desc:'Zones, platforms, connections. A quick guide for visitors.',btn:'Read'}],
+    tabs:{home:'Home',tt:'Timetable',tk:'Tickets',pr:'Profile'},
+    annoLeft:[
+      {tag:'tone',cat:'Tone',text:'Welcoming English — no Swiss-German abbreviations or local jargon'},
+      {tag:'content',cat:'Content',text:'Scenic routes dominate — tourist segment prioritizes experience over utility'},
+      {tag:'product',cat:'Product',text:'Swiss Travel Pass in every offer — her primary product, always referenced'},
     ],
-    tabs:{home:'Home',timetable:'Timetable',tickets:'Tickets',profile:'Profile'},
-    reasoning:'English interface for the international tourist. The Swiss Travel Pass is referenced in every offer — it\'s her primary product. Scenic routes and experiences dominate over commuter utility. Jungfraujoch at the top — the most-searched destination for tourists. "How Swiss trains work" helps a newcomer. No abbreviations or Swiss-German terms. Emotional anchor: wonder and precision.',
+    annoRight:[
+      {tag:'typo',cat:'Typography',text:'"Discover Switzerland." — aspirational section title with period'},
+      {tag:'color',cat:'Color',text:'Standard SBB palette — brand identity stays Swiss, not "international"'},
+      {tag:'layout',cat:'Layout',text:'Onboarding card at bottom — newcomer helper without patronizing'},
+    ],
+    reasoning:'English interface for the international tourist. The Swiss Travel Pass is referenced in every offer — it\'s her primary product. Scenic routes and experiences dominate over commuter utility. Jungfraujoch at the top — the most-searched destination. "How Swiss trains work" helps the newcomer without condescension. No abbreviations or local terms. Emotional anchor: wonder and precision.',
   },
   {
-    id:'mueller', name:'Familie Müller', icon:'user-group-medium',
-    meta:'Halbtax + Junior-Karte, Luzern',
-    lang:'de', abo:'Halbtax + Junior-Karte', class:'2. Klasse',
-    segment:'Familienausflug',
-    attrs:{'Sprache':'Deutsch','Abo':'Halbtax + Junior-Karte','Klasse':'2. Klasse','Strecke':'Luzern – Engelberg','Zusammensetzung':'2 Erwachsene, 2 Kinder','Segment':'Familienausflug'},
-    from:'Luzern',to:'Engelberg',
-    search_btn:'Suchen',
-    info_text:'Aktuelle Betriebslage: Normalbetrieb.',
-    section_title:'Familienausflüge.',
+    id:'mueller', name:'Familie Müller', icon:'user-group-medium', label:'Family, Luzern',
+    lang:'de', from:'Luzern', to:'Engelberg',
+    info:'Aktuelle Betriebslage: Normalbetrieb.',
+    title:'Familienausflüge.',
     offers:[
-      {icon:'ticket-day-medium',title:'Familien-Spartageskarte.',desc:'4 Personen, 1 Tag, ganze Schweiz. Ab CHF 76.–',btn:'Kaufen'},
+      {icon:'ticket-day-medium',title:'Familien-Spartageskarte.',desc:'4 Personen, 1 Tag, ganze Schweiz. Ab CHF 76.–',btn:'Kaufen',hl:true},
       {icon:'train-medium',title:'Kinder-Spielwagen.',desc:'Wagen 7 im IR Luzern–Engelberg. Spielplatz auf Schienen.',btn:'Details'},
       {icon:'ticket-percent-medium',title:'Kinder reisen gratis.',desc:'Mit der Junior-Karte fahren Ihre Kinder kostenlos.',btn:'Info'},
     ],
-    cta_label:'Meine Billette',cta_icon:'ticket-route-medium',
-    secondary_label:'Alle Familienangebote',
-    section2_title:'Top-Angebote.',
-    offers2:[
-      {icon:'star-medium',title:'RailAway Kombi.',desc:'Zug + Eintritt. Pilatus, Verkehrshaus, Swiss Museum of Transport.',btn:'Entdecken'},
+    cta:'Meine Billette', section2:'Top-Angebote.',
+    offers2:[{icon:'star-medium',title:'RailAway Kombi.',desc:'Zug + Eintritt. Pilatus, Verkehrshaus, Swiss Museum of Transport.',btn:'Entdecken'}],
+    tabs:{home:'Home',tt:'Fahrplan',tk:'Billette',pr:'Profil'},
+    annoLeft:[
+      {tag:'tone',cat:'Tone',text:'Warm but factual — parents need clarity, not sales pressure'},
+      {tag:'content',cat:'Content',text:'Spielwagen (play car) — practical info parents actually need'},
+      {tag:'product',cat:'Product',text:'Budget-first — family savings card leads, Junior-Karte benefit repeated'},
     ],
-    tabs:{home:'Home',timetable:'Fahrplan',tickets:'Billette',profile:'Profil'},
-    reasoning:'Familienformat: Die Familien-Spartageskarte steht oben — Budget ist der primäre Faktor. Der Kinder-Spielwagen ist eine praktische Information, die Eltern brauchen. Junior-Karte-Vorteil wird wiederholt. RailAway-Kombiangebote kombinieren Reise mit Erlebnis — ideal für Familienausflüge. Tonalität warm, aber sachlich. Emotionaler Anker: Gemeinsamkeit und Abenteuer.',
+    annoRight:[
+      {tag:'typo',cat:'Typography',text:'"Familienausflüge." — section title mirrors SBB "Top-Angebote." convention'},
+      {tag:'color',cat:'Color',text:'Red highlight on lead card — draws attention to best-value offer'},
+      {tag:'layout',cat:'Layout',text:'RailAway combis — experience + transport bundles ideal for families'},
+    ],
+    reasoning:'Family format: the Familien-Spartageskarte leads because budget is the primary factor. The Kinder-Spielwagen is practical information parents need. The Junior-Karte benefit is reinforced. RailAway combos combine travel with experiences — perfect for family outings. Warm but factual tone. Emotional anchor: togetherness and adventure.',
   },
   {
-    id:'marco', name:'Marco, 28', icon:'smartphone-medium',
-    meta:'Streckenabo, Zürich – Zug',
-    lang:'de', abo:'Streckenabo', class:'2. Klasse',
-    segment:'Digital-Pendler',
-    attrs:{'Sprache':'Deutsch','Abo':'Streckenabo Zürich–Zug','Klasse':'2. Klasse','Strecke':'Zürich HB – Zug','Alter':'28','Segment':'Digital-Pendler'},
-    from:'Zürich HB',to:'Zug',
-    search_btn:'Suchen',
-    info_text:'Normalbetrieb.',
-    section_title:'Nächste Verbindung.',
+    id:'marco', name:'Marco, 28', icon:'smartphone-medium', label:'Tech, Zürich',
+    lang:'de', from:'Zürich HB', to:'Zug',
+    info:'Normalbetrieb.',
+    title:'Nächste Verbindung.',
     offers:[
-      {icon:'platform-medium',title:'IR 75 in 3 Min.',desc:'Gleis 5, Auslastung tief. Ankunft Zug 07:46.',btn:null},
+      {icon:'platform-medium',title:'IR 75 in 3 Min.',desc:'Gleis 5, Auslastung tief. Ankunft Zug 07:46.',btn:null,hl:true},
       {icon:'wifi-medium',title:'SBB-FREE WiFi.',desc:'Verfügbar auf Ihrer Strecke. Download: 84 Mbps.',btn:null},
       {icon:'power-plug-medium',title:'Steckdosen: Wagen 4.',desc:'Fensterplatz links. Strom bestätigt.',btn:null},
     ],
-    cta_label:'Meine Billette',cta_icon:'ticket-route-medium',
-    secondary_label:'Alle Angebote',
-    section2_title:'Für Entwickler.',
-    offers2:[
-      {icon:'gps-medium',title:'SBB Open Data API.',desc:'Echtzeit-Fahrplandaten. Abfahrten, Störungen, Prognosen.',btn:'Docs'},
+    cta:'Meine Billette', section2:'Für Entwickler.',
+    offers2:[{icon:'gps-medium',title:'SBB Open Data API.',desc:'Echtzeit-Fahrplandaten. Abfahrten, Störungen, Prognosen.',btn:'Docs'}],
+    tabs:{home:'Home',tt:'Fahrplan',tk:'Billette',pr:'Profil'},
+    annoLeft:[
+      {tag:'tone',cat:'Tone',text:'Zero noise — no greetings, no upsells, pure data delivery'},
+      {tag:'content',cat:'Content',text:'WiFi speed + power outlets — he works on the train, needs infrastructure'},
+      {tag:'product',cat:'Product',text:'Open Data API — speaks directly to his developer identity'},
     ],
-    tabs:{home:'Home',timetable:'Fahrplan',tickets:'Billette',profile:'Profil'},
-    reasoning:'Marco erhält keine Werbung, keine Ausflugstipps — er will Daten. Nächster Zug mit exakter Abfahrt, Gleis und Auslastung. WiFi-Geschwindigkeit und Steckdosen-Standort: er arbeitet im Zug. Keine Kauf-Buttons bei seinen Infokarten — er braucht keine Aktion, nur Fakten. Die Open Data API spricht seinen Tech-Hintergrund an. Emotionaler Anker: Effizienz und Kontrolle.',
+    annoRight:[
+      {tag:'typo',cat:'Typography',text:'"Nächste Verbindung." — functional, not aspirational. Utility-first.'},
+      {tag:'color',cat:'Color',text:'No CTA buttons on info cards — he needs facts, not actions'},
+      {tag:'layout',cat:'Layout',text:'Minimal cards, no decoration — information density over visual richness'},
+    ],
+    reasoning:'Marco gets no ads, no trip suggestions — he wants data. Next train with exact departure, platform, and occupancy. WiFi speed and power outlet location: he works on the train. No buy buttons on his info cards — he needs facts, not actions. The Open Data API speaks to his tech background. Emotional anchor: efficiency and control.',
   },
   {
-    id:'isabelle', name:'Isabelle, 67', icon:'heart-medium',
-    meta:'AG, 1. Klasse, Bellinzona',
-    lang:'it', abo:'Abbonamento generale', class:'1a classe',
-    segment:'Viaggio di piacere',
-    attrs:{'Lingua':'Italiano','Abo':'Abbonamento generale','Classe':'1a classe','Tratta':'Bellinzona – Locarno','Età':'67','Segmento':'Viaggio di piacere'},
-    from:'Bellinzona',to:'Locarno',
-    search_btn:'Cercare',
-    info_text:'Traffico regolare su tutta la rete.',
-    section_title:'Per lei.',
+    id:'isabelle', name:'Isabelle, 67', icon:'heart-medium', label:'Retiree, Bellinzona',
+    lang:'it', from:'Bellinzona', to:'Locarno',
+    info:'Traffico regolare su tutta la rete.',
+    title:'Per lei.',
     offers:[
-      {icon:'ship-steering-wheel-medium',title:'Isole di Brissago.',desc:'Giardino botanico. 15 minuti in battello da Locarno.',btn:'Orari'},
+      {icon:'ship-steering-wheel-medium',title:'Isole di Brissago.',desc:'Giardino botanico. 15 minuti in battello da Locarno.',btn:'Orari',hl:true},
       {icon:'cutlery-medium',title:'Cardada — pranzo con vista.',desc:'Funivia inclusa nell\'abbonamento generale.',btn:'Scoprire'},
       {icon:'clock-medium',title:'L\'orologio SBB.',desc:'Dal 1944. Il simbolo della puntualità svizzera.',btn:'Storia'},
     ],
-    cta_label:'I miei biglietti',cta_icon:'ticket-route-medium',
-    secondary_label:'Tutte le offerte',
-    section2_title:'Gite.',
-    offers2:[
-      {icon:'walk-medium',title:'Sentiero del Lago Maggiore.',desc:'Da Locarno a Brissago. 12 km, pianeggiante, panoramico.',btn:'Percorso'},
+    cta:'I miei biglietti', section2:'Gite.',
+    offers2:[{icon:'walk-medium',title:'Sentiero del Lago Maggiore.',desc:'Da Locarno a Brissago. 12 km, pianeggiante.',btn:'Percorso'}],
+    tabs:{home:'Home',tt:'Orario',tk:'Biglietti',pr:'Profilo'},
+    annoLeft:[
+      {tag:'tone',cat:'Tone',text:'Formal "Lei" + calm pacing — no urgency, no countdown timers'},
+      {tag:'content',cat:'Content',text:'Heritage content — SBB clock history resonates with tradition values'},
+      {tag:'product',cat:'Product',text:'GA benefits woven in — cable car "included" reinforces value of her pass'},
     ],
-    tabs:{home:'Home',timetable:'Orario',tickets:'Biglietti',profile:'Profilo'},
-    reasoning:'Interfaccia in italiano per il Ticino. Tono formale (Lei) e calmo — nessuna urgenza, nessun "3 minuti al prossimo treno". Isole di Brissago, ristorante panoramico, orologio SBB come patrimonio — contenuti che rispecchiano il suo stile di vita. Il Sentiero del Lago Maggiore per un\'escursione accessibile. Nessuna tecnologia, nessuna app. Ancoraggio emotivo: bellezza e connessione.',
+    annoRight:[
+      {tag:'typo',cat:'Typography',text:'Italian interface — Ticino region triggers full Italian localization'},
+      {tag:'color',cat:'Color',text:'Gentle visual hierarchy — no aggressive highlighting, relaxed scanning'},
+      {tag:'layout',cat:'Layout',text:'Leisure-first — excursions over commuter utility, no tech features'},
+    ],
+    reasoning:'Italian interface for Ticino. Formal address (Lei), calm pacing — no urgency, no "3 minutes to next train." Brissago islands, panoramic restaurant, the SBB clock as heritage — content that mirrors her lifestyle. The lakeside trail for an accessible excursion. No technology, no apps. Emotional anchor: beauty and connection.',
   },
   {
-    id:'ahmed', name:'Ahmed, 35', icon:'translate-medium',
-    meta:'Halbtax (new), Geneva',
-    lang:'en', abo:'Halbtax (new)', class:'2nd class',
-    segment:'Expat newcomer',
-    attrs:{'Language':'English','Pass':'Halbtax (new)','Class':'2nd class','Route':'Genève – Lausanne','Age':'35','Segment':'Expat newcomer'},
-    from:'Genève',to:'Lausanne',
-    search_btn:'Search',
-    info_text:'All lines operating normally.',
-    section_title:'Getting started.',
+    id:'ahmed', name:'Ahmed, 35', icon:'translate-medium', label:'Expat, Geneva',
+    lang:'en', from:'Genève', to:'Lausanne',
+    info:'All lines operating normally.',
+    title:'Getting started.',
     offers:[
-      {icon:'circle-information-medium',title:'How to ride.',desc:'Zones, tickets, timetables. A 5-minute interactive guide.',btn:'Start'},
+      {icon:'circle-information-medium',title:'How to ride.',desc:'Zones, tickets, timetables. A 5-minute interactive guide.',btn:'Start',hl:true},
       {icon:'swisspass-medium',title:'Your Halbtax is active.',desc:'Show the QR code in your SBB Mobile app. No paper needed.',btn:'Show QR'},
       {icon:'ticket-percent-medium',title:'Supersaver tickets.',desc:'Geneva – Lausanne from CHF 5.40 with Halbtax.',btn:'Book'},
     ],
-    cta_label:'My tickets',cta_icon:'ticket-route-medium',
-    secondary_label:'All offers',
-    section2_title:'Explore.',
-    offers2:[
-      {icon:'binoculars-medium',title:'Weekend trip: Montreux.',desc:'Geneva – Montreux – Gruyères. Day trip, CHF 34.–',btn:'Plan'},
+    cta:'My tickets', section2:'Explore.',
+    offers2:[{icon:'binoculars-medium',title:'Weekend trip: Montreux.',desc:'Geneva – Montreux – Gruyères. Day trip, CHF 34.–',btn:'Plan'}],
+    tabs:{home:'Home',tt:'Timetable',tk:'Tickets',pr:'Profile'},
+    annoLeft:[
+      {tag:'tone',cat:'Tone',text:'Supportive onboarding — assumes no prior Swiss transport knowledge'},
+      {tag:'content',cat:'Content',text:'"How to ride" first — not an afterthought, the primary content'},
+      {tag:'product',cat:'Product',text:'Halbtax activation confirmed — new customer reassurance pattern'},
     ],
-    tabs:{home:'Home',timetable:'Timetable',tickets:'Tickets',profile:'Profile'},
-    reasoning:'Ahmed is new to Switzerland — English interface, onboarding-first approach. "How to ride" guide is the first item, not an afterthought. His new Halbtax activation is confirmed (reassurance). Supersaver tickets teach him the system. Weekend trip suggestions help him explore. Tone is welcoming, supportive, assumes no prior knowledge of Swiss transport. Emotional anchor: belonging and discovery.',
+    annoRight:[
+      {tag:'typo',cat:'Typography',text:'"Getting started." — onboarding frame, not the usual commuter view'},
+      {tag:'color',cat:'Color',text:'Highlight on guide card — visual priority on the most helpful action'},
+      {tag:'layout',cat:'Layout',text:'Weekend trips as exploration — helping him discover Switzerland'},
+    ],
+    reasoning:'Ahmed is new to Switzerland — English interface, onboarding-first. "How to ride" is the lead, not an afterthought. His new Halbtax activation is confirmed (reassurance). Supersaver tickets teach the system. Weekend suggestions help him explore. The tone is welcoming, supportive, assumes zero prior knowledge. Emotional anchor: belonging and discovery.',
   },
   {
-    id:'sophie', name:'Sophie, 17', icon:'music-notes-medium',
-    meta:'Seven25, Biel/Bienne',
-    lang:'fr', abo:'Seven25', class:'2e classe',
-    segment:'Jeune / Soirée',
-    attrs:{'Langue':'Français','Abo':'Seven25','Classe':'2e classe','Trajet':'Biel/Bienne – Bern','Âge':'17','Segment':'Jeune / Soirée'},
-    from:'Biel/Bienne',to:'Bern',
-    search_btn:'Chercher',
-    info_text:'Trafic normal.',
-    section_title:'Ce soir.',
+    id:'sophie', name:'Sophie, 17', icon:'music-notes-medium', label:'Teenager, Biel',
+    lang:'fr', from:'Biel/Bienne', to:'Bern',
+    info:'Trafic normal.',
+    title:'Ce soir.',
     offers:[
-      {icon:'clock-medium',title:'Dernier train: 23:47.',desc:'S3 Bern – Biel/Bienne. Tu rentres en sécurité.',btn:null},
+      {icon:'clock-medium',title:'Dernier train: 23:47.',desc:'S3 Bern – Biel/Bienne. Tu rentres en sécurité.',btn:null,hl:true},
       {icon:'moon-medium',title:'Moonliner.',desc:'Bus de nuit Bern – Biel. Ve + Sa jusqu\'à 03:30.',btn:'Horaires'},
-      {icon:'ticket-percent-medium',title:'Économie de groupe.',desc:'Voyage à 3 ou plus: –30%. Partage le lien.',btn:'Partager'},
+      {icon:'ticket-percent-medium',title:'Économie de groupe.',desc:'Voyage à 3+: –30%. Partage le lien.',btn:'Partager'},
     ],
-    cta_label:'Mes billets',cta_icon:'ticket-route-medium',
-    secondary_label:'Toutes les offres',
-    section2_title:'Seven25.',
-    offers2:[
-      {icon:'ticket-star-medium',title:'Ton abo, ta liberté.',desc:'Gratuit le soir dès 19h. Toute la Suisse, 2e classe.',btn:'Détails'},
+    cta:'Mes billets', section2:'Seven25.',
+    offers2:[{icon:'ticket-star-medium',title:'Ton abo, ta liberté.',desc:'Gratuit le soir dès 19h. Toute la Suisse, 2e classe.',btn:'Détails'}],
+    tabs:{home:'Accueil',tt:'Horaire',tk:'Billets',pr:'Profil'},
+    annoLeft:[
+      {tag:'tone',cat:'Tone',text:'"Tu" + evening-first — teenage segment gets nightlife-oriented content'},
+      {tag:'content',cat:'Content',text:'Last train time is lead — safety information that parents and teens both need'},
+      {tag:'product',cat:'Product',text:'Seven25 abo highlighted — her free-after-7pm pass is the hero product'},
     ],
-    tabs:{home:'Accueil',timetable:'Horaire',tickets:'Billets',profile:'Profil'},
-    reasoning:'Sophie a le Seven25 — un abo du soir. Le contenu est orienté soirée: dernier train avec heure exacte (les parents s\'inquiètent, elle veut sa liberté), Moonliner pour rentrer tard, économie de groupe pour sortir avec des amis. Tutoiement, ton direct. Pas de produits business, pas d\'excursions. Ancrage émotionnel: liberté et appartenance sociale.',
+    annoRight:[
+      {tag:'typo',cat:'Typography',text:'"Ce soir." — time-contextual title, not generic "Pour toi"'},
+      {tag:'color',cat:'Color',text:'Same brand palette — the brand stays SBB even in a youth context'},
+      {tag:'layout',cat:'Layout',text:'Group discount with share link — social dimension for going out with friends'},
+    ],
+    reasoning:'Sophie has Seven25 — an evening-only pass. Content is night-oriented: last train with exact time (parents worry, she wants freedom), Moonliner for late returns, group discount for going out with friends. Direct "tu" address. No business products, no excursions. The .brand agent understands that for a 17-year-old, the train is freedom. Emotional anchor: independence and social belonging.',
   },
   {
-    id:'reto', name:'Reto, 42', icon:'bicycle-medium',
-    meta:'Halbtax + Velo, Thun',
-    lang:'de', abo:'Halbtax + Velo-Tageskarte', class:'2. Klasse',
-    segment:'Velo + Zug',
-    attrs:{'Sprache':'Deutsch','Abo':'Halbtax + Velo-Tageskarte','Klasse':'2. Klasse','Strecke':'Thun – Spiez','Alter':'42','Segment':'Velo + Zug'},
-    from:'Thun',to:'Spiez',
-    search_btn:'Suchen',
-    info_text:'Normalbetrieb. Veloplätze verfügbar.',
-    section_title:'Deine Tour.',
+    id:'reto', name:'Reto, 42', icon:'bicycle-medium', label:'Cyclist, Thun',
+    lang:'de', from:'Thun', to:'Spiez',
+    info:'Normalbetrieb. Veloplätze verfügbar.',
+    title:'Deine Tour.',
     offers:[
-      {icon:'bicycle-medium',title:'Velo-Stellplatz reserviert.',desc:'IR nach Spiez, 09:14. Wagen 10, 4 Plätze frei.',btn:null},
+      {icon:'bicycle-medium',title:'Velo-Stellplatz reserviert.',desc:'IR nach Spiez, 09:14. Wagen 10, 4 Plätze frei.',btn:null,hl:true},
       {icon:'cloud-sunshine-medium',title:'Wetter Berner Oberland.',desc:'22°C, leicht bewölkt. Ideales Velowetter.',btn:null},
       {icon:'location-pin-medium',title:'Rent a Bike Spiez.',desc:'E-Bike ab CHF 35.–/Tag. Abholung am Bahnhof.',btn:'Reservieren'},
     ],
-    cta_label:'Meine Billette',cta_icon:'ticket-route-medium',
-    secondary_label:'Alle Velorouten',
-    section2_title:'Strecken.',
-    offers2:[
-      {icon:'mountain-sun-medium',title:'Thunersee-Runde.',desc:'68 km, 420 hm. Rückfahrt ab Interlaken Ost, 16:33.',btn:'Route'},
+    cta:'Meine Billette', section2:'Strecken.',
+    offers2:[{icon:'mountain-sun-medium',title:'Thunersee-Runde.',desc:'68 km, 420 hm. Rückfahrt ab Interlaken Ost, 16:33.',btn:'Route'}],
+    tabs:{home:'Home',tt:'Fahrplan',tk:'Billette',pr:'Profil'},
+    annoLeft:[
+      {tag:'tone',cat:'Tone',text:'"Du" + activity context — casual address for leisure/sport segment'},
+      {tag:'content',cat:'Content',text:'Weather data — critical for cyclists, irrelevant for commuters'},
+      {tag:'product',cat:'Product',text:'Velo-Tageskarte + bike rental — full cycling mobility chain'},
     ],
-    tabs:{home:'Home',timetable:'Fahrplan',tickets:'Billette',profile:'Profil'},
-    reasoning:'Reto erhält velozentrisches Inhalt: Stellplatz-Status, Wetter für die Tour, Rent a Bike am Zielbahnhof. Die Betriebslage erwähnt explizit "Veloplätze verfügbar" — für ihn die wichtigste Information. Thunersee-Runde mit Höhenmetern und Rückfahrzeit. Kein Business-Content, keine Familienangebote. Emotionaler Anker: Freiheit und Natur.',
+    annoRight:[
+      {tag:'typo',cat:'Typography',text:'"Deine Tour." — possessive, activity-framed section title'},
+      {tag:'color',cat:'Color',text:'Status info enriched — "Veloplätze verfügbar" added to standard ops line'},
+      {tag:'layout',cat:'Layout',text:'No action buttons on weather/status — pure information, zero friction'},
+    ],
+    reasoning:'Reto gets cycling-centric content: bike space status, weather for the tour, Rent a Bike at the destination. The service status explicitly mentions "bike spaces available" — for him, the most critical information. Thunersee route with elevation and return time. No business content, no family offers. Emotional anchor: freedom and nature.',
   },
   {
-    id:'chen', name:'Chen Wei, 45', icon:'diamond-medium',
-    meta:'1st Class Day Pass, Davos',
-    lang:'en', abo:'1st Class Day Pass', class:'1st class',
-    segment:'Executive / VIP',
-    attrs:{'Language':'English','Pass':'1st Class Day Pass','Class':'1st class','Route':'Zürich Flughafen – Davos Platz','Age':'45','Segment':'Executive international'},
-    from:'Zürich Flughafen',to:'Davos Platz',
-    search_btn:'Search',
-    info_text:'All services on time.',
-    section_title:'Your journey.',
+    id:'chen', name:'Chen Wei, 45', icon:'diamond-medium', label:'VIP, Davos',
+    lang:'en', from:'Zürich Flughafen', to:'Davos Platz',
+    info:'All services on time.',
+    title:'Your journey.',
     offers:[
-      {icon:'airplane-medium',title:'Airport connection.',desc:'Platform 1. Departing in 12 minutes. First class, car 1.',btn:null},
+      {icon:'airplane-medium',title:'Airport connection.',desc:'Platform 1. Departing in 12 minutes. First class, car 1.',btn:null,hl:true},
       {icon:'cup-hot-medium',title:'SBB First Lounge.',desc:'Zürich HB. Complimentary. Open until 21:00.',btn:'Directions'},
       {icon:'train-medium',title:'Direct to Davos Platz.',desc:'RE, 2h 38m. Seat reserved, window, quiet zone.',btn:'Reservation'},
     ],
-    cta_label:'My tickets',cta_icon:'ticket-route-medium',
-    secondary_label:'All services',
-    section2_title:'Services.',
-    offers2:[
-      {icon:'car-medium',title:'Door-to-door transfer.',desc:'Davos Platz station to your hotel. Pre-booked, confirmed.',btn:'Details'},
+    cta:'My tickets', section2:'Services.',
+    offers2:[{icon:'car-medium',title:'Door-to-door transfer.',desc:'Davos Platz station to your hotel. Pre-booked, confirmed.',btn:'Details'}],
+    tabs:{home:'Home',tt:'Timetable',tk:'Tickets',pr:'Profile'},
+    annoLeft:[
+      {tag:'tone',cat:'Tone',text:'Formal English, zero casual elements — executive international treatment'},
+      {tag:'content',cat:'Content',text:'Airport connection first — arriving internationally, needs immediate next step'},
+      {tag:'product',cat:'Product',text:'No prices anywhere — irrelevant at 1st class level, removes friction'},
     ],
-    tabs:{home:'Home',timetable:'Timetable',tickets:'Tickets',profile:'Profile'},
-    reasoning:'Executive treatment: formal English, no casual elements. Airport connection as first item — he\'s arriving internationally. First Lounge highlighted. Door-to-door transfer for the last mile. No prices shown — irrelevant at this level. Every detail is confirmed, reserved, pre-booked. The experience communicates: Swiss infrastructure is world-class, seamless, and anticipates your needs. Emotional anchor: prestige and seamlessness.',
+    annoRight:[
+      {tag:'typo',cat:'Typography',text:'"Your journey." — personal, understated, premium framing'},
+      {tag:'color',cat:'Color',text:'Maximum whitespace — premium feel through restraint, not decoration'},
+      {tag:'layout',cat:'Layout',text:'Everything pre-booked — the experience says "we anticipated your needs"'},
+    ],
+    reasoning:'Executive treatment: formal English, zero casual elements. Airport connection as first item — he\'s arriving internationally. First Lounge highlighted. Door-to-door transfer for the last mile. No prices shown — irrelevant at this level. Every detail is confirmed, reserved, pre-booked. The experience communicates: Swiss infrastructure is world-class, seamless, anticipates your needs. Emotional anchor: prestige and seamlessness.',
   },
   {
-    id:'petra', name:'Petra, 38', icon:'piggy-bank-medium',
-    meta:'Streckenabo, Winterthur',
-    lang:'de', abo:'Streckenabo Winterthur–ZH', class:'2. Klasse',
-    segment:'Pendlerin / Budget',
-    attrs:{'Sprache':'Deutsch','Abo':'Streckenabo','Klasse':'2. Klasse','Strecke':'Winterthur – Zürich HB','Alter':'38','Segment':'Pendlerin / Budget'},
-    from:'Winterthur',to:'Zürich HB',
-    search_btn:'Suchen',
-    info_text:'S12 fährt pünktlich.',
-    section_title:'Dein Morgen.',
+    id:'petra', name:'Petra, 38', icon:'piggy-bank-medium', label:'Commuter, Winterthur',
+    lang:'de', from:'Winterthur', to:'Zürich HB',
+    info:'S12 fährt pünktlich.',
+    title:'Dein Morgen.',
     offers:[
-      {icon:'timetable-medium',title:'S12, 07:23, pünktlich.',desc:'Gleis 2. Ankunft 07:49. Keine Störungen.',btn:null},
-      {icon:'ticket-percent-medium',title:'Sparbillette ab CHF 10.90.',desc:'Nächste Woche günstiger reisen. 3 Angebote gefunden.',btn:'Anzeigen'},
-      {icon:'coin-dollar-medium',title:'Coop Supercard Punkte.',desc:'Automatisch beim Pendeln sammeln. 347 Punkte diesen Monat.',btn:'Details'},
+      {icon:'timetable-medium',title:'S12, 07:23, pünktlich.',desc:'Gleis 2. Ankunft 07:49. Keine Störungen.',btn:null,hl:true},
+      {icon:'ticket-percent-medium',title:'Sparbillette ab CHF 10.90.',desc:'Nächste Woche günstiger reisen. 3 Angebote.',btn:'Anzeigen'},
+      {icon:'coin-dollar-medium',title:'Coop Supercard Punkte.',desc:'Automatisch sammeln. 347 Punkte diesen Monat.',btn:'Details'},
     ],
-    cta_label:'Meine Billette',cta_icon:'ticket-route-medium',
-    secondary_label:'Alle Angebote',
-    section2_title:'Sparen.',
-    offers2:[
-      {icon:'tag-medium',title:'GA Monatsabo.',desc:'Ab CHF 340.–/Monat. Rechner: Lohnt sich der Umstieg?',btn:'Berechnen'},
+    cta:'Meine Billette', section2:'Sparen.',
+    offers2:[{icon:'tag-medium',title:'GA Monatsabo.',desc:'Ab CHF 340.–/Monat. Rechner: Lohnt sich der Umstieg?',btn:'Berechnen'}],
+    tabs:{home:'Home',tt:'Fahrplan',tk:'Billette',pr:'Profil'},
+    annoLeft:[
+      {tag:'tone',cat:'Tone',text:'"Dein Morgen." — personal, functional framing for daily routine'},
+      {tag:'content',cat:'Content',text:'Specific S-Bahn line status — her S12, not the whole network'},
+      {tag:'product',cat:'Product',text:'Coop points + savings — budget-conscious segment gets value reinforcement'},
     ],
-    tabs:{home:'Home',timetable:'Fahrplan',tickets:'Billette',profile:'Profil'},
-    reasoning:'Petra braucht Verlässlichkeit — ihre S12 und deren Status sind das Erste. Sparbillette für das Budget. Coop-Punkte zeigen, dass sich Pendeln auch wirtschaftlich lohnt. Der GA-Rechner bietet einen sanften Upsell. Die Betriebslage nennt ihre spezifische Linie. Kein Luxus, keine Abenteuer — "dein Morgen funktioniert". Emotionaler Anker: Sicherheit und Sparsamkeit.',
+    annoRight:[
+      {tag:'typo',cat:'Typography',text:'Prices shown prominently — cost visibility matters for this segment'},
+      {tag:'color',cat:'Color',text:'Red highlight on first card — "your train is on time" as lead reassurance'},
+      {tag:'layout',cat:'Layout',text:'GA upsell calculator — soft upgrade path, not pushy sales'},
+    ],
+    reasoning:'Petra needs reliability — her S12 status is the first thing she sees. Savings tickets for the budget. Coop points show that commuting pays off economically. The GA calculator offers a soft upsell. The service status names her specific line. No luxury, no adventures — "your morning works." Emotional anchor: security and thrift.',
   },
   {
-    id:'luigi', name:'Luigi, 72', icon:'clock-medium',
-    meta:'AG, 1a classe, Lugano',
-    lang:'it', abo:'Abbonamento generale', class:'1a classe',
-    segment:'Tradizione',
-    attrs:{'Lingua':'Italiano','Abo':'Abbonamento generale','Classe':'1a classe','Tratta':'Lugano – Milano Centrale','Età':'72','Segmento':'Senior / Tradizione'},
-    from:'Lugano',to:'Milano Centrale',
-    search_btn:'Cercare',
-    info_text:'Traffico regolare.',
-    section_title:'Per lei.',
+    id:'luigi', name:'Luigi, 72', icon:'clock-medium', label:'Pensioner, Lugano',
+    lang:'it', from:'Lugano', to:'Milano Centrale',
+    info:'Traffico regolare.',
+    title:'Per lei.',
     offers:[
-      {icon:'newspaper-medium',title:'Minibar, vagone 1.',desc:'Caffè, cornetto, Corriere del Ticino.',btn:null},
-      {icon:'museum-medium',title:'Milano in giornata.',desc:'Partenza 09:17, ritorno 17:45. Duomo, Pinacoteca, risotto.',btn:'Orari'},
+      {icon:'newspaper-medium',title:'Minibar, vagone 1.',desc:'Caffè, cornetto, Corriere del Ticino.',btn:null,hl:true},
+      {icon:'museum-medium',title:'Milano in giornata.',desc:'Partenza 09:17, ritorno 17:45. Duomo, Pinacoteca.',btn:'Orari'},
       {icon:'train-station-medium',title:'La Ferrovia del Gottardo.',desc:'Percorso storico. Come una volta.',btn:'Scoprire'},
     ],
-    cta_label:'I miei biglietti',cta_icon:'ticket-route-medium',
-    secondary_label:'Tutte le offerte',
-    section2_title:'Patrimonio.',
-    offers2:[
-      {icon:'clock-medium',title:'L\'orologio FFS.',desc:'Disegnato nel 1944 da Hans Hilfiker. Simbolo della puntualità.',btn:'Storia'},
+    cta:'I miei biglietti', section2:'Patrimonio.',
+    offers2:[{icon:'clock-medium',title:'L\'orologio FFS.',desc:'Disegnato nel 1944 da Hans Hilfiker. Simbolo della puntualità.',btn:'Storia'}],
+    tabs:{home:'Home',tt:'Orario',tk:'Biglietti',pr:'Profilo'},
+    annoLeft:[
+      {tag:'tone',cat:'Tone',text:'Formal "Lei" in Italian — respect for senior, unhurried tone'},
+      {tag:'content',cat:'Content',text:'Minibar ritual — the brand recognizes his daily coffee + newspaper habit'},
+      {tag:'product',cat:'Product',text:'Heritage railway + clock history — connecting identity to Swiss tradition'},
     ],
-    tabs:{home:'Home',timetable:'Orario',tickets:'Biglietti',profile:'Profilo'},
-    reasoning:'Indirizzo formale (Lei) per il signore anziano. Interfaccia in italiano. Il minibar con il giornale è il suo rituale — la marca lo riconosce. Milano in giornata per una gita culturale. La Ferrovia del Gottardo come patrimonio. L\'orologio FFS — legame con la tradizione svizzera. Niente tecnologia, niente app. Ancoraggio emotivo: tradizione e dignità.',
+    annoRight:[
+      {tag:'typo',cat:'Typography',text:'Italian localization — "Patrimonio" (heritage) as section title'},
+      {tag:'color',cat:'Color',text:'Quiet visual hierarchy — no aggressive promotions, leisurely browsing'},
+      {tag:'layout',cat:'Layout',text:'Cultural experiences lead — no tech, no apps, no digital features'},
+    ],
+    reasoning:'Formal Italian (Lei) for the elderly gentleman. The minibar with newspaper is his ritual — the brand recognizes it. Milan day trip for cultural excursion. The Gotthard Railway as heritage. The FFS clock — a connection to Swiss tradition. No technology, no apps. Emotional anchor: tradition and dignity.',
   },
 ];
 
-/* ═══ RENDER PERSONA LIST ═══ */
-const pList = document.getElementById('persona-list');
-pList.innerHTML = personas.map((p,i) => `
-  <button class="p-btn${i===0?' active':''}" data-idx="${i}">
-    <div class="p-avatar"><img src="${I(p.icon)}" alt=""/></div>
-    <div><div class="p-name">${p.name}</div><div class="p-meta">${p.meta}</div></div>
+/* ═══ RENDER PERSONA STRIP ═══ */
+const strip = document.getElementById('persona-strip');
+strip.innerHTML = personas.map((p,i) => `
+  <button class="p-chip${i===0?' active':''}" data-idx="${i}">
+    <img class="p-chip-icon" src="${I(p.icon)}" alt=""/>
+    ${p.name}
   </button>
 `).join('');
 
-document.querySelectorAll('.p-btn').forEach(btn => {
+document.querySelectorAll('.p-chip').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.p-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.p-chip').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     render(personas[+btn.dataset.idx]);
   });
 });
 
-/* ═══ RENDER PHONE ═══ */
+/* ═══ RENDER PHONE + ANNOTATIONS ═══ */
 function render(p) {
   const s = document.getElementById('screen');
   s.scrollTop = 0;
 
   s.innerHTML = `
     <div class="sbb-status"></div>
-
     <div class="sbb-header">
       <div class="sbb-header-left">
         <img src="${I('hamburger-menu-medium')}" alt="menu"/>
         <img src="${I('magnifying-glass-medium')}" alt="search"/>
         <img src="${I('user-medium')}" alt="profile"/>
       </div>
-      <div class="sbb-header-right">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 302 48" width="120" height="19">
-          <path fill="#eb0000" d="M1 47h141V1H1v46z"/>
-          <path fill="#fff" d="M87 40h9.3L83.8 27.7h15.5V40h7.4V27.7h15.6L109.7 40h9.3l16-16-15.9-16h-9.3l12.5 12.3h-15.6V8h-7.4v12.3H83.8L96.3 8H87L71 24l16 16z"/>
-          <path fill="currentColor" d="M159.8 31.5c-3.4 0-5.7-1-7.2-2.1l1.7-3.5c1.4 1 3.4 1.8 5.5 1.8 2.6 0 3.8-1 3.8-2.5 0-1.3-1-2.1-4.2-3.1-4.2-1.3-6.2-3-6.2-6.1 0-3.5 2.8-6.2 7.7-6.2 3 0 5.2.9 6.5 1.8l-1.6 3.4c-1.2-.8-3-1.5-4.9-1.5-2.3 0-3.5.9-3.5 2.3 0 1.4 1.1 2.1 4 2.9 4.4 1.3 6.4 3.2 6.4 6.3 0 3.5-2.7 6.5-8 6.5zM172.3 31.2V10.3h7.4c5.3 0 8.3 2.5 8.3 6.4 0 2.3-1.1 4.1-3.1 5.2 2.6 1 4 3.1 4 5.6 0 4.3-3.3 6.7-8.9 6.7h-7.7zm4.3-12.5h3c2.7 0 4.1-1.2 4.1-3.2 0-2-1.4-3.1-4.1-3.1h-3v6.3zm0 9h3.3c3 0 4.7-1.2 4.7-3.4 0-2.2-1.6-3.4-4.7-3.4h-3.3v6.8zM194.5 31.2V10.3h7.4c5.3 0 8.3 2.5 8.3 6.4 0 2.3-1.1 4.1-3.1 5.2 2.6 1 4 3.1 4 5.6 0 4.3-3.3 6.7-8.9 6.7h-7.7zm4.3-12.5h3c2.7 0 4.1-1.2 4.1-3.2 0-2-1.4-3.1-4.1-3.1h-3v6.3zm0 9h3.3c3 0 4.7-1.2 4.7-3.4 0-2.2-1.6-3.4-4.7-3.4h-3.3v6.8z"/>
-          <path fill="currentColor" d="M224.5 31.5c-3.2 0-5.8-.8-7.5-2l1.6-3.5c1.5 1 3.8 1.7 5.9 1.7 2.8 0 4.1-1 4.1-2.5 0-4.3-11-1.5-11-9.3 0-3.6 3-6.2 8.1-6.2 2.8 0 5.1.8 6.6 1.8l-1.5 3.4c-1.4-.9-3.3-1.5-5.1-1.5-2.6 0-3.9 1-3.9 2.4 0 4.4 11 1.6 11 9.3 0 3.5-3 6.4-8.3 6.4z"/>
-        </svg>
-      </div>
+      <div class="sbb-header-right">${BILDMARKE}</div>
     </div>
 
     <div class="sbb-red-zone"></div>
@@ -643,13 +1014,13 @@ function render(p) {
 
     <div class="sbb-info-row">
       <img src="${I('circle-information-small')}" alt=""/>
-      <span>${p.info_text}</span>
+      <span>${p.info}</span>
     </div>
 
-    <div class="sbb-section-title">${p.section_title}</div>
+    <div class="sbb-section-title">${p.title}</div>
 
     ${p.offers.map(o => `
-      <div class="sbb-offer-card">
+      <div class="sbb-offer-card${o.hl?' highlight':''}">
         <div class="sbb-offer-icon"><img src="${I(o.icon)}" alt=""/></div>
         <div class="sbb-offer-title">${o.title}</div>
         <div class="sbb-offer-desc">${o.desc}</div>
@@ -658,12 +1029,11 @@ function render(p) {
     `).join('')}
 
     <div class="sbb-btn-red">
-      <img src="${I(p.cta_icon)}" alt=""/>
-      ${p.cta_label}
+      <img src="${I('ticket-route-medium')}" alt=""/>
+      ${p.cta}
     </div>
-    <div class="sbb-btn-outline">${p.secondary_label}</div>
 
-    <div class="sbb-section-title">${p.section2_title}</div>
+    <div class="sbb-section-title">${p.section2}</div>
     ${p.offers2.map(o => `
       <div class="sbb-offer-card">
         <div class="sbb-offer-icon"><img src="${I(o.icon)}" alt=""/></div>
@@ -676,8 +1046,8 @@ function render(p) {
     <div style="height:8px"></div>
 
     <div class="sbb-tab-bar">
-      ${['home','timetable','tickets','profile'].map((tab,i) => {
-        const icons = {home:'house-small',timetable:'timetable-small',tickets:'ticket-route-small',profile:'user-small'};
+      ${['home','tt','tk','pr'].map((tab,i) => {
+        const icons = {home:'house-small',tt:'timetable-small',tk:'ticket-route-small',pr:'user-small'};
         return `<div class="sbb-tab${i===0?' active':''}">
           <img src="${I(icons[tab])}" alt=""/>
           <span>${p.tabs[tab]}</span>
@@ -686,47 +1056,27 @@ function render(p) {
     </div>
   `;
 
+  // Annotations
+  const renderAnnos = (annos) => annos.map(a => `
+    <div class="anno-item">
+      <div class="anno-tag ${a.tag}">${a.cat}</div>
+      <div class="anno-text">${a.text}</div>
+      <div class="anno-line"></div>
+    </div>
+  `).join('');
+
+  document.getElementById('anno-left').innerHTML = renderAnnos(p.annoLeft);
+  document.getElementById('anno-right').innerHTML = renderAnnos(p.annoRight);
+
   // Reasoning
   document.getElementById('reasoning').innerHTML = `
     <h4>.brand agent reasoning</h4>
     <p>${p.reasoning}</p>
   `;
-
-  // Right panel
-  document.getElementById('rp-attrs').innerHTML = Object.entries(p.attrs).map(([k,v]) =>
-    `<div class="rp-attr"><span class="rp-label">${k}</span><span class="rp-value">${v}</span></div>`
-  ).join('');
 }
 
 // Init
 render(personas[0]);
-
-/* ═══ LOAD BRAND DATA INTO RIGHT PANEL ═══ */
-async function loadBrandData() {
-  try {
-    const [colors, rules, typo] = await Promise.all([
-      fetch(`${API}/api/colors`).then(r=>r.json()),
-      fetch(`${API}/api/rules`).then(r=>r.json()),
-      fetch(`${API}/api/typography`).then(r=>r.json()),
-    ]);
-
-    document.getElementById('rp-colors').innerHTML = colors.colors
-      .filter(c => c.hex)
-      .map(c => `<div class="rp-color-row"><div class="rp-swatch" style="background:${c.hex}"></div><div class="rp-color-name">${c.name} — ${c.hex}</div></div>`)
-      .join('');
-
-    document.getElementById('rp-typo').innerHTML = typo.typography.slice(0,5)
-      .map(t => `<div class="rp-rule">${t.font_family} ${t.weight}: ${t.rules}</div>`)
-      .join('');
-
-    document.getElementById('rp-rules').innerHTML = rules.rules.slice(0,6)
-      .map(r => {
-        const cls = r.rule_type === 'restriction' ? 'restriction' : r.rule_type === 'principle' ? 'principle' : 'usage';
-        return `<div class="rp-rule"><div class="rp-rule-type ${cls}">${r.rule_type}</div>${r.rule_text || r.content || ''}</div>`;
-      }).join('');
-  } catch(e) { console.error(e); }
-}
-loadBrandData();
 </script>
 </body>
 </html>

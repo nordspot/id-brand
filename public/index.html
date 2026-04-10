@@ -268,7 +268,12 @@
   }
   .sbb-header-left{display:flex;gap:14px;align-items:center}
   .sbb-header-left img{width:24px;height:24px;opacity:.7}
-  .sbb-red-zone{background:var(--sbb-red);padding:12px 16px 40px}
+  .sbb-red-zone{background:var(--sbb-red);padding:12px 16px 40px;transition:all .3s}
+  .sbb-red-zone.tall{padding:20px 16px 56px}
+  .sbb-red-zone.slim{padding:6px 16px 32px}
+  .sbb-red-zone-text{color:rgba(255,255,255,.85);font-size:13px;font-weight:300;margin-top:4px}
+  .sbb-red-zone.evening{background:linear-gradient(135deg,#c40000,#8b0000)}
+  .sbb-red-zone.scenic{padding:20px 16px 56px;background:linear-gradient(180deg,var(--sbb-red) 60%,#d40000)}
   .sbb-search-card{
     margin:-28px 16px 0;position:relative;z-index:5;
     background:#fff;border-radius:16px;
@@ -293,7 +298,63 @@
   .sbb-info-row img{width:18px;height:18px;opacity:.5}
   .sbb-info-row span{font-size:13px;color:var(--sbb-granite);font-weight:300}
 
-  .sbb-section-title{font-size:22px;font-weight:300;padding:24px 16px 14px;letter-spacing:-.01em}
+  .sbb-section-title{font-size:22px;font-weight:300;padding:24px 16px 14px;letter-spacing:-.01em;transition:all .3s}
+
+  /* Visual expression variations */
+  .vis-premium .sbb-section-title{font-size:26px;padding:32px 20px 16px}
+  .vis-premium .sbb-offer-card{margin:0 20px 12px;padding:20px;border-radius:14px;box-shadow:0 1px 8px rgba(0,0,0,.04)}
+  .vis-premium .sbb-offer-desc{font-size:14px;line-height:1.6}
+  .vis-premium .sbb-btn-red{margin:20px 20px 10px;padding:14px;font-size:16px}
+
+  .vis-compact .sbb-section-title{font-size:18px;padding:16px 16px 8px;font-weight:400}
+  .vis-compact .sbb-offer-card{margin:0 12px 4px;padding:12px;border-radius:8px}
+  .vis-compact .sbb-offer-icon{width:22px;height:22px;margin-bottom:6px}
+  .vis-compact .sbb-offer-icon img{width:22px;height:22px}
+  .vis-compact .sbb-offer-title{font-size:14px}
+  .vis-compact .sbb-offer-desc{font-size:12px}
+
+  .vis-senior .sbb-section-title{font-size:26px;padding:28px 16px 16px}
+  .vis-senior .sbb-offer-card{margin:0 16px 12px;padding:20px;border-radius:14px}
+  .vis-senior .sbb-offer-title{font-size:17px}
+  .vis-senior .sbb-offer-desc{font-size:15px;line-height:1.6}
+  .vis-senior .sbb-pill{font-size:15px;padding:8px 20px}
+  .vis-senior .sbb-btn-red{padding:14px;font-size:17px}
+  .vis-senior .sbb-tab span{font-size:11px}
+
+  .vis-dashboard .sbb-section-title{font-size:16px;font-weight:700;padding:14px 16px 6px;text-transform:uppercase;letter-spacing:.08em;color:var(--sbb-granite)}
+  .vis-dashboard .sbb-offer-card{margin:0 12px 3px;padding:10px 14px;border-radius:6px;border:none;border-bottom:1px solid var(--sbb-milk);display:flex;gap:10px;align-items:center}
+  .vis-dashboard .sbb-offer-icon{width:20px;height:20px;margin-bottom:0;flex-shrink:0}
+  .vis-dashboard .sbb-offer-icon img{width:20px;height:20px}
+  .vis-dashboard .sbb-offer-title{font-size:14px;margin-bottom:0}
+  .vis-dashboard .sbb-offer-desc{font-size:12px}
+
+  .vis-discovery .sbb-section-title{font-size:28px;padding:28px 16px 16px}
+  .vis-discovery .sbb-offer-card:first-child{padding:24px;background:var(--sbb-milk);border:none}
+  .vis-discovery .sbb-offer-card:first-child .sbb-offer-title{font-size:18px}
+  .vis-discovery .sbb-offer-card:first-child .sbb-offer-desc{font-size:15px}
+
+  .vis-evening .sbb-section-title{font-size:20px}
+  .vis-evening .sbb-offer-card.highlight{background:rgba(235,0,0,.03);border:1px solid rgba(235,0,0,.15)}
+
+  /* Hero card — first card gets special treatment */
+  .hero-card{margin:0 16px 12px;padding:24px 20px;border-radius:14px;background:var(--sbb-milk);border:none}
+  .hero-card .sbb-offer-icon{width:36px;height:36px;margin-bottom:14px}
+  .hero-card .sbb-offer-icon img{width:36px;height:36px}
+  .hero-card .sbb-offer-title{font-size:18px;margin-bottom:6px}
+  .hero-card .sbb-offer-desc{font-size:15px;line-height:1.6}
+  .hero-card .sbb-pill{font-size:14px;padding:8px 20px;background:var(--sbb-red);color:#fff;border-color:var(--sbb-red)}
+
+  /* Savings badge */
+  .savings-badge{display:inline-block;background:var(--sbb-red);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;margin-bottom:8px}
+
+  /* Step indicator for onboarding */
+  .step-indicator{display:flex;gap:4px;margin-bottom:12px}
+  .step-dot{width:8px;height:8px;border-radius:50%;background:var(--sbb-cloud)}
+  .step-dot.active{background:var(--sbb-red)}
+
+  /* Time display */
+  .time-display{font-size:32px;font-weight:100;color:var(--sbb-red);padding:4px 16px 0;letter-spacing:-.02em}
+  .time-sub{font-size:13px;color:var(--sbb-granite);font-weight:300;padding:0 16px 8px}
 
   .sbb-offer-card{
     margin:0 16px 8px;
@@ -662,6 +723,7 @@ const BILDMARKE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142 48" 
 const personas = [
   {
     id:'lena', name:'Lena, 22', icon:'user-group-medium', label:'Student, Lausanne',
+    vis:{cls:'',zone:'',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},
     lang:'fr', from:'Lausanne', to:'Zürich HB',
     info:'Trafic normal sur tout le réseau.',
     title:'Pour toi.',
@@ -687,6 +749,7 @@ const personas = [
   },
   {
     id:'thomas', name:'Thomas, 54', icon:'user-medium', label:'Executive, Bern',
+    vis:{cls:'vis-premium',zone:'',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},
     lang:'de', from:'Bern', to:'Zürich HB',
     info:'Aktuelle Betriebslage: Normalbetrieb.',
     title:'Für Sie.',
@@ -712,6 +775,7 @@ const personas = [
   },
   {
     id:'yuki', name:'Yuki, 31', icon:'globe-medium', label:'Tourist, Tokyo',
+    vis:{cls:'vis-discovery',zone:'scenic',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Swiss Travel Pass — unlimited travel'},
     lang:'en', from:'Zürich HB', to:'Interlaken Ost',
     info:'All lines operating normally.',
     title:'Discover Switzerland.',
@@ -729,14 +793,15 @@ const personas = [
       {tag:'product',cat:'Product',text:'Swiss Travel Pass in every offer — her primary product, always referenced'},
     ],
     annoRight:[
-      {tag:'typo',cat:'Typography',text:'"Discover Switzerland." — aspirational section title with period'},
-      {tag:'color',cat:'Color',text:'Standard SBB palette — brand identity stays Swiss, not "international"'},
-      {tag:'layout',cat:'Layout',text:'Onboarding card at bottom — newcomer helper without patronizing'},
+      {tag:'typo',cat:'Typography',text:'28px title + hero first card — discovery mode with larger, bolder type'},
+      {tag:'color',cat:'Color',text:'Scenic red zone — gradient banner sets travel-inspiration mood'},
+      {tag:'layout',cat:'Layout',text:'Hero card treatment — Jungfraujoch gets premium card with filled CTA'},
     ],
     reasoning:'English interface for the international tourist. The Swiss Travel Pass is referenced in every offer — it\'s her primary product. Scenic routes and experiences dominate over commuter utility. Jungfraujoch at the top — the most-searched destination. "How Swiss trains work" helps the newcomer without condescension. No abbreviations or local terms. Emotional anchor: wonder and precision.',
   },
   {
     id:'mueller', name:'Familie Müller', icon:'user-group-medium', label:'Family, Luzern',
+    vis:{cls:'',zone:'',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:true},
     lang:'de', from:'Luzern', to:'Engelberg',
     info:'Aktuelle Betriebslage: Normalbetrieb.',
     title:'Familienausflüge.',
@@ -762,6 +827,7 @@ const personas = [
   },
   {
     id:'marco', name:'Marco, 28', icon:'smartphone-medium', label:'Tech, Zürich',
+    vis:{cls:'vis-dashboard',zone:'slim',heroCard:false,timeDisplay:'07:43',timeSub:'IR 75 → Zug · Gleis 5',stepIndicator:false,savingsBadge:false},
     lang:'de', from:'Zürich HB', to:'Zug',
     info:'Normalbetrieb.',
     title:'Nächste Verbindung.',
@@ -779,14 +845,15 @@ const personas = [
       {tag:'product',cat:'Product',text:'Open Data API — speaks directly to his developer identity'},
     ],
     annoRight:[
-      {tag:'typo',cat:'Typography',text:'"Nächste Verbindung." — functional, not aspirational. Utility-first.'},
-      {tag:'color',cat:'Color',text:'No CTA buttons on info cards — he needs facts, not actions'},
-      {tag:'layout',cat:'Layout',text:'Minimal cards, no decoration — information density over visual richness'},
+      {tag:'typo',cat:'Typography',text:'Large time display — departure time as hero element, not buried in card'},
+      {tag:'color',cat:'Color',text:'Slim red zone, dashboard layout — visual noise stripped to minimum'},
+      {tag:'layout',cat:'Layout',text:'Dashboard mode — cards become inline data rows, no borders, pure density'},
     ],
     reasoning:'Marco gets no ads, no trip suggestions — he wants data. Next train with exact departure, platform, and occupancy. WiFi speed and power outlet location: he works on the train. No buy buttons on his info cards — he needs facts, not actions. The Open Data API speaks to his tech background. Emotional anchor: efficiency and control.',
   },
   {
     id:'isabelle', name:'Isabelle, 67', icon:'heart-medium', label:'Retiree, Bellinzona',
+    vis:{cls:'vis-senior',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Buongiorno, Isabelle'},
     lang:'it', from:'Bellinzona', to:'Locarno',
     info:'Traffico regolare su tutta la rete.',
     title:'Per lei.',
@@ -804,14 +871,15 @@ const personas = [
       {tag:'product',cat:'Product',text:'GA benefits woven in — cable car "included" reinforces value of her pass'},
     ],
     annoRight:[
-      {tag:'typo',cat:'Typography',text:'Italian interface — Ticino region triggers full Italian localization'},
-      {tag:'color',cat:'Color',text:'Gentle visual hierarchy — no aggressive highlighting, relaxed scanning'},
-      {tag:'layout',cat:'Layout',text:'Leisure-first — excursions over commuter utility, no tech features'},
+      {tag:'typo',cat:'Typography',text:'Senior mode — 26px titles, 17px body, generous padding throughout'},
+      {tag:'color',cat:'Color',text:'Personal greeting in red zone — "Buongiorno, Isabelle" as warm welcome'},
+      {tag:'layout',cat:'Layout',text:'Hero first card + large pill buttons — accessible, easy-to-tap targets'},
     ],
     reasoning:'Italian interface for Ticino. Formal address (Lei), calm pacing — no urgency, no "3 minutes to next train." Brissago islands, panoramic restaurant, the SBB clock as heritage — content that mirrors her lifestyle. The lakeside trail for an accessible excursion. No technology, no apps. Emotional anchor: beauty and connection.',
   },
   {
     id:'ahmed', name:'Ahmed, 35', icon:'translate-medium', label:'Expat, Geneva',
+    vis:{cls:'',zone:'',heroCard:true,timeDisplay:null,stepIndicator:true,savingsBadge:false},
     lang:'en', from:'Genève', to:'Lausanne',
     info:'All lines operating normally.',
     title:'Getting started.',
@@ -837,6 +905,7 @@ const personas = [
   },
   {
     id:'sophie', name:'Sophie, 17', icon:'music-notes-medium', label:'Teenager, Biel',
+    vis:{cls:'vis-evening',zone:'evening',heroCard:false,timeDisplay:'23:47',timeSub:'Dernier S3 → Biel/Bienne',stepIndicator:false,savingsBadge:false},
     lang:'fr', from:'Biel/Bienne', to:'Bern',
     info:'Trafic normal.',
     title:'Ce soir.',
@@ -854,14 +923,15 @@ const personas = [
       {tag:'product',cat:'Product',text:'Seven25 abo highlighted — her free-after-7pm pass is the hero product'},
     ],
     annoRight:[
-      {tag:'typo',cat:'Typography',text:'"Ce soir." — time-contextual title, not generic "Pour toi"'},
-      {tag:'color',cat:'Color',text:'Same brand palette — the brand stays SBB even in a youth context'},
-      {tag:'layout',cat:'Layout',text:'Group discount with share link — social dimension for going out with friends'},
+      {tag:'typo',cat:'Typography',text:'23:47 time display — last train as hero element, countdown urgency'},
+      {tag:'color',cat:'Color',text:'Evening gradient red zone — darker tones signal nighttime context'},
+      {tag:'layout',cat:'Layout',text:'Highlighted last-train card — visual urgency through subtle red background'},
     ],
     reasoning:'Sophie has Seven25 — an evening-only pass. Content is night-oriented: last train with exact time (parents worry, she wants freedom), Moonliner for late returns, group discount for going out with friends. Direct "tu" address. No business products, no excursions. The .brand agent understands that for a 17-year-old, the train is freedom. Emotional anchor: independence and social belonging.',
   },
   {
     id:'reto', name:'Reto, 42', icon:'bicycle-medium', label:'Cyclist, Thun',
+    vis:{cls:'',zone:'tall',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'22°C · Berner Oberland · Velowetter'},
     lang:'de', from:'Thun', to:'Spiez',
     info:'Normalbetrieb. Veloplätze verfügbar.',
     title:'Deine Tour.',
@@ -887,6 +957,7 @@ const personas = [
   },
   {
     id:'chen', name:'Chen Wei, 45', icon:'diamond-medium', label:'VIP, Davos',
+    vis:{cls:'vis-premium',zone:'slim',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},
     lang:'en', from:'Zürich Flughafen', to:'Davos Platz',
     info:'All services on time.',
     title:'Your journey.',
@@ -912,6 +983,7 @@ const personas = [
   },
   {
     id:'petra', name:'Petra, 38', icon:'piggy-bank-medium', label:'Commuter, Winterthur',
+    vis:{cls:'vis-compact',zone:'slim',heroCard:false,timeDisplay:'07:23',timeSub:'S12 → Zürich HB · Gleis 2',stepIndicator:false,savingsBadge:true},
     lang:'de', from:'Winterthur', to:'Zürich HB',
     info:'S12 fährt pünktlich.',
     title:'Dein Morgen.',
@@ -929,14 +1001,15 @@ const personas = [
       {tag:'product',cat:'Product',text:'Coop points + savings — budget-conscious segment gets value reinforcement'},
     ],
     annoRight:[
-      {tag:'typo',cat:'Typography',text:'Prices shown prominently — cost visibility matters for this segment'},
-      {tag:'color',cat:'Color',text:'Red highlight on first card — "your train is on time" as lead reassurance'},
-      {tag:'layout',cat:'Layout',text:'GA upsell calculator — soft upgrade path, not pushy sales'},
+      {tag:'typo',cat:'Typography',text:'Compact mode — smaller titles, tighter cards, morning-routine density'},
+      {tag:'color',cat:'Color',text:'Slim red zone + time display — commuter gets departure time as hero'},
+      {tag:'layout',cat:'Layout',text:'Savings badge on lead card — budget segment sees "AKTION" tag immediately'},
     ],
     reasoning:'Petra needs reliability — her S12 status is the first thing she sees. Savings tickets for the budget. Coop points show that commuting pays off economically. The GA calculator offers a soft upsell. The service status names her specific line. No luxury, no adventures — "your morning works." Emotional anchor: security and thrift.',
   },
   {
     id:'luigi', name:'Luigi, 72', icon:'clock-medium', label:'Pensioner, Lugano',
+    vis:{cls:'vis-senior',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Buongiorno, Signor Luigi'},
     lang:'it', from:'Lugano', to:'Milano Centrale',
     info:'Traffico regolare.',
     title:'Per lei.',
@@ -954,9 +1027,9 @@ const personas = [
       {tag:'product',cat:'Product',text:'Heritage railway + clock history — connecting identity to Swiss tradition'},
     ],
     annoRight:[
-      {tag:'typo',cat:'Typography',text:'Italian localization — "Patrimonio" (heritage) as section title'},
-      {tag:'color',cat:'Color',text:'Quiet visual hierarchy — no aggressive promotions, leisurely browsing'},
-      {tag:'layout',cat:'Layout',text:'Cultural experiences lead — no tech, no apps, no digital features'},
+      {tag:'typo',cat:'Typography',text:'Senior mode — 26px titles, 17px card text, maximum readability'},
+      {tag:'color',cat:'Color',text:'Personal greeting "Buongiorno, Signor Luigi" — dignified, named welcome'},
+      {tag:'layout',cat:'Layout',text:'Hero card for minibar ritual — brand recognizes his daily habit visually'},
     ],
     reasoning:'Formal Italian (Lei) for the elderly gentleman. The minibar with newspaper is his ritual — the brand recognizes it. Milan day trip for cultural excursion. The Gotthard Railway as heritage. The FFS clock — a connection to Swiss tradition. No technology, no apps. Emotional anchor: tradition and dignity.',
   },
@@ -982,7 +1055,33 @@ document.querySelectorAll('.p-chip').forEach(btn => {
 /* ═══ RENDER PHONE + ANNOTATIONS ═══ */
 function render(p) {
   const s = document.getElementById('screen');
+  const v = p.vis;
   s.scrollTop = 0;
+  s.className = 'phone-screen ' + (v.cls || '');
+
+  const zoneCls = [v.zone || '', v.zone === 'evening' ? 'evening' : '', v.zone === 'scenic' ? 'scenic' : ''].filter(Boolean).join(' ');
+  const zoneText = v.zoneText ? `<div class="sbb-red-zone-text">${v.zoneText}</div>` : '';
+
+  const renderCard = (o, idx) => {
+    const isHero = v.heroCard && idx === 0;
+    const cls = isHero ? 'hero-card' : 'sbb-offer-card' + (o.hl ? ' highlight' : '');
+    const badge = v.savingsBadge && idx === 0 && o.btn ? '<div class="savings-badge">AKTION</div>' : '';
+    return `<div class="${cls}">
+      ${badge}
+      <div class="sbb-offer-icon"><img src="${I(o.icon)}" alt=""/></div>
+      <div class="sbb-offer-title">${o.title}</div>
+      <div class="sbb-offer-desc">${o.desc}</div>
+      ${o.btn ? `<div class="sbb-pill">${o.btn}</div>` : ''}
+    </div>`;
+  };
+
+  const timeEl = v.timeDisplay
+    ? `<div class="time-display">${v.timeDisplay}</div><div class="time-sub">${v.timeSub || ''}</div>`
+    : '';
+
+  const stepEl = v.stepIndicator
+    ? `<div class="step-indicator"><div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div></div>`
+    : '';
 
   s.innerHTML = `
     <div class="sbb-status"></div>
@@ -995,7 +1094,7 @@ function render(p) {
       <div class="sbb-header-right">${BILDMARKE}</div>
     </div>
 
-    <div class="sbb-red-zone"></div>
+    <div class="sbb-red-zone ${zoneCls}">${zoneText}</div>
 
     <div class="sbb-search-card" style="position:relative">
       <div class="sbb-search-row">
@@ -1014,16 +1113,12 @@ function render(p) {
       <span>${p.info}</span>
     </div>
 
-    <div class="sbb-section-title">${p.title}</div>
+    ${timeEl}
 
-    ${p.offers.map(o => `
-      <div class="sbb-offer-card${o.hl?' highlight':''}">
-        <div class="sbb-offer-icon"><img src="${I(o.icon)}" alt=""/></div>
-        <div class="sbb-offer-title">${o.title}</div>
-        <div class="sbb-offer-desc">${o.desc}</div>
-        ${o.btn ? `<div class="sbb-pill">${o.btn}</div>` : ''}
-      </div>
-    `).join('')}
+    <div class="sbb-section-title">${p.title}</div>
+    ${stepEl}
+
+    ${p.offers.map((o, i) => renderCard(o, i)).join('')}
 
     <div class="sbb-btn-red">
       <img src="${I('ticket-route-medium')}" alt=""/>

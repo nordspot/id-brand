@@ -260,18 +260,21 @@
 
   /* Persona visual banner inside phone */
   .sbb-persona-banner{
-    width:100%;height:100px;
+    width:100%;height:120px;
     position:relative;overflow:hidden;
   }
+  .sbb-persona-banner img{
+    width:100%;height:100%;object-fit:cover;display:block;
+  }
   .sbb-persona-banner::after{
-    content:'';position:absolute;bottom:0;left:0;right:0;height:32px;
+    content:'';position:absolute;bottom:0;left:0;right:0;height:40px;
     background:linear-gradient(transparent,#fff);
   }
   .sbb-persona-banner .banner-label{
-    position:absolute;bottom:36px;left:16px;
-    font-size:11px;font-weight:700;color:rgba(255,255,255,.9);
+    position:absolute;bottom:44px;left:16px;
+    font-size:11px;font-weight:700;color:rgba(255,255,255,.95);
     text-transform:uppercase;letter-spacing:.1em;
-    text-shadow:0 1px 4px rgba(0,0,0,.3);
+    text-shadow:0 1px 6px rgba(0,0,0,.5),0 0 12px rgba(0,0,0,.3);
   }
 
   /* Phone */
@@ -801,7 +804,7 @@ const BILDMARKE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142 48" 
 const personas = [
   {
     id:'lena', name:'Lena, 22', icon:'user-group-medium', label:'Student, Lausanne',
-    banner:{bg:'linear-gradient(135deg,#2d327d 0%,#5b61a5 50%,#8b91d1 100%)',label:'Lausanne · EPFL · Halbtax'},
+    banner:{img:'/images/lena-lausanne.jpg',label:'Lausanne · EPFL · Halbtax'},
     vis:{cls:'vis-young',zone:'',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},
     lang:'fr', from:'Lausanne', to:'Zürich HB',
     info:'Trafic normal sur tout le réseau.',
@@ -855,7 +858,7 @@ const personas = [
   },
   {
     id:'yuki', name:'Yuki, 31', icon:'globe-medium', label:'Tourist, Tokyo',
-    banner:{bg:'linear-gradient(160deg,#1a6b4a 0%,#2d8f63 30%,#87ceeb 70%,#f0f8ff 100%)',label:'Swiss Alps · Jungfraujoch'},
+    banner:{img:'/images/yuki-alps.jpg',label:'Swiss Alps · Jungfraujoch'},
     vis:{cls:'vis-discovery',zone:'scenic',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Swiss Travel Pass — unlimited travel'},
     lang:'en', from:'Zürich HB', to:'Interlaken Ost',
     info:'All lines operating normally.',
@@ -882,7 +885,7 @@ const personas = [
   },
   {
     id:'mueller', name:'Familie Müller', icon:'user-group-medium', label:'Family, Luzern',
-    banner:{bg:'linear-gradient(135deg,#4a90d9 0%,#87ceeb 50%,#98d4a2 100%)',label:'Engelberg · Familienausflug'},
+    banner:{img:'/images/family-engelberg.jpg',label:'Engelberg · Familienausflug'},
     vis:{cls:'vis-family',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:true,zoneText:'Ihr Familienausflug'},
     lang:'de', from:'Luzern', to:'Engelberg',
     info:'Aktuelle Betriebslage: Normalbetrieb.',
@@ -936,7 +939,7 @@ const personas = [
   },
   {
     id:'isabelle', name:'Isabelle, 67', icon:'heart-medium', label:'Retiree, Bellinzona',
-    banner:{bg:'linear-gradient(180deg,#e8d5b7 0%,#c9a96e 40%,#5a8f7b 100%)',label:'Lago Maggiore · Ticino'},
+    banner:{img:'/images/isabelle-ticino.jpg',label:'Lago Maggiore · Ticino'},
     vis:{cls:'vis-senior',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Buongiorno, Isabelle'},
     lang:'it', from:'Bellinzona', to:'Locarno',
     info:'Traffico regolare su tutta la rete.',
@@ -990,7 +993,7 @@ const personas = [
   },
   {
     id:'sophie', name:'Sophie, 17', icon:'music-notes-medium', label:'Teenager, Biel',
-    banner:{bg:'linear-gradient(135deg,#1a1a2e 0%,#16213e 40%,#0f3460 70%,#533483 100%)',label:'Bern · Nachtleben'},
+    banner:{img:'/images/sophie-bern-night.jpg',label:'Bern · Nachtleben'},
     vis:{cls:'vis-evening',zone:'evening',heroCard:false,timeDisplay:'23:47',timeSub:'Dernier S3 → Biel/Bienne',stepIndicator:false,savingsBadge:false},
     lang:'fr', from:'Biel/Bienne', to:'Bern',
     info:'Trafic normal.',
@@ -1017,7 +1020,7 @@ const personas = [
   },
   {
     id:'reto', name:'Reto, 42', icon:'bicycle-medium', label:'Cyclist, Thun',
-    banner:{bg:'linear-gradient(160deg,#2d6a4f 0%,#52b788 40%,#95d5b2 70%,#d8f3dc 100%)',label:'Thunersee · Berner Oberland'},
+    banner:{img:'/images/reto-thunersee.jpg',label:'Thunersee · Berner Oberland'},
     vis:{cls:'vis-activity',zone:'tall',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'22°C · Berner Oberland · Velowetter'},
     lang:'de', from:'Thun', to:'Spiez',
     info:'Normalbetrieb. Veloplätze verfügbar.',
@@ -1044,7 +1047,7 @@ const personas = [
   },
   {
     id:'chen', name:'Chen Wei, 45', icon:'diamond-medium', label:'VIP, Davos',
-    banner:{bg:'linear-gradient(135deg,#2c3e50 0%,#3d5a80 50%,#98c1d9 100%)',label:'Davos · First Class'},
+    banner:{img:'/images/hans-davos.jpg',label:'Davos · First Class'},
     vis:{cls:'vis-premium',zone:'slim',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},
     lang:'en', from:'Zürich Flughafen', to:'Davos Platz',
     info:'All services on time.',
@@ -1098,7 +1101,7 @@ const personas = [
   },
   {
     id:'luigi', name:'Luigi, 72', icon:'clock-medium', label:'Pensioner, Lugano',
-    banner:{bg:'linear-gradient(180deg,#d4a574 0%,#c19456 40%,#4a7c59 100%)',label:'Lugano · Lago · Gottardo'},
+    banner:{img:'/images/lucia-lugano.jpg',label:'Lugano · Lago · Gottardo'},
     vis:{cls:'vis-senior',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Buongiorno, Signor Luigi'},
     lang:'it', from:'Lugano', to:'Milano Centrale',
     info:'Traffico regolare.',
@@ -1174,7 +1177,7 @@ function render(p) {
     : '';
 
   const bannerEl = p.banner
-    ? `<div class="sbb-persona-banner" style="background:${p.banner.bg}"><span class="banner-label">${p.banner.label}</span></div>`
+    ? `<div class="sbb-persona-banner"><img src="${p.banner.img}" alt="${p.banner.label}" loading="eager"/><span class="banner-label">${p.banner.label}</span></div>`
     : '';
 
   s.innerHTML = `

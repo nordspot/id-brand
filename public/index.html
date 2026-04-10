@@ -30,10 +30,9 @@
     border-bottom:1px solid var(--sbb-cloud);
     padding:14px 40px;display:flex;justify-content:space-between;align-items:center;
   }
-  .nav-left{display:flex;align-items:center;gap:12px}
-  .nav-logo{display:flex;align-items:center;gap:10px}
-  .nav h1{font-size:16px;font-weight:300;letter-spacing:.01em}
-  .nav h1 strong{color:var(--sbb-red);font-weight:700}
+  .nav-left{display:flex;align-items:center;gap:0}
+  .nav h1{font-size:18px;font-weight:300;letter-spacing:-.01em}
+  .nav h1 strong{color:var(--sbb-red);font-weight:700;font-size:22px}
   .nav-links{display:flex;gap:24px;align-items:center}
   .nav-links a{color:var(--sbb-granite);text-decoration:none;font-size:14px;font-weight:300;transition:color .2s}
   .nav-links a:hover{color:var(--sbb-black)}
@@ -42,32 +41,32 @@
 
   /* ═══ HERO ═══ */
   .hero{
-    padding:160px 40px 100px;
+    padding:140px 40px 80px;
     max-width:1100px;margin:0 auto;
   }
   .hero-eyebrow{
-    font-size:13px;color:var(--sbb-red);text-transform:uppercase;
-    letter-spacing:.2em;font-weight:700;margin-bottom:24px;
+    font-size:13px;color:var(--sbb-granite);text-transform:uppercase;
+    letter-spacing:.18em;font-weight:400;margin-bottom:32px;
   }
   .hero h2{
-    font-size:72px;font-weight:300;line-height:1.05;
-    letter-spacing:-.03em;margin-bottom:32px;max-width:900px;
+    font-size:68px;font-weight:300;line-height:1.08;
+    letter-spacing:-.03em;margin-bottom:36px;max-width:850px;
   }
   .hero h2 em{font-style:normal;color:var(--sbb-red);font-weight:300}
   .hero-sub{
-    font-size:22px;font-weight:300;color:var(--sbb-anthracite);
-    line-height:1.6;max-width:680px;margin-bottom:48px;
+    font-size:21px;font-weight:300;color:var(--sbb-anthracite);
+    line-height:1.65;max-width:640px;margin-bottom:56px;
   }
   .hero-meta{
-    display:flex;gap:40px;padding-top:32px;border-top:1px solid var(--sbb-cloud);
+    display:flex;gap:48px;padding-top:28px;border-top:1px solid var(--sbb-cloud);
   }
-  .hero-meta-item{font-size:14px;color:var(--sbb-granite);font-weight:300}
-  .hero-meta-item strong{color:var(--sbb-black);font-weight:400}
+  .hero-meta-item{font-size:14px;color:var(--sbb-granite);font-weight:300;line-height:1.5}
+  .hero-meta-item strong{color:var(--sbb-black);font-weight:400;display:block}
   .hero-scroll{
-    margin-top:60px;display:flex;align-items:center;gap:10px;
-    font-size:14px;color:var(--sbb-storm);font-weight:300;
+    margin-top:56px;display:flex;align-items:center;gap:10px;
+    font-size:13px;color:var(--sbb-storm);font-weight:300;letter-spacing:.05em;
   }
-  .hero-scroll-line{width:24px;height:1px;background:var(--sbb-storm)}
+  .hero-scroll-line{width:28px;height:1px;background:var(--sbb-storm)}
 
   /* ═══ SECTION COMMON ═══ */
   section{padding:100px 40px}
@@ -419,9 +418,6 @@
 <!-- ═══ NAV ═══ -->
 <nav class="nav">
   <div class="nav-left">
-    <div class="nav-logo">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142 48" width="36" height="12"><path fill="#eb0000" d="M1 47h141V1H1v46z"/><path fill="#fff" d="M87 40h9.3L83.8 27.7h15.5V40h7.4V27.7h15.6L109.7 40h9.3l16-16-15.9-16h-9.3l12.5 12.3h-15.6V8h-7.4v12.3H83.8L96.3 8H87L71 24l16 16z"/></svg>
-    </div>
     <h1><strong>.</strong>brand</h1>
   </div>
   <div class="nav-links">
@@ -429,21 +425,22 @@
     <a href="#idea">Concept</a>
     <a href="#typologies">Theory</a>
     <a href="#demo">Live demo</a>
-    <a href="https://sbb-brand-api.billowing-leaf-4d6a.workers.dev/api" target="_blank">API</a>
+    <a href="#landscape">Landscape</a>
+    <a href="https://sbb-brand-api.billowing-leaf-4d6a.workers.dev/api" target="_blank">SBB API &#8599;</a>
   </div>
 </nav>
 
 <!-- ═══ HERO ═══ -->
 <section class="hero" id="top">
-  <div class="hero-eyebrow">Nord.spot &times; Brigade Studio &mdash; Fribourg, 2026</div>
+  <div class="hero-eyebrow">A concept by Nord.spot &times; Brigade Studio</div>
   <h2>When the brand becomes <em>the agent.</em></h2>
   <p class="hero-sub">
     A .brand file is not a document. It is a living intelligence &mdash; an MCP agent that embodies a brand's identity, speaks to consumers directly, adapts to every audience, and learns from every interaction.
   </p>
   <div class="hero-meta">
-    <div class="hero-meta-item"><strong>Proof of concept</strong> &mdash; SBB/CFF/FFS</div>
-    <div class="hero-meta-item"><strong>Protocol</strong> &mdash; MCP (Model Context Protocol)</div>
-    <div class="hero-meta-item"><strong>Infrastructure</strong> &mdash; Cloudflare edge</div>
+    <div class="hero-meta-item"><strong>Proof of concept</strong>SBB/CFF/FFS</div>
+    <div class="hero-meta-item"><strong>Protocol</strong>MCP (Model Context Protocol)</div>
+    <div class="hero-meta-item"><strong>Infrastructure</strong>Cloudflare edge, global</div>
   </div>
   <div class="hero-scroll">
     <div class="hero-scroll-line"></div>
@@ -551,9 +548,9 @@
 <!-- ═══ LIVE DEMO ═══ -->
 <section class="demo-section" id="demo">
   <div class="section-inner">
-    <div class="section-eyebrow">Proof of concept &mdash; SBB/CFF/FFS</div>
+    <div class="section-eyebrow">Live demo &mdash; SBB/CFF/FFS as test case</div>
     <h3 class="section-title">One brand, twelve people.</h3>
-    <p class="section-lead">Same rules, different experience. Select a persona &mdash; watch the brand agent adapt language, tone, content, and product positioning in real time.</p>
+    <p class="section-lead">Same brand rules, radically different experience. Select a persona &mdash; watch the .brand agent adapt language, tone, content, and product positioning in real time. The annotations reveal which brand decisions are firing.</p>
 
     <div class="persona-strip" id="persona-strip"></div>
 
@@ -645,10 +642,10 @@
 <footer>
   <div class="footer-inner">
     <div class="footer-left">
-      <strong>.</strong>brand &mdash;
-      <a href="https://nord.spot">Nord.spot</a> &times; <a href="https://brigade.studio">Brigade Studio</a> &mdash; Fribourg
+      <strong>.</strong>brand &mdash; a concept by
+      <a href="https://nord.spot">Nord.spot</a> &times; <a href="https://brigade.studio">Brigade Studio</a> &mdash; Fribourg, 2026
     </div>
-    <div class="footer-right">SBB brand data used for research purposes &middot; <a href="https://sbb-brand-api.billowing-leaf-4d6a.workers.dev/api" style="color:#777">API</a></div>
+    <div class="footer-right">SBB/CFF/FFS brand data used for research &middot; <a href="https://sbb-brand-api.billowing-leaf-4d6a.workers.dev/api" style="color:#777">API</a></div>
   </div>
 </footer>
 

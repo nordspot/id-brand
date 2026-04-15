@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<title>.brand — When the Brand Becomes the Agent</title>
+<style>
+  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-UltraLight.woff2') format('woff2');font-weight:100}
+  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Thin.woff2') format('woff2');font-weight:200}
+  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Light.woff2') format('woff2');font-weight:300}
+  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Roman.woff2') format('woff2');font-weight:400}
+  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Bold.woff2') format('woff2');font-weight:700}
+
+  @property --tracking{syntax:'<length>';inherits:false;initial-value:-0.03em}
+  @property --glow-x{syntax:'<percentage>';inherits:false;initial-value:30%}
+  @property --glow-y{syntax:'<percentage>';inherits:false;initial-value:20%}
+
+  :root{
+    --bg:#0F0D0B;--surface:#1A1714;--surface-2:#231F1A;
+    --border:rgba(245,240,235,.06);--border-hover:rgba(245,240,235,.14);
+    --text-1:#F5F0EB;--text-2:#8A7E72;--text-3:#5C5249;--text-4:#3A332D;
+    --amber:#D4A574;--ember:#C4623A;
+    --serif:'Instrument Serif',Georgia,serif;
+    --sans:'DM Sans',system-ui,sans-serif;
+    --mono:'DM Mono',monospace;
+    --sbb-red:#eb0000;--sbb-red-dark:#c40000;--sbb-black:#000;
+    --sbb-anthracite:#4c4c4c;--sbb-blue:#2d327d;--sbb-white:#fff;
+    --sbb-milk:#f6f6f6;--sbb-cloud:#e5e5e5;--sbb-granite:#686868;
+    --sbb-iron:#767676;--sbb-storm:#a8a8a8;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-snap-type:y proximity}
+  body{font-family:var(--sans);background:var(--bg);color:var(--text-1);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::selection{background:var(--amber);color:var(--bg)}
+
+  /* Grain */
+  body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.03;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  /* Ambient glow */
+  body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:radial-gradient(ellipse at var(--glow-x) var(--glow-y),rgba(212,165,116,.05) 0%,rgba(196,98,58,.02) 40%,transparent 70%);
+    animation:glowDrift 20s ease-in-out infinite alternate}
+  @keyframes glowDrift{to{--glow-x:70%;--glow-y:60%}}
+
+  /* Scroll reveal */
+  @supports(animation-timeline:view()){
+    .reveal{animation:fadeUp .6s both;animation-timeline:view();animation-range:entry 0% entry 35%}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(24px);filter:blur(3px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+  }
+  @supports not(animation-timeline:view()){.reveal{opacity:1}}
+
+  /* ═══ MASTHEAD ═══ */
+  .masthead{position:fixed;top:0;left:0;right:0;z-index:300;padding:20px max(32px,4vw);display:flex;justify-content:space-between;align-items:center;transition:background .4s,border-color .4s;border-bottom:1px solid transparent}
+  .masthead.scrolled{background:rgba(15,13,11,.88);backdrop-filter:blur(16px);border-bottom-color:var(--border)}
+  .wordmark{font-family:var(--sans);font-size:18px;font-weight:300;color:var(--text-2)}
+  .wordmark span{color:var(--amber);font-weight:700}
+  .masthead-status{font-family:var(--mono);font-size:10px;color:var(--text-3);letter-spacing:.06em;transition:color .3s}
+
+  /* ═══ HERO ═══ */
+  .hero{min-height:100vh;display:grid;grid-template-columns:1fr auto;align-items:center;gap:max(40px,6vw);padding:0 max(40px,6vw);scroll-snap-align:start}
+  .hero-text{max-width:520px}
+  .hero-text h1{font-family:var(--serif);font-size:clamp(48px,8vw,110px);font-weight:400;line-height:.92;letter-spacing:var(--tracking);color:var(--text-1);text-wrap:balance;animation:breathe 8s ease-in-out infinite alternate}
+  @keyframes breathe{to{--tracking:-0.005em}}
+  .hero-sub{font-size:17px;font-weight:300;color:var(--text-2);line-height:1.75;max-width:400px;margin-top:32px}
+  .hero-meta{font-family:var(--mono);font-size:11px;color:var(--text-3);display:flex;gap:24px;margin-top:40px;letter-spacing:.04em}
+  .hero-meta .n{color:var(--amber)}
+  .hero-phone-wrap{flex-shrink:0;position:relative}
+  .hero-phone{width:320px;min-height:680px;border-radius:40px;border:6px solid #1a1714;background:#fff;overflow:hidden;position:relative;box-shadow:0 0 0 1px rgba(245,240,235,.04),0 40px 80px rgba(0,0,0,.4)}
+  .hero-phone .phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:110px;height:24px;background:#1a1714;border-radius:0 0 14px 14px;z-index:10}
+  .hero-phone .phone-screen{width:100%;max-height:668px;min-height:668px;overflow-y:auto;overflow-x:hidden;color:var(--sbb-black);font-family:'SBBWeb','Helvetica Neue',sans-serif;transition:opacity .3s}
+  .hero-phone .phone-screen::-webkit-scrollbar{width:0}
+  .hero-cycling{font-family:var(--mono);font-size:10px;color:var(--text-3);text-align:center;margin-top:16px;letter-spacing:.06em}
+
+  /* ═══ DEMO — STICKY SCROLL ═══ */
+  .demo{border-top:1px solid var(--border)}
+  .demo-layout{display:grid;grid-template-columns:auto 1fr;max-width:1400px;margin:0 auto}
+  .demo-phone-col{position:sticky;top:calc(50vh - 400px);height:fit-content;padding:0 max(32px,3vw);z-index:2;align-self:start}
+  .demo-phone{width:375px;min-height:780px;border-radius:44px;border:6px solid #1a1714;background:#fff;overflow:hidden;position:relative;box-shadow:0 0 0 1px rgba(245,240,235,.04),0 40px 80px rgba(0,0,0,.4)}
+  .demo-phone .phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:126px;height:28px;background:#1a1714;border-radius:0 0 16px 16px;z-index:10}
+  .demo-phone .phone-screen{width:100%;max-height:768px;min-height:768px;overflow-y:auto;overflow-x:hidden;color:var(--sbb-black);font-family:'SBBWeb','Helvetica Neue',sans-serif;transition:opacity .15s}
+  .demo-phone .phone-screen::-webkit-scrollbar{width:0}
+  .demo-phone .phone-screen.transitioning{opacity:0}
+
+  .agent-thinking{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(15,13,11,.92);z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;border-radius:38px}
+  .agent-thinking.visible{opacity:1;pointer-events:auto}
+  .thinking-ring{width:36px;height:36px;border:2px solid var(--amber);border-top-color:transparent;border-radius:50%;margin-bottom:14px;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .thinking-label{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.1em}
+  .thinking-detail{font-family:var(--mono);font-size:10px;color:var(--text-3);margin-top:6px}
+
+  .demo-scroll-col{padding:16vh max(40px,4vw) 16vh 0}
+  .scroll-panel{min-height:80vh;display:flex;flex-direction:column;justify-content:center;padding:8vh 0}
+  .panel-chapter{font-family:var(--mono);font-size:11px;color:var(--text-4);letter-spacing:.15em;margin-bottom:20px}
+  .scroll-panel h2{font-family:var(--serif);font-size:clamp(28px,3.5vw,48px);font-weight:400;line-height:1.1;letter-spacing:-.02em;color:var(--text-1);text-wrap:balance;margin-bottom:28px}
+  .scroll-panel h2 em{font-style:italic;color:var(--amber)}
+  .panel-body{font-size:16px;font-weight:300;color:var(--text-2);line-height:1.75;max-width:480px;margin-bottom:32px}
+
+  .persona-strip{display:flex;gap:6px;overflow-x:auto;padding:8px 0 12px;scrollbar-width:none}
+  .persona-strip::-webkit-scrollbar{display:none}
+  .p-chip{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:24px;border:1px solid var(--border);background:transparent;color:var(--text-3);cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:400;transition:all .3s;white-space:nowrap}
+  .p-chip:hover{border-color:var(--border-hover);color:var(--text-2)}
+  .p-chip.active{border-color:var(--amber);color:var(--text-1)}
+  .p-chip .lang{font-family:var(--mono);font-size:9px;color:var(--text-3);text-transform:uppercase;opacity:.6}
+  .p-chip.active .lang{color:var(--amber);opacity:1}
+
+  .scenario-strip{display:flex;gap:5px;padding:4px 0 16px;scrollbar-width:none}
+  .scenario-strip::-webkit-scrollbar{display:none}
+  .s-chip{flex-shrink:0;padding:5px 12px;border-radius:14px;border:1px solid var(--border);background:transparent;color:var(--text-3);cursor:pointer;font-family:var(--mono);font-size:10px;transition:all .3s;white-space:nowrap;letter-spacing:.06em}
+  .s-chip:hover{border-color:var(--border-hover);color:var(--text-2)}
+  .s-chip.active{border-color:var(--border-hover);color:var(--text-1)}
+
+  .decision-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px}
+  .decision-item{padding:14px;background:var(--surface);border-radius:8px;border:1px solid var(--border)}
+  .decision-tag{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;color:var(--amber)}
+  .decision-text{font-size:12px;color:var(--text-2);line-height:1.5}
+  .reasoning-block{padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px}
+  .reasoning-block h4{font-family:var(--mono);font-size:10px;color:var(--amber);letter-spacing:.15em;margin-bottom:10px}
+  .reasoning-block p{font-size:14px;font-weight:300;color:var(--text-2);line-height:1.7}
+  .reasoning-cursor{display:inline-block;width:2px;height:1em;background:var(--amber);margin-left:1px;animation:blink .8s step-end infinite;vertical-align:text-bottom}
+  @keyframes blink{50%{opacity:0}}
+
+  .arch-layers{display:flex;flex-direction:column;gap:2px;margin-top:24px}
+  .arch-layer{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:6px;background:var(--surface);cursor:pointer;transition:all .3s;border-left:2px solid transparent}
+  .arch-layer:hover{background:var(--surface-2)}
+  .arch-layer.active{background:var(--surface-2);border-left-color:var(--amber)}
+  .arch-num{font-family:var(--mono);font-size:11px;color:var(--text-4);width:20px}
+  .arch-name{font-size:14px;font-weight:500;flex:1}
+  .arch-drift{font-family:var(--mono);font-size:9px;letter-spacing:.06em;padding:3px 8px;border-radius:3px}
+  .drift-locked{background:rgba(196,98,58,.1);color:var(--ember)}
+  .drift-controlled{background:rgba(212,165,116,.1);color:var(--amber)}
+  .drift-autonomous{background:rgba(138,126,114,.1);color:var(--text-2)}
+  .drift-legend{display:flex;gap:20px;margin-top:16px;font-family:var(--mono);font-size:10px;color:var(--text-3);letter-spacing:.04em}
+  .drift-legend i{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px;vertical-align:middle}
+
+  /* ═══ THEORY ═══ */
+  .theory{padding:16vh max(40px,6vw);border-top:1px solid var(--border)}
+  .theory-intro{max-width:580px;margin-bottom:56px}
+  .theory-intro h2{font-family:var(--serif);font-size:clamp(28px,4vw,52px);font-weight:400;line-height:1.1;color:var(--text-1);text-wrap:balance;margin-bottom:20px}
+  .theory-intro h2 em{font-style:italic;color:var(--amber)}
+  .theory-intro p{font-size:15px;color:var(--text-2);line-height:1.75}
+  .typo-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:8px;margin-right:calc(-1 * max(40px,6vw));padding-right:max(40px,6vw);scrollbar-width:none}
+  .typo-track::-webkit-scrollbar{display:none}
+  .typo-card{flex-shrink:0;width:220px;padding:28px 22px;background:var(--surface);border-radius:12px;border:1px solid var(--border);scroll-snap-align:start;transition:border-color .4s}
+  .typo-card:hover{border-color:var(--border-hover)}
+  .typo-vis{width:44px;height:44px;margin-bottom:16px}
+  .typo-num{font-family:var(--mono);font-size:10px;color:var(--text-4);margin-bottom:10px;display:block;letter-spacing:.1em}
+  .typo-card h3{font-family:var(--sans);font-size:15px;font-weight:500;margin-bottom:6px}
+  .typo-card p{font-size:13px;color:var(--text-3);line-height:1.5}
+  /* Vignettes */
+  .v-container{width:44px;height:44px;border:1.5px solid var(--text-3);border-radius:6px;display:flex;align-items:center;justify-content:center;transition:border-color .6s}.v-fill{width:55%;height:55%;background:var(--text-3);transition:background .6s}.typo-card:hover .v-fill{background:var(--amber)}.typo-card:hover .v-container{border-color:var(--amber)}
+  .v-morph{width:44px;height:44px;background:var(--text-3);border-radius:6px;transition:all .8s}.typo-card:hover .v-morph{border-radius:50%;background:var(--amber)}
+  .v-dots{display:grid;grid-template-columns:repeat(4,7px);gap:3px}.v-dots span{width:7px;height:7px;border-radius:50%;background:var(--text-4);transition:all .4s}.typo-card:hover .v-dots span:nth-child(odd){background:var(--amber);transform:scale(1.2)}
+  .v-react{width:44px;height:44px;border:1.5px solid var(--text-3);border-radius:50%;transition:all .4s}.typo-card:hover .v-react{border-color:var(--amber);box-shadow:0 0 16px rgba(212,165,116,.2);transform:scale(1.08)}
+  .v-collab{display:flex;gap:3px;align-items:flex-end}.v-collab span{width:10px;background:var(--text-4);border-radius:2px;transition:all .4s}.v-collab span:nth-child(1){height:16px}.v-collab span:nth-child(2){height:28px}.v-collab span:nth-child(3){height:22px}.v-collab span:nth-child(4){height:36px}.typo-card:hover .v-collab span{background:var(--amber)}
+  .v-evolve{width:44px;height:44px;border:1.5px solid var(--text-3);border-radius:6px;position:relative;overflow:hidden;transition:border-color .6s}.v-evolve::after{content:'';position:absolute;bottom:0;left:0;right:0;height:25%;background:var(--text-4);transition:all .8s}.typo-card:hover .v-evolve{border-color:var(--amber)}.typo-card:hover .v-evolve::after{height:75%;background:var(--amber)}
+  .v-conscious{width:44px;height:44px;border:1.5px solid var(--amber);border-radius:50%;animation:consciousPulse 3s ease-in-out infinite alternate;position:relative}
+  .v-conscious::after{content:'';position:absolute;inset:8px;border:1px solid var(--amber);border-radius:50%;opacity:.4}
+  @keyframes consciousPulse{from{transform:scale(.95);opacity:.7}to{transform:scale(1.05);opacity:1}}
+  .typo-seventh{flex-shrink:0;width:320px;padding:32px 28px;background:rgba(212,165,116,.03);border-radius:12px;border:1px solid rgba(212,165,116,.15);scroll-snap-align:start}
+  .typo-seventh h3{font-family:var(--serif);font-size:20px;font-weight:400}
+
+  /* ═══ CONTENT SECTIONS ═══ */
+  .content-section{padding:14vh max(40px,6vw);border-top:1px solid var(--border)}
+  .content-section .inner{max-width:900px;margin:0 auto}
+  .content-section h2{font-family:var(--serif);font-size:clamp(28px,4vw,52px);font-weight:400;line-height:1.1;color:var(--text-1);text-wrap:balance;margin-bottom:24px}
+  .content-section h2 em{font-style:italic;color:var(--amber)}
+  .content-section .lead{font-size:17px;font-weight:300;color:var(--text-2);line-height:1.75;max-width:640px;margin-bottom:48px}
+  .content-section .eyebrow{font-family:var(--mono);font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:.2em;margin-bottom:16px}
+
+  .idea-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:48px}
+  .idea-card{padding:36px;background:var(--surface);border:1px solid var(--border);border-radius:14px;transition:border-color .3s}
+  .idea-card:hover{border-color:var(--border-hover)}
+  .idea-card.solution{border-color:rgba(212,165,116,.2)}
+  .idea-card h4{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.15em;margin-bottom:16px}
+  .idea-card.problem h4{color:var(--text-3)}
+  .idea-card.solution h4{color:var(--amber)}
+  .idea-card p{font-size:15px;font-weight:300;color:var(--text-2);line-height:1.75}
+  .idea-quote{margin-top:48px;padding:40px 0;border-top:1px solid var(--border);text-align:center}
+  .idea-quote blockquote{font-family:var(--serif);font-size:clamp(22px,3vw,34px);font-weight:400;font-style:italic;color:var(--text-1)}
+  .idea-quote cite{display:block;margin-top:16px;font-size:13px;color:var(--text-3);font-style:normal}
+
+  /* Full architecture */
+  .arch-full{margin-top:48px}
+  .arch-full-layer{display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:8px;background:var(--surface);cursor:pointer;transition:all .3s;border-left:2px solid transparent;margin-bottom:2px}
+  .arch-full-layer:hover{background:var(--surface-2)}
+  .arch-full-layer.active{background:var(--surface-2);border-left-color:var(--amber)}
+  .arch-full-layer .num{font-family:var(--mono);font-size:12px;color:var(--text-4);width:24px;flex-shrink:0}
+  .arch-full-layer .name{font-size:15px;font-weight:500;flex:1}
+  .arch-full-layer .drift{font-family:var(--mono);font-size:9px;letter-spacing:.06em;padding:3px 8px;border-radius:3px}
+  .arch-full-desc{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;padding:0 20px 0 60px;font-size:14px;font-weight:300;color:var(--text-2);line-height:1.7}
+  .arch-full-desc.open{max-height:120px;padding:8px 20px 16px 60px}
+
+  .drift-legend-full{display:flex;gap:24px;margin-top:20px;padding:16px 0;font-family:var(--mono);font-size:10px;color:var(--text-3);letter-spacing:.04em;border-top:1px solid var(--border)}
+  .drift-legend-full i{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px;vertical-align:middle}
+
+  /* Landscape */
+  .landscape-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px}
+  .lc-card{padding:28px;background:var(--surface);border:1px solid var(--border);border-radius:12px;transition:border-color .3s}
+  .lc-card:hover{border-color:var(--border-hover)}
+  .lc-card h4{font-size:15px;font-weight:600;margin-bottom:4px}
+  .lc-card .lc-type{font-family:var(--mono);font-size:10px;color:var(--text-3);margin-bottom:10px;letter-spacing:.04em}
+  .lc-card p{font-size:14px;font-weight:300;color:var(--text-2);line-height:1.6}
+  .lc-card.ours{border-color:rgba(212,165,116,.2);background:rgba(212,165,116,.02)}
+
+  /* Roadmap */
+  .roadmap{display:flex;gap:12px;margin-top:40px;overflow-x:auto;scrollbar-width:none}
+  .roadmap::-webkit-scrollbar{display:none}
+  .rm-phase{flex:1;min-width:180px;padding:24px;background:var(--surface);border-radius:10px;border:1px solid var(--border);border-top:3px solid var(--border)}
+  .rm-phase.now{border-top-color:var(--amber)}
+  .rm-phase h4{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin-bottom:10px}
+  .rm-phase p{font-size:13px;font-weight:300;color:var(--text-2);line-height:1.6}
+
+  /* ═══ FOOTER ═══ */
+  .close{padding:40px max(40px,6vw);display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--text-3);letter-spacing:.04em;border-top:1px solid var(--border)}
+  .close a{color:var(--text-3);text-decoration:none;transition:color .2s}.close a:hover{color:var(--text-1)}
+
+  /* ═══ SBB PHONE INTERNALS ═══ */
+  .sbb-persona-banner{width:100%;height:120px;position:relative;overflow:hidden}.sbb-persona-banner img{width:100%;height:100%;object-fit:cover;display:block}.sbb-persona-banner::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(transparent,#fff)}.sbb-persona-banner .banner-label{position:absolute;bottom:44px;left:16px;font-size:11px;font-weight:700;color:rgba(255,255,255,.95);text-transform:uppercase;letter-spacing:.1em;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+  .sbb-status{height:28px;background:#fff}.sbb-header{display:flex;justify-content:space-between;align-items:center;padding:2px 16px 10px;background:#fff}.sbb-header-left{display:flex;gap:14px;align-items:center}.sbb-header-left img{width:24px;height:24px;opacity:.7}
+  .sbb-red-zone{background:var(--sbb-red);padding:12px 16px 40px;transition:all .4s}.sbb-red-zone.tall{padding:20px 16px 56px}.sbb-red-zone.slim{padding:6px 16px 32px}.sbb-red-zone-text{color:rgba(255,255,255,.85);font-size:13px;font-weight:300;margin-top:4px}.sbb-red-zone.evening{background:linear-gradient(135deg,#c40000,#8b0000)}.sbb-red-zone.scenic{padding:20px 16px 56px;background:linear-gradient(180deg,var(--sbb-red) 60%,#d40000)}.sbb-red-zone.disruption{background:linear-gradient(135deg,#eb0000,#ff4444)}.sbb-red-zone.morning{background:linear-gradient(135deg,#eb0000 40%,#d40000)}
+  .sbb-search-card{margin:-28px 16px 0;position:relative;z-index:5;background:#fff;border-radius:16px;box-shadow:0 2px 16px rgba(0,0,0,.08);padding:4px 0}.sbb-search-row{display:flex;align-items:center;gap:10px;padding:12px 16px}.sbb-search-row+.sbb-search-row{border-top:1px solid var(--sbb-milk)}.sbb-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--sbb-anthracite);flex-shrink:0}.sbb-dot.dest{background:var(--sbb-anthracite)}.sbb-search-text{font-size:15px;color:var(--sbb-black);font-weight:300;flex:1}.sbb-swap{width:36px;height:36px;display:flex;align-items:center;justify-content:center;position:absolute;right:16px;top:50%;transform:translateY(-50%);background:var(--sbb-milk);border-radius:50%}.sbb-swap img{width:20px;height:20px;opacity:.7}
+  .sbb-info-row{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--sbb-milk)}.sbb-info-row img{width:18px;height:18px;opacity:.5}.sbb-info-row span{font-size:13px;color:var(--sbb-granite);font-weight:300}.sbb-info-row.disruption-info{background:rgba(235,0,0,.04)}.sbb-info-row.disruption-info span{color:var(--sbb-red);font-weight:400}
+  .sbb-section-title{font-size:22px;font-weight:300;padding:24px 16px 14px;letter-spacing:-.01em;transition:all .3s}
+  .vis-premium .sbb-section-title{font-size:26px;padding:32px 20px 16px}.vis-premium .sbb-offer-card{margin:0 20px 12px;padding:20px;border-radius:14px;box-shadow:0 1px 8px rgba(0,0,0,.04)}.vis-premium .sbb-offer-desc{font-size:14px;line-height:1.6}.vis-premium .sbb-btn-red{margin:20px 20px 10px;padding:14px;font-size:16px}
+  .vis-compact .sbb-section-title{font-size:18px;padding:16px 16px 8px;font-weight:400}.vis-compact .sbb-offer-card{margin:0 12px 4px;padding:12px;border-radius:8px}.vis-compact .sbb-offer-icon{width:22px;height:22px;margin-bottom:6px}.vis-compact .sbb-offer-icon img{width:22px;height:22px}.vis-compact .sbb-offer-title{font-size:14px}.vis-compact .sbb-offer-desc{font-size:12px}
+  .vis-senior .sbb-section-title{font-size:26px;padding:28px 16px 16px}.vis-senior .sbb-offer-card{margin:0 16px 12px;padding:20px;border-radius:14px}.vis-senior .sbb-offer-title{font-size:17px}.vis-senior .sbb-offer-desc{font-size:15px;line-height:1.6}.vis-senior .sbb-pill{font-size:15px;padding:8px 20px}.vis-senior .sbb-btn-red{padding:14px;font-size:17px}.vis-senior .sbb-tab span{font-size:11px}
+  .vis-dashboard .sbb-section-title{font-size:16px;font-weight:700;padding:14px 16px 6px;text-transform:uppercase;letter-spacing:.08em;color:var(--sbb-granite)}.vis-dashboard .sbb-offer-card{margin:0 12px 3px;padding:10px 14px;border-radius:6px;border:none;border-bottom:1px solid var(--sbb-milk);display:flex;gap:10px;align-items:center}.vis-dashboard .sbb-offer-icon{width:20px;height:20px;margin-bottom:0;flex-shrink:0}.vis-dashboard .sbb-offer-icon img{width:20px;height:20px}.vis-dashboard .sbb-offer-title{font-size:14px;margin-bottom:0}.vis-dashboard .sbb-offer-desc{font-size:12px}
+  .vis-discovery .sbb-section-title{font-size:28px;padding:28px 16px 16px}.vis-discovery .sbb-offer-card:first-child{padding:24px;background:var(--sbb-milk);border:none}.vis-discovery .sbb-offer-card:first-child .sbb-offer-title{font-size:18px}.vis-discovery .sbb-offer-card:first-child .sbb-offer-desc{font-size:15px}
+  .vis-evening .sbb-section-title{font-size:20px}.vis-evening .sbb-offer-card.highlight{background:rgba(235,0,0,.03);border:1px solid rgba(235,0,0,.15)}
+  .vis-young .sbb-section-title{font-size:24px;font-weight:700;padding:20px 16px 10px;letter-spacing:-.02em}.vis-young .sbb-offer-card{margin:0 14px 6px;border-radius:16px;padding:14px 16px}.vis-young .sbb-offer-card.highlight{border-left:4px solid var(--sbb-red);background:linear-gradient(90deg,rgba(235,0,0,.04),transparent)}.vis-young .sbb-pill{border-radius:20px;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em}.vis-young .sbb-btn-red{border-radius:14px;font-size:14px;padding:10px;margin:12px 14px 6px}.vis-young .sbb-red-zone{background:var(--sbb-red);padding:10px 16px 36px}
+  .vis-onboard .sbb-section-title{font-size:24px;padding:24px 16px 12px;font-weight:300}.vis-onboard .sbb-offer-card{margin:0 16px 10px;padding:18px;border-radius:14px;border:1px solid var(--sbb-cloud)}.vis-onboard .sbb-offer-card.highlight{border:2px solid var(--sbb-red);background:rgba(235,0,0,.02)}.vis-onboard .sbb-offer-title{font-size:16px}.vis-onboard .sbb-offer-desc{font-size:14px;line-height:1.65}.vis-onboard .sbb-btn-red{border-radius:28px;font-size:16px;padding:14px}
+  .vis-activity .sbb-section-title{font-size:22px;font-weight:300;padding:20px 16px 10px}.vis-activity .sbb-offer-card{margin:0 16px 10px;padding:16px;border-radius:12px;border:none;background:var(--sbb-milk)}.vis-activity .sbb-offer-card.highlight{background:linear-gradient(135deg,var(--sbb-milk),rgba(235,0,0,.04));border-left:3px solid var(--sbb-red)}.vis-activity .sbb-info-row{background:var(--sbb-milk);border-radius:8px;margin:0 16px 8px;border:none}.vis-activity .sbb-pill{background:var(--sbb-milk);border-color:var(--sbb-granite)}
+  .vis-family .sbb-section-title{font-size:26px;padding:28px 16px 14px}.vis-family .sbb-offer-card{margin:0 16px 12px;padding:20px;border-radius:16px;border:1px solid var(--sbb-cloud)}.vis-family .sbb-offer-card.highlight{border:2px solid var(--sbb-red)}.vis-family .sbb-offer-icon{width:32px;height:32px;margin-bottom:12px}.vis-family .sbb-offer-icon img{width:32px;height:32px}.vis-family .sbb-offer-title{font-size:17px}.vis-family .sbb-offer-desc{font-size:15px;line-height:1.6}.vis-family .sbb-btn-red{padding:14px;font-size:16px;border-radius:28px}.vis-family .sbb-pill{font-size:14px;padding:8px 18px}
+  .vis-disruption .sbb-section-title{font-size:20px;font-weight:700;color:var(--sbb-red)}.vis-disruption .sbb-offer-card.highlight{border:2px solid var(--sbb-red);background:rgba(235,0,0,.03)}.vis-disruption .sbb-offer-card{margin:0 16px 8px;padding:16px;border-radius:10px}
+  .vis-weekend .sbb-section-title{font-size:26px;padding:24px 16px 14px;font-weight:300}.vis-weekend .sbb-offer-card{margin:0 16px 10px;padding:18px;border-radius:14px}.vis-weekend .sbb-offer-card.highlight{background:var(--sbb-milk);border:none;padding:22px}.vis-weekend .sbb-offer-card.highlight .sbb-offer-title{font-size:18px}
+  .hero-card{margin:0 16px 12px;padding:24px 20px;border-radius:14px;background:var(--sbb-milk);border:none}.hero-card .sbb-offer-icon{width:36px;height:36px;margin-bottom:14px}.hero-card .sbb-offer-icon img{width:36px;height:36px}.hero-card .sbb-offer-title{font-size:18px;margin-bottom:6px}.hero-card .sbb-offer-desc{font-size:15px;line-height:1.6}.hero-card .sbb-pill{font-size:14px;padding:8px 20px;background:var(--sbb-red);color:#fff;border-color:var(--sbb-red)}
+  .savings-badge{display:inline-block;background:var(--sbb-red);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;margin-bottom:8px}.step-indicator{display:flex;gap:4px;margin-bottom:12px}.step-dot{width:8px;height:8px;border-radius:50%;background:var(--sbb-cloud)}.step-dot.active{background:var(--sbb-red)}
+  .time-display{font-size:32px;font-weight:100;color:var(--sbb-red);padding:4px 16px 0;letter-spacing:-.02em}.time-sub{font-size:13px;color:var(--sbb-granite);font-weight:300;padding:0 16px 8px}
+  .sbb-alert{margin:8px 16px;padding:12px 14px;background:rgba(235,0,0,.06);border-radius:10px;border-left:3px solid var(--sbb-red);display:flex;align-items:flex-start;gap:10px}.sbb-alert img{width:18px;height:18px;flex-shrink:0;margin-top:1px}.sbb-alert-text{font-size:13px;color:var(--sbb-anthracite);font-weight:300;line-height:1.5}.sbb-alert-text strong{font-weight:700;color:var(--sbb-red)}
+  .sbb-toast{margin:8px 16px;padding:10px 14px;background:#1a1a1a;border-radius:10px;display:flex;align-items:center;gap:10px;animation:toastIn .4s ease}@keyframes toastIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}.sbb-toast img{width:18px;height:18px;filter:brightness(0) invert(1);flex-shrink:0}.sbb-toast-text{font-size:12px;color:#fff;font-weight:300}.sbb-toast-text strong{font-weight:700}
+  .sbb-progress{margin:0 16px 8px;height:4px;background:var(--sbb-cloud);border-radius:2px;overflow:hidden}.sbb-progress-bar{height:100%;background:var(--sbb-red);border-radius:2px;transition:width .6s ease}
+  .sbb-offer-card{margin:0 16px 8px;border:1px solid var(--sbb-cloud);border-radius:12px;padding:16px;transition:box-shadow .15s}.sbb-offer-card.highlight{border-left:3px solid var(--sbb-red)}.sbb-offer-icon{width:28px;height:28px;margin-bottom:10px}.sbb-offer-icon img{width:28px;height:28px}.sbb-offer-title{font-size:15px;font-weight:700;margin-bottom:3px}.sbb-offer-desc{font-size:13px;color:var(--sbb-granite);font-weight:300;line-height:1.5}
+  .sbb-pill{display:inline-block;margin-top:10px;font-size:13px;font-weight:400;padding:6px 16px;border-radius:20px;border:1px solid var(--sbb-anthracite);color:var(--sbb-anthracite);background:transparent}
+  .sbb-btn-red{display:flex;align-items:center;justify-content:center;gap:8px;margin:16px 16px 8px;padding:12px;background:var(--sbb-red);color:#fff;border-radius:28px;font-size:15px;font-weight:700;font-family:inherit}.sbb-btn-red img{width:20px;height:20px;filter:brightness(0) invert(1)}
+  .sbb-tab-bar{display:flex;justify-content:space-around;padding:6px 0 4px;border-top:1px solid var(--sbb-cloud);background:#fff;position:sticky;bottom:0}.sbb-tab{display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 8px}.sbb-tab img{width:24px;height:24px;opacity:.5}.sbb-tab span{font-size:10px;color:var(--sbb-granite);font-weight:300}.sbb-tab.active img{opacity:1;filter:invert(12%) sepia(100%) saturate(7000%) hue-rotate(0deg) brightness(90%)}.sbb-tab.active span{color:var(--sbb-red);font-weight:700}
+
+  /* ═══ RESPONSIVE ═══ */
+  @media(max-width:1100px){.demo-layout{grid-template-columns:1fr}.demo-phone-col{position:relative;top:auto;padding:40px 20px;display:flex;justify-content:center}.demo-scroll-col{padding:0 max(24px,4vw) 12vh}}
+  @media(max-width:900px){.hero{grid-template-columns:1fr;padding:100px max(24px,4vw) 60px;gap:40px}.hero-phone-wrap{display:flex;justify-content:center}.hero-text h1{font-size:48px}.decision-grid{grid-template-columns:1fr}.typo-card{width:190px}.theory{padding:12vh max(24px,4vw)}.idea-grid{grid-template-columns:1fr}.landscape-grid{grid-template-columns:1fr}.roadmap{flex-direction:column}.content-section{padding:10vh max(24px,4vw)}}
+  @media(max-width:600px){.hero-text h1{font-size:36px}.hero-phone{width:280px;min-height:600px}.hero-phone .phone-screen{max-height:588px;min-height:588px}.demo-phone{width:320px;min-height:680px}.demo-phone .phone-screen{max-height:668px;min-height:668px}.masthead{padding:16px 20px}.close{flex-direction:column;gap:8px}}
+</style>
+</head>
+<body>
+
+<header class="masthead" id="masthead">
+  <span class="wordmark">.<span>brand</span></span>
+  <nav style="display:flex;gap:24px;align-items:center">
+    <span class="masthead-status" id="masthead-status"></span>
+    <a href="#idea" style="color:var(--text-3);text-decoration:none;font-size:12px;transition:color .2s" onmouseover="this.style.color='var(--text-1)'" onmouseout="this.style.color='var(--text-3)'">Concept</a>
+    <a href="#demo" style="color:var(--text-3);text-decoration:none;font-size:12px;transition:color .2s" onmouseover="this.style.color='var(--text-1)'" onmouseout="this.style.color='var(--text-3)'">Demo</a>
+    <a href="#arch" style="color:var(--text-3);text-decoration:none;font-size:12px;transition:color .2s" onmouseover="this.style.color='var(--text-1)'" onmouseout="this.style.color='var(--text-3)'">Architecture</a>
+    <a href="#theory" style="color:var(--text-3);text-decoration:none;font-size:12px;transition:color .2s" onmouseover="this.style.color='var(--text-1)'" onmouseout="this.style.color='var(--text-3)'">Theory</a>
+    <a href="#landscape" style="color:var(--text-3);text-decoration:none;font-size:12px;transition:color .2s" onmouseover="this.style.color='var(--text-1)'" onmouseout="this.style.color='var(--text-3)'">Landscape</a>
+  </nav>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-text">
+    <h1>The brand<br>becomes<br>the agent.</h1>
+    <p class="hero-sub">A .brand file is a living MCP agent. It embodies identity, adapts to every person, learns from every interaction.</p>
+    <div class="hero-meta"><span><span class="n">12</span> personas</span><span><span class="n">4</span> languages</span><span><span class="n">22</span> scenarios</span></div>
+  </div>
+  <div class="hero-phone-wrap">
+    <div class="hero-phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen" id="hero-screen"></div>
+    </div>
+    <div class="hero-cycling" id="hero-label"></div>
+  </div>
+</section>
+
+<!-- ═══ THE IDEA ═══ -->
+<section class="content-section" id="idea">
+  <div class="inner">
+    <div class="eyebrow reveal">The shift</div>
+    <h2 class="reveal">Brand guidelines <em>can't talk</em> to AI agents.</h2>
+    <p class="lead reveal">AI agents are becoming the primary interface between consumers and brands. A 200-page PDF doesn't negotiate with a shopping assistant. A Frontify library doesn't adapt its tone for a 22-year-old in Lausanne versus a 55-year-old in Bern. The tools we have manage brand assets. What we need is something that embodies brand intelligence.</p>
+    <div class="idea-grid reveal">
+      <div class="idea-card problem">
+        <h4>Today: static guidelines</h4>
+        <p>PDFs, digital asset platforms, compliance checklists. One-directional. The brand transmits, the consumer receives. AI agents scrape and approximate. No understanding, no adaptation, no conversation.</p>
+      </div>
+      <div class="idea-card solution">
+        <h4>.brand: living identity agent</h4>
+        <p>An MCP server that any AI system can connect to. It doesn't describe a brand &mdash; it <em>is</em> one. It speaks, validates, generates, refuses, adapts, and learns. Not just colors and fonts &mdash; textures, sounds, feelings, stories, culture.</p>
+      </div>
+    </div>
+    <div class="idea-quote reveal">
+      <blockquote>&laquo; Tu poc la marque &mdash; elle te poc back. &raquo;</blockquote>
+      <cite>Nicolas Paupe, Brigade Studio &mdash; You poke the brand, it pokes you back.</cite>
+    </div>
+  </div>
+</section>
+
+<section class="demo" id="demo">
+  <div class="demo-layout">
+    <div class="demo-phone-col">
+      <div class="demo-phone">
+        <div class="phone-notch"></div>
+        <div class="agent-thinking" id="agent-thinking"><div class="thinking-ring"></div><div class="thinking-label">.brand agent</div><div class="thinking-detail" id="thinking-detail"></div></div>
+        <div class="phone-screen" id="screen"></div>
+      </div>
+    </div>
+    <div class="demo-scroll-col">
+      <div class="scroll-panel reveal" id="panel-select">
+        <div class="panel-chapter">01</div>
+        <h2>Same brand.<br>Every person sees<br>something <em>different.</em></h2>
+        <div class="persona-strip" id="persona-strip"></div>
+        <div class="scenario-strip" id="scenario-strip"></div>
+      </div>
+      <div class="scroll-panel reveal" id="panel-decisions">
+        <div class="panel-chapter">02</div>
+        <h2>What the agent <em>decided.</em></h2>
+        <div class="decision-grid" id="decisions"></div>
+        <div class="reasoning-block" id="reasoning"></div>
+      </div>
+      <div class="scroll-panel reveal" id="panel-architecture">
+        <div class="panel-chapter">03</div>
+        <h2>Seven layers.<br>Three <em>freedoms.</em></h2>
+        <p class="panel-body">An operating system for brands that think. Each layer has a defined freedom level.</p>
+        <div class="arch-layers" id="arch-layers">
+          <div class="arch-layer active" data-idx="0"><span class="arch-num">01</span><span class="arch-name">Core Intelligence</span><span class="arch-drift drift-locked">Locked</span></div>
+          <div class="arch-layer" data-idx="1"><span class="arch-num">02</span><span class="arch-name">Expression Engine</span><span class="arch-drift drift-controlled">Controlled</span></div>
+          <div class="arch-layer" data-idx="2"><span class="arch-num">03</span><span class="arch-name">Context Adaptation</span><span class="arch-drift drift-controlled">Controlled</span></div>
+          <div class="arch-layer" data-idx="3"><span class="arch-num">04</span><span class="arch-name">Interaction Layer</span><span class="arch-drift drift-autonomous">Autonomous</span></div>
+          <div class="arch-layer" data-idx="4"><span class="arch-num">05</span><span class="arch-name">System Network</span><span class="arch-drift drift-controlled">Controlled</span></div>
+          <div class="arch-layer" data-idx="5"><span class="arch-num">06</span><span class="arch-name">Governance</span><span class="arch-drift drift-locked">Locked</span></div>
+          <div class="arch-layer" data-idx="6"><span class="arch-num">07</span><span class="arch-name">Value Creation</span><span class="arch-drift drift-autonomous">Autonomous</span></div>
+        </div>
+        <div class="drift-legend"><span><i style="background:var(--ember)"></i> Locked</span><span><i style="background:var(--amber)"></i> Controlled</span><span><i style="background:var(--text-2)"></i> Autonomous</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="theory" id="theory">
+  <div class="theory-intro reveal">
+    <h2>Six typologies exist.<br>None of them <em>understand.</em></h2>
+    <p>Building on Irene van Nes. Container, Transformative, Generative, Reactive, Participative, Evolutive. And then a seventh.</p>
+  </div>
+  <div class="typo-track">
+    <div class="typo-card"><div class="typo-vis"><div class="v-container"><div class="v-fill"></div></div></div><span class="typo-num">01</span><h3>Container</h3><p>Fixed shape, variable content. MTV, AOL.</p></div>
+    <div class="typo-card"><div class="typo-vis"><div class="v-morph"></div></div><span class="typo-num">02</span><h3>Transformative</h3><p>The logo itself mutates. Google Doodles.</p></div>
+    <div class="typo-card"><div class="typo-vis"><div class="v-dots"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div><span class="typo-num">03</span><h3>Generative</h3><p>Algorithmically created. Nordkyn.</p></div>
+    <div class="typo-card"><div class="typo-vis"><div class="v-react"></div></div><span class="typo-num">04</span><h3>Reactive</h3><p>Responds to real-time stimuli. MIT Media Lab.</p></div>
+    <div class="typo-card"><div class="typo-vis"><div class="v-collab"><span></span><span></span><span></span><span></span></div></div><span class="typo-num">05</span><h3>Participative</h3><p>Co-created with users. RISD.</p></div>
+    <div class="typo-card"><div class="typo-vis"><div class="v-evolve"></div></div><span class="typo-num">06</span><h3>Evolutive</h3><p>Changes over time. Seed Media.</p></div>
+    <div class="typo-card typo-seventh"><div class="typo-vis"><div class="v-conscious"></div></div><span class="typo-num">07</span><h3>Conscious Identity</h3><p>Not just dynamic. Autonomous. A brand that perceives, decides, and learns.</p></div>
+  </div>
+</section>
+
+<!-- ═══ FULL ARCHITECTURE ═══ -->
+<section class="content-section" id="arch">
+  <div class="inner">
+    <div class="eyebrow reveal">Strategic architecture &mdash; Nicolas Paupe</div>
+    <h2 class="reveal"><em>Seven layers</em> of a living brand.</h2>
+    <p class="lead reveal">An operating system for brands that think. Each layer has a defined freedom level &mdash; from locked core identity to autonomous real-time expression. Not rigidity. A spectrum of creative freedom with hard edges.</p>
+    <div class="arch-full reveal" id="arch-full">
+      <div class="arch-full-layer active" data-i="0"><span class="num">01</span><span class="name">Core Intelligence</span><span class="drift drift-locked">Locked</span></div>
+      <div class="arch-full-desc open">Vision, values, positioning, brand DNA. The immutable nucleus. Everything downstream inherits from here. AI cannot override &mdash; only interpret within these boundaries.</div>
+      <div class="arch-full-layer" data-i="1"><span class="num">02</span><span class="name">Expression Engine</span><span class="drift drift-controlled">Controlled</span></div>
+      <div class="arch-full-desc">Tone, visual language, narrative formats, sensory palette. AI operates within a defined segment of the brand universe &mdash; generating variations that flex without breaking recognition.</div>
+      <div class="arch-full-layer" data-i="2"><span class="num">03</span><span class="name">Context Adaptation</span><span class="drift drift-controlled">Controlled</span></div>
+      <div class="arch-full-desc">Consumer typologies, cultural narratives, temporal context. The brand reads its audience. Positioning is triple: anthropological, sensory, and neuro. It doesn't manipulate &mdash; it resonates.</div>
+      <div class="arch-full-layer" data-i="3"><span class="num">04</span><span class="name">Interaction Layer</span><span class="drift drift-autonomous">Autonomous</span></div>
+      <div class="arch-full-desc">Real-time outputs &mdash; the consumer-facing interface. Content, layout, language, emotional texture adapt per individual. Every expression unique, every expression on-brand.</div>
+      <div class="arch-full-layer" data-i="4"><span class="num">05</span><span class="name">System Network</span><span class="drift drift-controlled">Controlled</span></div>
+      <div class="arch-full-desc">Agent-to-agent dialogue, output negotiation, cross-touchpoint synchronization. An ecosystem of agents that share context, negotiate outputs, and maintain coherence across channels.</div>
+      <div class="arch-full-layer" data-i="5"><span class="num">06</span><span class="name">Governance</span><span class="drift drift-locked">Locked</span></div>
+      <div class="arch-full-desc">Human oversight, creative direction, strategic arbitration, ethics. Humans are the custodians of meaning. Data governance: relevance, permission, weight, temporality, risk filtering.</div>
+      <div class="arch-full-layer" data-i="6"><span class="num">07</span><span class="name">Value Creation</span><span class="drift drift-autonomous">Autonomous</span></div>
+      <div class="arch-full-desc">Products, experiences, services, brand extensions. The .brand doesn't just communicate &mdash; it produces. Every interaction generates signal. A/B testing, optimization, learning loops feed back into the system.</div>
+    </div>
+    <div class="drift-legend-full reveal">
+      <span><i style="background:var(--ember)"></i> Locked &mdash; AI cannot override. Human-defined, machine-enforced.</span>
+      <span><i style="background:var(--amber)"></i> Controlled &mdash; Adapts within defined parameters.</span>
+      <span><i style="background:var(--text-2)"></i> Autonomous &mdash; Free to interpret, anchored by layers above.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LANDSCAPE ═══ -->
+<section class="content-section" id="landscape">
+  <div class="inner">
+    <div class="eyebrow reveal">Competitive landscape</div>
+    <h2 class="reveal"><em>Nobody</em> is building what we're building.</h2>
+    <p class="lead reveal">The market offers platforms. We're proposing a protocol.</p>
+    <div class="landscape-grid reveal">
+      <div class="lc-card"><h4>Frontify, Bynder, Brandpad</h4><div class="lc-type">Digital asset management</div><p>Filing cabinets. They store brand assets, they don't understand them. They can't talk to AI agents.</p></div>
+      <div class="lc-card"><h4>brand.ai</h4><div class="lc-type">AI brand compliance</div><p>Closest to our vision. Machine-readable guidelines + AI generation. But centralized SaaS, not a protocol. Focus is compliance, not emotional resonance.</p></div>
+      <div class="lc-card"><h4>Firsthand ($26M Series A)</h4><div class="lc-type">Brand agents for ads</div><p>Consumer-facing, right direction. But ad-tech DNA. Their agents are campaign tools, not embodiments of brand identity.</p></div>
+      <div class="lc-card ours"><h4>.brand</h4><div class="lc-type">Open protocol &mdash; identity-first, consumer-facing</div><p>An MCP standard the brand owns and deploys. Starts from brand DNA and emotional depth. Talks directly to people. Gets smarter over time.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ROADMAP ═══ -->
+<section class="content-section" id="roadmap">
+  <div class="inner">
+    <div class="eyebrow reveal">Roadmap</div>
+    <h2 class="reveal"><em>What comes</em> next.</h2>
+    <p class="lead reveal">From proof of concept to ecosystem.</p>
+    <div class="roadmap reveal">
+      <div class="rm-phase now"><h4>Phase 1 &mdash; Now</h4><p>Brand knowledge API. Structured data, semantic search, natural language queries. SBB proof of concept live on Cloudflare edge.</p></div>
+      <div class="rm-phase"><h4>Phase 2</h4><p>MCP brand agent. The API becomes a proper .brand file any AI system can connect to.</p></div>
+      <div class="rm-phase"><h4>Phase 3</h4><p>Optimization loop. Every interaction generates signal. A/B testing, performance monitoring. The brand gets smarter.</p></div>
+      <div class="rm-phase"><h4>Phase 4</h4><p>Multi-channel deployment. Digital, physical, spatial. Total coherence.</p></div>
+      <div class="rm-phase"><h4>Phase 5</h4><p>The .brand ecosystem. File format spec, marketplace, inter-brand communication.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer class="close">
+  <span><a href="https://nord.spot">Nord.spot</a> &times; <a href="https://brigade.studio">Brigade Studio</a> &mdash; Fribourg, 2026</span>
+  <span>SBB/CFF/FFS research &middot; <a href="https://sbb-brand-api.billowing-leaf-4d6a.workers.dev/api">API</a></span>
+</footer>
+
+<script>
+const I=n=>`https://icons.app.sbb.ch/icons/${n}.svg`;
+const BM=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142 48" width="50" height="17"><path fill="#eb0000" d="M1 47h141V1H1v46z"/><path fill="#fff" d="M87 40h9.3L83.8 27.7h15.5V40h7.4V27.7h15.6L109.7 40h9.3l16-16-15.9-16h-9.3l12.5 12.3h-15.6V8h-7.4v12.3H83.8L96.3 8H87L71 24l16 16z"/></svg>`;
+const personas=[
+{id:'lena',name:'Lena, 22',icon:'user-group-medium',label:'Student, Lausanne',banner:{img:'/images/lena-lausanne.jpg',label:'Lausanne · EPFL · Halbtax'},scenarios:[{id:'default',name:'Morning commute',color:'#34d399',vis:{cls:'vis-young',zone:'',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},from:'Lausanne',to:'Zürich HB',info:'Trafic normal sur tout le réseau.',title:'Pour toi.',offers:[{icon:'leaf-medium',title:'Bilan CO₂ de ton trajet.',desc:'Lausanne–Zürich: 4.2 kg CO₂ économisés vs voiture.',btn:'Détails',hl:true},{icon:'ticket-percent-medium',title:'Billets dégriffés.',desc:'Dès CHF 10.90. Prochaines 48h.',btn:'Réserver'},{icon:'smartphone-medium',title:'EasyRide.',desc:'Monte, descend. Meilleur prix auto.',btn:'Activer'}],cta:'Mes billets',section2:'Durabilité.',offers2:[{icon:'train-medium',title:'Green Class.',desc:'Abo + vélo électrique.',btn:'Découvrir'}],alert:null,toast:null,progress:null,annoLeft:[{tag:'tone',cat:'Tone',text:'Informal "tu" — age < 30'},{tag:'content',cat:'Content',text:'Eco lead — sustainability flag'},{tag:'product',cat:'Product',text:'Budget-first — student segment'}],annoRight:[{tag:'typo',cat:'Typo',text:'Bold 24px — young energy'},{tag:'color',cat:'Color',text:'Gradient highlight card'},{tag:'layout',cat:'Layout',text:'Tight gaps — fast scan'}],reasoning:'French interface. Student with Halbtax: discounted tickets lead. Eco profile triggers CO₂ data. Informal "tu." Emotional anchor: independence.'},{id:'disruption',name:'Disruption',color:'#ef4444',vis:{cls:'vis-young vis-disruption',zone:'disruption',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},from:'Lausanne',to:'Zürich HB',info:'⚠ Retard de 25 min. Lausanne–Bern.',title:'Ton trajet.',offers:[{icon:'circle-cross-medium',title:'IR 15 retardé: +25 min.',desc:'Arrivée: 09:47. Travaux à Fribourg.',btn:null,hl:true},{icon:'arrow-change-horizontal-small',title:'Alternative: via Biel.',desc:'08:45→10:02. Sans perturbation.',btn:'Choisir'},{icon:'smartphone-medium',title:'Push activée.',desc:'Alerte si retard augmente.',btn:null}],cta:'Alternatives',section2:'Compensation.',offers2:[{icon:'ticket-percent-medium',title:'Dédommagement.',desc:'> 60 min = remboursement partiel.',btn:'Info'}],alert:{text:'<strong>Disruption</strong> Lausanne–Bern: +25 min.'},toast:null,progress:null,annoLeft:[{tag:'context',cat:'Context',text:'Disruption — alternatives first'},{tag:'tone',cat:'Tone',text:'Still "tu," factual urgency'},{tag:'drift',cat:'Drift',text:'Layer 4 autonomous reorder'}],annoRight:[{tag:'color',cat:'Color',text:'Warmer red zone gradient'},{tag:'layout',cat:'Layout',text:'Alert banner inverts hierarchy'},{tag:'product',cat:'Product',text:'Compensation proactive'}],reasoning:'Disruption: delay detected, interface restructured. Alternatives surface instantly. Compensation appears proactively. Layer 4 autonomous.'}],lang:'fr',tabs:{home:'Accueil',tt:'Horaire',tk:'Billets',pr:'Profil'}},
+{id:'thomas',name:'Thomas, 54',icon:'user-medium',label:'Executive, Bern',banner:null,scenarios:[{id:'default',name:'Morning commute',color:'#34d399',vis:{cls:'vis-premium',zone:'',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},from:'Bern',to:'Zürich HB',info:'Normalbetrieb.',title:'Für Sie.',offers:[{icon:'seat-window-medium',title:'Sitzplatzreservation.',desc:'Wagen 1, Platz 62. Ruhezone.',btn:'Ändern',hl:true},{icon:'cup-hot-medium',title:'Business Lounge.',desc:'Bern, Gleis 12.',btn:'Zeiten'},{icon:'timetable-medium',title:'IC 724, 07:32.',desc:'Ankunft 08:28. Auslastung tief.',btn:'Details'}],cta:'Meine Billette',section2:'Business.',offers2:[{icon:'diamond-medium',title:'Business Travel.',desc:'Reisekostenmanagement.',btn:'Info'}],alert:null,toast:null,progress:null,annoLeft:[{tag:'tone',cat:'Tone',text:'Formal "Sie" — executive'},{tag:'content',cat:'Content',text:'Seat reservation leads'},{tag:'product',cat:'Product',text:'No prices — GA holder'}],annoRight:[{tag:'typo',cat:'Typo',text:'"Für Sie." — formal period'},{tag:'color',cat:'Color',text:'Restraint = premium'},{tag:'layout',cat:'Layout',text:'Dense — exec wants data'}],reasoning:'Formal "Sie." GA 1st class: seat + Business Lounge. No prices. Emotional anchor: control.'}],lang:'de',tabs:{home:'Home',tt:'Fahrplan',tk:'Billette',pr:'Profil'}},
+{id:'yuki',name:'Yuki, 31',icon:'globe-medium',label:'Tourist, Tokyo',banner:{img:'/images/yuki-alps.jpg',label:'Swiss Alps · Jungfraujoch'},scenarios:[{id:'default',name:'Discovery',color:'#38bdf8',vis:{cls:'vis-discovery',zone:'scenic',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Swiss Travel Pass — unlimited'},from:'Zürich HB',to:'Interlaken Ost',info:'All lines normal.',title:'Discover Switzerland.',offers:[{icon:'mountain-sun-medium',title:'Jungfraujoch.',desc:'25% off with Swiss Travel Pass.',btn:'Book',hl:true},{icon:'binoculars-medium',title:'GoldenPass Panoramic.',desc:'Montreux–Interlaken.',btn:'Reserve'},{icon:'camera-medium',title:'Scenic routes.',desc:'Glacier Express, Bernina.',btn:'Explore'}],cta:'My tickets',section2:'Good to know.',offers2:[{icon:'circle-information-medium',title:'How Swiss trains work.',desc:'Quick guide for visitors.',btn:'Read'}],alert:null,toast:null,progress:null,annoLeft:[{tag:'tone',cat:'Tone',text:'Clear English, no jargon'},{tag:'content',cat:'Content',text:'Scenic routes dominate'},{tag:'product',cat:'Product',text:'Travel Pass in every offer'}],annoRight:[{tag:'typo',cat:'Typo',text:'28px hero card — discovery'},{tag:'color',cat:'Color',text:'Scenic red zone gradient'},{tag:'layout',cat:'Layout',text:'Jungfraujoch gets premium'}],reasoning:'English for tourist. Scenic routes dominate. Jungfraujoch leads. "How trains work" for newcomer. Emotional anchor: wonder.'}],lang:'en',tabs:{home:'Home',tt:'Timetable',tk:'Tickets',pr:'Profile'}},
+{id:'mueller',name:'Familie Müller',icon:'user-group-medium',label:'Family, Luzern',banner:{img:'/images/family-engelberg.jpg',label:'Engelberg · Familienausflug'},scenarios:[{id:'default',name:'Family outing',color:'#fb923c',vis:{cls:'vis-family',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:true,zoneText:'Ihr Familienausflug'},from:'Luzern',to:'Engelberg',info:'Normalbetrieb.',title:'Familienausflüge.',offers:[{icon:'ticket-day-medium',title:'Familien-Spartageskarte.',desc:'4 Pers., ganze Schweiz. Ab CHF 76.–',btn:'Kaufen',hl:true},{icon:'train-medium',title:'Kinder-Spielwagen.',desc:'Wagen 7, Spielplatz auf Schienen.',btn:'Details'},{icon:'ticket-percent-medium',title:'Kinder gratis.',desc:'Junior-Karte.',btn:'Info'}],cta:'Meine Billette',section2:'Top-Angebote.',offers2:[{icon:'star-medium',title:'RailAway Kombi.',desc:'Zug + Eintritt. Pilatus.',btn:'Entdecken'}],alert:null,toast:null,progress:null,annoLeft:[{tag:'tone',cat:'Tone',text:'Warm, factual — no pressure'},{tag:'content',cat:'Content',text:'Spielwagen — practical'},{tag:'product',cat:'Product',text:'Budget-first for families'}],annoRight:[{tag:'typo',cat:'Typo',text:'26px, generous radius'},{tag:'color',cat:'Color',text:'Warm red zone welcome'},{tag:'layout',cat:'Layout',text:'Hero card + savings badge'}],reasoning:'Family: savings card leads. Kinder-Spielwagen practical info. Emotional anchor: togetherness.'}],lang:'de',tabs:{home:'Home',tt:'Fahrplan',tk:'Billette',pr:'Profil'}},
+{id:'sophie',name:'Sophie, 17',icon:'music-notes-medium',label:'Teenager, Biel',banner:{img:'/images/sophie-bern-night.jpg',label:'Bern · Nachtleben'},scenarios:[{id:'default',name:'Night out',color:'#c084fc',vis:{cls:'vis-evening',zone:'evening',heroCard:false,timeDisplay:'23:47',timeSub:'Dernier S3 → Biel',stepIndicator:false,savingsBadge:false},from:'Biel/Bienne',to:'Bern',info:'Trafic normal.',title:'Ce soir.',offers:[{icon:'clock-medium',title:'Dernier train: 23:47.',desc:'S3. Tu rentres en sécurité.',btn:null,hl:true},{icon:'moon-medium',title:'Moonliner.',desc:'Bus de nuit jusqu\'à 03:30.',btn:'Horaires'},{icon:'ticket-percent-medium',title:'Groupe: –30%.',desc:'3+ personnes.',btn:'Partager'}],cta:'Mes billets',section2:'Seven25.',offers2:[{icon:'ticket-star-medium',title:'Ton abo, ta liberté.',desc:'Gratuit dès 19h.',btn:'Détails'}],alert:null,toast:null,progress:null,annoLeft:[{tag:'tone',cat:'Tone',text:'"Tu" + evening content'},{tag:'content',cat:'Content',text:'Last train = safety first'},{tag:'product',cat:'Product',text:'Seven25 — hero product'}],annoRight:[{tag:'typo',cat:'Typo',text:'23:47 countdown urgency'},{tag:'color',cat:'Color',text:'Evening gradient'},{tag:'layout',cat:'Layout',text:'Last-train highlighted'}],reasoning:'Sophie: Seven25 pass. Night-oriented. Last train, Moonliner, group discount. Train is freedom. Emotional anchor: independence.'}],lang:'fr',tabs:{home:'Accueil',tt:'Horaire',tk:'Billets',pr:'Profil'}},
+{id:'isabelle',name:'Isabelle, 67',icon:'heart-medium',label:'Retiree, Bellinzona',banner:{img:'/images/isabelle-ticino.jpg',label:'Lago Maggiore · Ticino'},scenarios:[{id:'default',name:'Day trip',color:'#38bdf8',vis:{cls:'vis-senior',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Buongiorno, Isabelle'},from:'Bellinzona',to:'Locarno',info:'Traffico regolare.',title:'Per lei.',offers:[{icon:'ship-steering-wheel-medium',title:'Isole di Brissago.',desc:'Giardino botanico.',btn:'Orari',hl:true},{icon:'cutlery-medium',title:'Cardada — pranzo.',desc:'Funivia inclusa.',btn:'Scoprire'},{icon:'clock-medium',title:'L\'orologio SBB.',desc:'Dal 1944.',btn:'Storia'}],cta:'I miei biglietti',section2:'Gite.',offers2:[{icon:'walk-medium',title:'Sentiero Lago Maggiore.',desc:'12 km, piano.',btn:'Percorso'}],alert:null,toast:null,progress:null,annoLeft:[{tag:'tone',cat:'Tone',text:'Formal "Lei" — calm'},{tag:'content',cat:'Content',text:'Heritage — tradition values'},{tag:'product',cat:'Product',text:'GA benefits woven in'}],annoRight:[{tag:'typo',cat:'Typo',text:'26px, generous padding'},{tag:'color',cat:'Color',text:'"Buongiorno" — warm'},{tag:'layout',cat:'Layout',text:'Large tap targets'}],reasoning:'Italian. Formal "Lei," calm pacing. Brissago, restaurant, SBB clock. Emotional anchor: beauty.'}],lang:'it',tabs:{home:'Home',tt:'Orario',tk:'Biglietti',pr:'Profilo'}},
+{id:'luigi',name:'Luigi, 72',icon:'clock-medium',label:'Pensioner, Lugano',banner:{img:'/images/lucia-lugano.jpg',label:'Lugano · Lago · Gottardo'},scenarios:[{id:'default',name:'Morning ritual',color:'#fb923c',vis:{cls:'vis-senior',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Buongiorno, Signor Luigi'},from:'Lugano',to:'Milano Centrale',info:'Traffico regolare.',title:'Per lei.',offers:[{icon:'newspaper-medium',title:'Minibar, vagone 1.',desc:'Caffè, cornetto, Corriere.',btn:null,hl:true},{icon:'museum-medium',title:'Milano in giornata.',desc:'09:17→17:45.',btn:'Orari'},{icon:'train-station-medium',title:'Ferrovia del Gottardo.',desc:'Percorso storico.',btn:'Scoprire'}],cta:'I miei biglietti',section2:'Patrimonio.',offers2:[{icon:'clock-medium',title:'L\'orologio FFS.',desc:'1944, Hans Hilfiker.',btn:'Storia'}],alert:null,toast:null,progress:null,annoLeft:[{tag:'tone',cat:'Tone',text:'Formal "Lei" — unhurried'},{tag:'content',cat:'Content',text:'Minibar ritual recognized'},{tag:'product',cat:'Product',text:'Heritage — Swiss tradition'}],annoRight:[{tag:'typo',cat:'Typo',text:'Senior — max readability'},{tag:'color',cat:'Color',text:'Named greeting — dignity'},{tag:'layout',cat:'Layout',text:'Daily ritual as hero card'}],reasoning:'Formal Italian. Minibar ritual recognized. Milan day trip, Gotthard heritage. Emotional anchor: tradition and dignity.'}],lang:'it',tabs:{home:'Home',tt:'Orario',tk:'Biglietti',pr:'Profilo'}},
+];
+const langWords={fr:'.marque',de:'.Marke',it:'.marchio',en:'.brand'};
+let curP=0,curS=0,transitioning=false;
+
+// Time-aware default
+const h=new Date().getHours();
+if(h>=22||h<5)curP=personas.findIndex(p=>p.id==='sophie');
+else if(h<9)curP=personas.findIndex(p=>p.id==='thomas');
+else if(h>=17)curP=personas.findIndex(p=>p.id==='isabelle');
+else curP=personas.findIndex(p=>p.id==='yuki');
+if(curP<0)curP=0;
+
+function renderTo(el,p,si){
+  const sc=p.scenarios[si||0],v=sc.vis;el.scrollTop=0;
+  el.className='phone-screen '+(v.cls||'');
+  const zc=v.zone||'',zt=v.zoneText?`<div class="sbb-red-zone-text">${v.zoneText}</div>`:'';
+  const card=(o,i)=>{const h=v.heroCard&&i===0,c=h?'hero-card':'sbb-offer-card'+(o.hl?' highlight':''),b=v.savingsBadge&&i===0&&o.btn?'<div class="savings-badge">AKTION</div>':'';return`<div class="${c}">${b}<div class="sbb-offer-icon"><img src="${I(o.icon)}" alt=""/></div><div class="sbb-offer-title">${o.title}</div><div class="sbb-offer-desc">${o.desc}</div>${o.btn?`<div class="sbb-pill">${o.btn}</div>`:''}</div>`};
+  const te=v.timeDisplay?`<div class="time-display">${v.timeDisplay}</div><div class="time-sub">${v.timeSub||''}</div>`:'';
+  const se=v.stepIndicator?'<div style="padding:0 16px"><div class="step-indicator"><div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div></div></div>':'';
+  const be=p.banner?`<div class="sbb-persona-banner"><img src="${p.banner.img}" alt="" loading="eager"/><span class="banner-label">${p.banner.label}</span></div>`:'';
+  const ae=sc.alert?`<div class="sbb-alert"><img src="${I('circle-cross-medium')}" alt=""/><div class="sbb-alert-text">${sc.alert.text}</div></div>`:'';
+  const oe=sc.toast?`<div class="sbb-toast"><img src="${I(sc.toast.icon)}" alt=""/><div class="sbb-toast-text">${sc.toast.text}</div></div>`:'';
+  const pe=sc.progress?`<div style="padding:4px 16px 0;font-size:11px;color:var(--sbb-granite);display:flex;justify-content:space-between"><span>${sc.progress.label}</span><span>${sc.progress.value}%</span></div><div class="sbb-progress"><div class="sbb-progress-bar" style="width:${sc.progress.value}%"></div></div>`:'';
+  const ic=sc.info.includes('⚠')||sc.info.includes('Retard')||sc.info.includes('verspätet')?'sbb-info-row disruption-info':'sbb-info-row';
+  el.innerHTML=`<div class="sbb-status"></div><div class="sbb-header"><div class="sbb-header-left"><img src="${I('hamburger-menu-medium')}" alt=""/><img src="${I('magnifying-glass-medium')}" alt=""/><img src="${I('user-medium')}" alt=""/></div><div>${BM}</div></div>${be}${ae}<div class="sbb-red-zone ${zc}">${zt}</div><div class="sbb-search-card" style="position:relative"><div class="sbb-search-row"><div class="sbb-dot"></div><div class="sbb-search-text">${sc.from}</div></div><div class="sbb-search-row"><div class="sbb-dot dest"></div><div class="sbb-search-text">${sc.to}</div></div><div class="sbb-swap"><img src="${I('arrow-change-horizontal-small')}" alt=""/></div></div><div class="${ic}"><img src="${I('circle-information-small')}" alt=""/><span>${sc.info}</span></div>${oe}${te}${pe}<div class="sbb-section-title">${sc.title}</div>${se}${sc.offers.map((o,i)=>card(o,i)).join('')}<div class="sbb-btn-red"><img src="${I('ticket-route-medium')}" alt=""/>${sc.cta}</div><div class="sbb-section-title">${sc.section2}</div>${sc.offers2.map(o=>`<div class="sbb-offer-card"><div class="sbb-offer-icon"><img src="${I(o.icon)}" alt=""/></div><div class="sbb-offer-title">${o.title}</div><div class="sbb-offer-desc">${o.desc}</div>${o.btn?`<div class="sbb-pill">${o.btn}</div>`:''}</div>`).join('')}<div style="height:8px"></div><div class="sbb-tab-bar">${['home','tt','tk','pr'].map((t,i)=>{const ic={home:'house-small',tt:'timetable-small',tk:'ticket-route-small',pr:'user-small'};return`<div class="sbb-tab${i===0?' active':''}"><img src="${I(ic[t])}" alt=""/><span>${p.tabs[t]}</span></div>`}).join('')}</div>`;
+}
+
+// Hero auto-cycle
+const heroIds=[0,1,2,5,6];let hci=0;const hs=document.getElementById('hero-screen'),hl=document.getElementById('hero-label');
+function heroRender(i){const p=personas[i];renderTo(hs,p,0);hl.textContent=`${p.name} · ${p.label} · ${p.lang.toUpperCase()}`}
+heroRender(heroIds[0]);hs.style.transition='opacity .3s';
+setInterval(()=>{hci=(hci+1)%heroIds.length;hs.style.opacity='0';setTimeout(()=>{heroRender(heroIds[hci]);hs.style.opacity='1'},300)},3500);
+
+// Masthead scroll
+const mh=document.getElementById('masthead');
+window.addEventListener('scroll',()=>mh.classList.toggle('scrolled',scrollY>innerHeight*.4),{passive:true});
+
+// Persona strip
+const strip=document.getElementById('persona-strip');
+strip.innerHTML=personas.map((p,i)=>`<button class="p-chip${i===curP?' active':''}" data-i="${i}">${p.name} <span class="lang">${p.lang}</span></button>`).join('');
+document.querySelectorAll('.p-chip').forEach(b=>b.addEventListener('click',()=>{
+  if(transitioning)return;const i=+b.dataset.i;if(i===curP)return;
+  document.querySelectorAll('.p-chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+  curP=i;curS=0;renderScenarios();transitionTo(personas[i],0);
+}));
+
+function renderScenarios(){
+  const p=personas[curP],ss=document.getElementById('scenario-strip');
+  if(p.scenarios.length<=1){ss.innerHTML='';return}
+  ss.innerHTML=p.scenarios.map((s,i)=>`<button class="s-chip${i===0?' active':''}" data-si="${i}">${s.name}</button>`).join('');
+  document.querySelectorAll('.s-chip').forEach(b=>b.addEventListener('click',()=>{
+    if(transitioning)return;const si=+b.dataset.si;if(si===curS)return;
+    document.querySelectorAll('.s-chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+    curS=si;transitionTo(personas[curP],si);
+  }));
+}
+
+function transitionTo(p,si){
+  transitioning=true;const th=document.getElementById('agent-thinking'),td=document.getElementById('thinking-detail'),sc=document.getElementById('screen');
+  const msgs=[`${p.name.split(',')[0]}...`,`${p.lang.toUpperCase()} · ${p.scenarios[si].name}`,`Generating...`];
+  td.textContent=msgs[0];th.classList.add('visible');sc.classList.add('transitioning');
+  let mi=0;const iv=setInterval(()=>{mi++;if(mi<msgs.length)td.textContent=msgs[mi]},250);
+  setTimeout(()=>{clearInterval(iv);renderTo(sc,p,si);th.classList.remove('visible');sc.classList.remove('transitioning');transitioning=false;updatePanels(p,si)},800);
+}
+
+function updatePanels(p,si){
+  const sc=p.scenarios[si],all=[...sc.annoLeft,...sc.annoRight];
+  document.getElementById('decisions').innerHTML=all.map(a=>`<div class="decision-item"><div class="decision-tag">${a.cat}</div><div class="decision-text">${a.text}</div></div>`).join('');
+  const re=document.getElementById('reasoning');
+  re.innerHTML=`<h4>.brand reasoning</h4><p></p>`;typeWriter(re.querySelector('p'),sc.reasoning);
+  // Flash lang
+  const ms=document.getElementById('masthead-status');
+  const w=langWords[p.lang]||'.brand';
+  ms.textContent=`${w} · ${p.name.split(',')[0]} · ${p.lang.toUpperCase()}`;
+  ms.style.color='var(--amber)';setTimeout(()=>ms.style.color='',1200);
+}
+
+function typeWriter(el,txt){let i=0;el.innerHTML='<span class="reasoning-cursor"></span>';(function t(){if(i<txt.length){el.innerHTML=txt.substring(0,i+3)+'<span class="reasoning-cursor"></span>';i+=3;setTimeout(t,8)}else el.textContent=txt})()}
+
+// Architecture (demo sidebar)
+document.querySelectorAll('.arch-layer').forEach(l=>l.addEventListener('click',()=>{
+  document.querySelectorAll('.arch-layer').forEach(x=>x.classList.remove('active'));l.classList.add('active');
+}));
+
+// Architecture (full section)
+document.querySelectorAll('.arch-full-layer').forEach(l=>l.addEventListener('click',()=>{
+  document.querySelectorAll('.arch-full-layer').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.arch-full-desc').forEach(d=>d.classList.remove('open'));
+  l.classList.add('active');
+  const desc=l.nextElementSibling;
+  if(desc&&desc.classList.contains('arch-full-desc'))desc.classList.add('open');
+}));
+
+// Init
+renderScenarios();renderTo(document.getElementById('screen'),personas[curP],0);updatePanels(personas[curP],0);
+</script>
+</body>
+</html>

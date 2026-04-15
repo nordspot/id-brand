@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700;9..40,800&family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<title>.brand Manifesto — From Static Guidelines to Living Identity Agents</title>
+<style>
+  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-UltraLight.woff2') format('woff2');font-weight:100}
+  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Thin.woff2') format('woff2');font-weight:200}
+  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Light.woff2') format('woff2');font-weight:300}
+  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Roman.woff2') format('woff2');font-weight:400}
+  @font-face{font-family:'SBBWeb';src:url('https://cdn.app.sbb.ch/fonts/SBBWeb-Bold.woff2') format('woff2');font-weight:700}
+
+  :root{
+    --bg:#FAFAF8;--surface:#fff;--surface-2:#F0F0EC;
+    --border:rgba(0,0,0,.08);--border-hover:rgba(0,0,0,.18);
+    --text-1:#111;--text-2:#555;--text-3:#999;--text-4:#ccc;
+    --accent:#4F46E5;--accent-light:#818CF8;--accent-bg:rgba(79,70,229,.06);
+    --pop:#F43F5E;
+    --serif:'Instrument Serif',Georgia,serif;
+    --sans:'DM Sans',system-ui,sans-serif;
+    --mono:'DM Mono',monospace;
+    --sbb-red:#eb0000;--sbb-red-dark:#c40000;--sbb-black:#000;
+    --sbb-anthracite:#4c4c4c;--sbb-blue:#2d327d;--sbb-white:#fff;
+    --sbb-milk:#f6f6f6;--sbb-cloud:#e5e5e5;--sbb-granite:#686868;
+    --sbb-iron:#767676;--sbb-storm:#a8a8a8;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);background:var(--bg);color:var(--text-1);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.7;font-size:18px}
+  ::selection{background:var(--accent);color:#fff}
+
+  /* Hide all scrollbars */
+  ::-webkit-scrollbar{display:none}
+  *{scrollbar-width:none}
+
+  /* ═══ 3-COLUMN LAYOUT ═══ */
+  .page-wrap{display:grid;grid-template-columns:180px 1fr 280px;min-height:100vh;max-width:1400px;margin:0 auto}
+
+  /* Left: section nav */
+  .col-nav{position:sticky;top:0;height:100vh;padding:40px 20px;border-right:1px solid var(--border);overflow-y:auto;z-index:100;background:var(--bg)}
+  .col-nav-logo{font-family:'Space Grotesk',var(--sans);font-size:28px;color:var(--text-1);margin-bottom:48px;font-weight:700;letter-spacing:-.03em}
+  .col-nav-logo span{color:var(--accent)}
+  .col-nav a{display:block;padding:6px 0;font-size:14px;color:var(--text-3);text-decoration:none;transition:all .2s;line-height:1.5;border-radius:6px}
+  .col-nav a:hover{color:var(--text-1)}
+  .col-nav a.active{color:var(--accent);font-weight:600}
+  .col-nav .sn{font-family:var(--mono);font-size:10px;color:var(--text-4);margin-right:8px}
+
+  /* Center: main content */
+  .col-main{padding:0 max(32px,3vw);border-right:1px solid var(--border)}
+
+  /* Right: examples/tips */
+  .col-aside{padding:0 20px}
+  .aside-block{position:sticky;top:20vh;padding:20px 0}
+  .aside-card{padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:16px;transition:border-color .3s,transform .3s,box-shadow .3s}
+  .aside-card:hover{border-color:var(--border-hover);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.2)}
+
+  /* Cards start hidden, animate in via JS observer */
+  .aside-card{
+    opacity:0;transform:translateX(30px);filter:blur(4px);
+    transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1),filter .6s ease,border-color .3s,box-shadow .3s;
+    padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;
+  }
+  .aside-card.visible{opacity:1;transform:translateX(0);filter:blur(0)}
+  .aside-card:nth-child(2){transition-delay:.12s}
+  .aside-card:nth-child(3){transition-delay:.24s}
+  .aside-card:nth-child(4){transition-delay:.36s}
+  .aside-card:hover{border-color:var(--border-hover);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.06)}
+
+  /* Animated border glow on aside cards */
+  @property --border-angle{syntax:'<angle>';inherits:false;initial-value:0deg}
+  .aside-card.glow{
+    border-color:transparent;
+    background:linear-gradient(var(--surface),var(--surface)) padding-box,
+      conic-gradient(from var(--border-angle),transparent 60%,var(--accent) 80%,transparent 100%) border-box;
+    animation:borderSpin 4s linear infinite;
+  }
+  .aside-card.glow.visible{opacity:1;transform:translateX(0);filter:blur(0)}
+  @keyframes borderSpin{to{--border-angle:360deg}}
+
+  /* Pulsing dot for live indicators */
+  .aside-live{display:inline-block;width:6px;height:6px;border-radius:50%;background:#22C55E;margin-right:6px;animation:livePulse 2s ease-in-out infinite}
+  @keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+
+  /* Counter animation */
+  .aside-counter{font-family:'Space Grotesk',var(--sans);font-size:36px;color:var(--accent);font-weight:700;letter-spacing:-.03em;margin-bottom:4px}
+  .aside-counter-label{font-family:var(--mono);font-size:9px;color:var(--text-4);text-transform:uppercase;letter-spacing:.12em}
+  .aside-label{font-family:var(--mono);font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px;font-weight:500}
+  .aside-card p{font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:0}
+  .aside-card code{font-family:var(--mono);font-size:12px;color:var(--accent);background:var(--accent-bg);padding:2px 6px;border-radius:4px}
+  .aside-card .tip{font-size:12px;color:var(--text-3);font-style:italic;margin-top:8px}
+  .aside-card h5{font-size:13px;font-weight:500;margin-bottom:6px}
+  .aside-card ul{list-style:none;font-size:12px;color:var(--text-3);line-height:1.7}
+  .aside-card ul li::before{content:'>';font-family:var(--mono);color:var(--text-4);margin-right:6px}
+  .aside-img{width:100%;border-radius:8px;margin-bottom:16px;border:1px solid var(--border)}
+
+  @media(max-width:1100px){
+    .page-wrap{grid-template-columns:1fr}
+    .col-nav{display:none}
+    .col-aside{display:none}
+    .col-main{max-width:100%;border-right:none;padding:0 max(24px,4vw)}
+  }
+
+  /* ═══ SECTION BASE ═══ */
+  section{padding:12vh 0;border-top:1px solid var(--border)}
+  section:first-of-type{border-top:none}
+
+  .sec-num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.15em;margin-bottom:12px;font-weight:500}
+  .sec-title{font-family:'Space Grotesk',var(--sans);font-size:clamp(36px,5vw,64px);font-weight:700;line-height:1.05;letter-spacing:-.03em;margin-bottom:32px;color:var(--text-1)}
+  .sec-title em{font-style:normal;color:var(--accent);font-weight:700}
+
+  p{font-size:18px;font-weight:400;color:var(--text-2);line-height:1.85;margin-bottom:24px}
+  p strong{font-weight:600;color:var(--text-1)}
+
+  /* ═══ COVER ═══ */
+  .cover{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:0;border-top:none}
+  .cover-eyebrow{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.15em;text-transform:uppercase;margin-bottom:32px;font-weight:500}
+  .cover h1{font-family:'Space Grotesk',var(--sans);font-size:clamp(48px,8vw,100px);font-weight:700;line-height:.95;letter-spacing:-.04em;margin-bottom:36px;color:var(--text-1)}
+  .cover h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--pop));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cover-sub{font-size:22px;font-weight:400;color:var(--text-2);line-height:1.7;max-width:520px;margin-bottom:48px}
+  .cover-meta{font-family:var(--mono);font-size:13px;color:var(--text-3);letter-spacing:.03em;line-height:2.2}
+  .cover-meta strong{color:var(--text-1);font-weight:600}
+
+  /* ═══ EVOLUTION CANVAS ═══ */
+  #evolution-canvas{width:100%;height:200px;border-radius:10px;margin:32px 0;cursor:default}
+
+  /* ═══ EXPRESSION CONTAINER DEMO ═══ */
+  .ec-demo{margin:32px 0}
+  .ec-toggles{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+  .ec-btn{padding:8px 18px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-3);cursor:pointer;font-family:var(--mono);font-size:12px;transition:all .2s;letter-spacing:.04em}
+  .ec-btn:hover{border-color:var(--border-hover);color:var(--text-2)}
+  .ec-btn.on{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+  .ec-preview{padding:28px;border-radius:14px;border:1px solid var(--border);background:var(--surface);transition:all .4s;min-height:160px}
+  .ec-preview h4{font-size:18px;font-weight:600;margin-bottom:8px;transition:all .3s}
+  .ec-preview p{font-size:14px;color:var(--text-2);margin-bottom:0;transition:all .3s}
+  .ec-preview .ec-tag{display:inline-block;font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:4px;background:var(--accent-bg);color:var(--accent);margin-bottom:12px;letter-spacing:.06em;font-weight:500}
+
+  /* ═══ THREE.JS CANVAS ═══ */
+  #arch-three{width:100%;height:500px;border-radius:16px;margin:32px 0;cursor:grab;position:relative;background:var(--surface-2)}
+  #arch-three:active{cursor:grabbing}
+  #arch-info{font-family:var(--mono);font-size:13px;color:var(--text-2);margin-top:12px;min-height:48px;padding:16px;background:var(--surface);border-radius:10px;border:1px solid var(--border);transition:all .3s}
+
+  /* ═══ DRIFT SLIDERS ═══ */
+  .drift-slider-group{margin:32px 0}
+  .drift-slider{margin-bottom:28px}
+  .drift-slider label{display:block;font-size:14px;font-weight:500;margin-bottom:10px}
+  .drift-slider input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:3px;background:var(--surface-2);outline:none;cursor:pointer}
+  .drift-slider input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;border:3px solid var(--bg);box-shadow:0 2px 8px rgba(79,70,229,.3)}
+  .drift-slider input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;border:3px solid var(--bg);box-shadow:0 2px 8px rgba(79,70,229,.3)}
+  .drift-labels{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--text-3);margin-top:6px;letter-spacing:.04em}
+  .drift-desc{font-size:14px;color:var(--text-1);margin-top:10px;padding:12px 16px;background:var(--accent-bg);border-radius:8px;border-left:3px solid var(--accent);transition:all .3s;font-family:var(--mono);font-size:12px}
+
+  /* ═══ SBB PHONE ═══ */
+  .demo-phone-wrap{display:flex;justify-content:center;margin:32px 0}
+  .demo-phone{width:375px;min-height:780px;border-radius:44px;border:6px solid #222;background:#fff;overflow:hidden;position:relative;box-shadow:0 4px 24px rgba(0,0,0,.08),0 40px 80px rgba(0,0,0,.12)}
+  .demo-phone .phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:126px;height:28px;background:#1a1a1a;border-radius:0 0 16px 16px;z-index:10}
+  .demo-phone .phone-screen{width:100%;max-height:768px;min-height:768px;overflow-y:auto;overflow-x:hidden;color:var(--sbb-black);font-family:'SBBWeb','Helvetica Neue',sans-serif;transition:opacity .15s}
+  .demo-phone .phone-screen.transitioning{opacity:0}
+
+  .agent-thinking{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(250,250,248,.94);z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;border-radius:38px;backdrop-filter:blur(8px)}
+  .agent-thinking.visible{opacity:1;pointer-events:auto}
+  .thinking-ring{width:36px;height:36px;border:2px solid var(--accent);border-top-color:transparent;border-radius:50%;margin-bottom:14px;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .thinking-label{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.1em;font-weight:500}
+  .thinking-detail{font-family:var(--mono);font-size:11px;color:var(--text-3);margin-top:6px}
+
+  .persona-strip{display:flex;gap:6px;overflow-x:auto;padding:8px 0 12px;margin:16px 0}
+  .p-chip{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:24px;border:1px solid var(--border);background:transparent;color:var(--text-3);cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:400;transition:all .3s;white-space:nowrap}
+  .p-chip:hover{border-color:var(--border-hover);color:var(--text-2)}
+  .p-chip.active{border-color:var(--accent);color:var(--text-1)}
+  .p-chip .lang{font-family:var(--mono);font-size:9px;color:var(--text-3);text-transform:uppercase;opacity:.6}
+  .p-chip.active .lang{color:var(--accent);opacity:1}
+
+  .scenario-strip{display:flex;gap:5px;padding:4px 0 16px}
+  .s-chip{flex-shrink:0;padding:5px 12px;border-radius:14px;border:1px solid var(--border);background:transparent;color:var(--text-3);cursor:pointer;font-family:var(--mono);font-size:10px;transition:all .3s;white-space:nowrap;letter-spacing:.06em}
+  .s-chip:hover{border-color:var(--border-hover);color:var(--text-2)}
+  .s-chip.active{border-color:var(--border-hover);color:var(--text-1)}
+
+  .decision-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+  .decision-item{padding:14px;background:var(--surface);border-radius:10px;border:1px solid var(--border);transition:border-color .2s}
+  .decision-item:hover{border-color:var(--accent)}
+  .decision-tag{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;color:var(--accent);font-weight:500}
+  .decision-text{font-size:12px;color:var(--text-2);line-height:1.5}
+  .reasoning-block{padding:24px;background:var(--accent-bg);border:1px solid rgba(79,70,229,.1);border-radius:12px;margin-top:16px}
+  .reasoning-block h4{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.15em;margin-bottom:10px;font-weight:500}
+  .reasoning-block p{font-size:14px;font-weight:400;color:var(--text-2);line-height:1.7;margin-bottom:0}
+  .reasoning-cursor{display:inline-block;width:2px;height:1em;background:var(--accent);margin-left:1px;animation:blink .8s step-end infinite;vertical-align:text-bottom}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ═══ SBB PHONE INTERNALS ═══ */
+  .sbb-persona-banner{width:100%;height:120px;position:relative;overflow:hidden}.sbb-persona-banner img{width:100%;height:100%;object-fit:cover;display:block}.sbb-persona-banner::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(transparent,#fff)}.sbb-persona-banner .banner-label{position:absolute;bottom:44px;left:16px;font-size:11px;font-weight:700;color:rgba(255,255,255,.95);text-transform:uppercase;letter-spacing:.1em;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+  .sbb-status{height:28px;background:#fff}.sbb-header{display:flex;justify-content:space-between;align-items:center;padding:2px 16px 10px;background:#fff}.sbb-header-left{display:flex;gap:14px;align-items:center}.sbb-header-left img{width:24px;height:24px;opacity:.7}
+  .sbb-red-zone{background:var(--sbb-red);padding:12px 16px 40px;transition:all .4s}.sbb-red-zone.tall{padding:20px 16px 56px}.sbb-red-zone.slim{padding:6px 16px 32px}.sbb-red-zone-text{color:rgba(255,255,255,.85);font-size:13px;font-weight:300;margin-top:4px}.sbb-red-zone.evening{background:linear-gradient(135deg,#c40000,#8b0000)}.sbb-red-zone.scenic{padding:20px 16px 56px;background:linear-gradient(180deg,var(--sbb-red) 60%,#d40000)}.sbb-red-zone.disruption{background:linear-gradient(135deg,#eb0000,#ff4444)}.sbb-red-zone.morning{background:linear-gradient(135deg,#eb0000 40%,#d40000)}
+  .sbb-search-card{margin:-28px 16px 0;position:relative;z-index:5;background:#fff;border-radius:16px;box-shadow:0 2px 16px rgba(0,0,0,.08);padding:4px 0}.sbb-search-row{display:flex;align-items:center;gap:10px;padding:12px 16px}.sbb-search-row+.sbb-search-row{border-top:1px solid var(--sbb-milk)}.sbb-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--sbb-anthracite);flex-shrink:0}.sbb-dot.dest{background:var(--sbb-anthracite)}.sbb-search-text{font-size:15px;color:var(--sbb-black);font-weight:300;flex:1}.sbb-swap{width:36px;height:36px;display:flex;align-items:center;justify-content:center;position:absolute;right:16px;top:50%;transform:translateY(-50%);background:var(--sbb-milk);border-radius:50%}.sbb-swap img{width:20px;height:20px;opacity:.7}
+  .sbb-info-row{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--sbb-milk)}.sbb-info-row img{width:18px;height:18px;opacity:.5}.sbb-info-row span{font-size:13px;color:var(--sbb-granite);font-weight:300}.sbb-info-row.disruption-info{background:rgba(235,0,0,.04)}.sbb-info-row.disruption-info span{color:var(--sbb-red);font-weight:400}
+  .sbb-section-title{font-size:22px;font-weight:300;padding:24px 16px 14px;letter-spacing:-.01em;transition:all .3s}
+  .sbb-offer-card{margin:0 16px 8px;border:1px solid var(--sbb-cloud);border-radius:12px;padding:16px;transition:box-shadow .15s}.sbb-offer-card.highlight{border-left:3px solid var(--sbb-red)}.sbb-offer-icon{width:28px;height:28px;margin-bottom:10px}.sbb-offer-icon img{width:28px;height:28px}.sbb-offer-title{font-size:15px;font-weight:700;margin-bottom:3px}.sbb-offer-desc{font-size:13px;color:var(--sbb-granite);font-weight:300;line-height:1.5}
+  .sbb-pill{display:inline-block;margin-top:10px;font-size:13px;font-weight:400;padding:6px 16px;border-radius:20px;border:1px solid var(--sbb-anthracite);color:var(--sbb-anthracite);background:transparent}
+  .sbb-btn-red{display:flex;align-items:center;justify-content:center;gap:8px;margin:16px 16px 8px;padding:12px;background:var(--sbb-red);color:#fff;border-radius:28px;font-size:15px;font-weight:700;font-family:inherit}.sbb-btn-red img{width:20px;height:20px;filter:brightness(0) invert(1)}
+  .sbb-tab-bar{display:flex;justify-content:space-around;padding:6px 0 4px;border-top:1px solid var(--sbb-cloud);background:#fff;position:sticky;bottom:0}.sbb-tab{display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 8px}.sbb-tab img{width:24px;height:24px;opacity:.5}.sbb-tab span{font-size:10px;color:var(--sbb-granite);font-weight:300}.sbb-tab.active img{opacity:1;filter:invert(12%) sepia(100%) saturate(7000%) hue-rotate(0deg) brightness(90%)}.sbb-tab.active span{color:var(--sbb-red);font-weight:700}
+  .sbb-alert{margin:8px 16px;padding:12px 14px;background:rgba(235,0,0,.06);border-radius:10px;border-left:3px solid var(--sbb-red);display:flex;align-items:flex-start;gap:10px}.sbb-alert img{width:18px;height:18px;flex-shrink:0;margin-top:1px}.sbb-alert-text{font-size:13px;color:var(--sbb-anthracite);font-weight:300;line-height:1.5}.sbb-alert-text strong{font-weight:700;color:var(--sbb-red)}
+  .sbb-toast{margin:8px 16px;padding:10px 14px;background:#1a1a1a;border-radius:10px;display:flex;align-items:center;gap:10px;animation:toastIn .4s ease}@keyframes toastIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}.sbb-toast img{width:18px;height:18px;filter:brightness(0) invert(1);flex-shrink:0}.sbb-toast-text{font-size:12px;color:#fff;font-weight:300}.sbb-toast-text strong{font-weight:700}
+  .sbb-progress{margin:0 16px 8px;height:4px;background:var(--sbb-cloud);border-radius:2px;overflow:hidden}.sbb-progress-bar{height:100%;background:var(--sbb-red);border-radius:2px;transition:width .6s ease}
+  .time-display{font-size:32px;font-weight:100;color:var(--sbb-red);padding:4px 16px 0;letter-spacing:-.02em}.time-sub{font-size:13px;color:var(--sbb-granite);font-weight:300;padding:0 16px 8px}
+  .savings-badge{display:inline-block;background:var(--sbb-red);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;margin-bottom:8px}.step-indicator{display:flex;gap:4px;margin-bottom:12px}.step-dot{width:8px;height:8px;border-radius:50%;background:var(--sbb-cloud)}.step-dot.active{background:var(--sbb-red)}
+  .hero-card{margin:0 16px 12px;padding:24px 20px;border-radius:14px;background:var(--sbb-milk);border:none}.hero-card .sbb-offer-icon{width:36px;height:36px;margin-bottom:14px}.hero-card .sbb-offer-icon img{width:36px;height:36px}.hero-card .sbb-offer-title{font-size:18px;margin-bottom:6px}.hero-card .sbb-offer-desc{font-size:15px;line-height:1.6}.hero-card .sbb-pill{font-size:14px;padding:8px 20px;background:var(--sbb-red);color:#fff;border-color:var(--sbb-red)}
+
+  /* vis variants */
+  .vis-premium .sbb-section-title{font-size:26px;padding:32px 20px 16px}.vis-premium .sbb-offer-card{margin:0 20px 12px;padding:20px;border-radius:14px;box-shadow:0 1px 8px rgba(0,0,0,.04)}.vis-premium .sbb-offer-desc{font-size:14px;line-height:1.6}.vis-premium .sbb-btn-red{margin:20px 20px 10px;padding:14px;font-size:16px}
+  .vis-compact .sbb-section-title{font-size:18px;padding:16px 16px 8px;font-weight:400}.vis-compact .sbb-offer-card{margin:0 12px 4px;padding:12px;border-radius:8px}.vis-compact .sbb-offer-icon{width:22px;height:22px;margin-bottom:6px}.vis-compact .sbb-offer-icon img{width:22px;height:22px}.vis-compact .sbb-offer-title{font-size:14px}.vis-compact .sbb-offer-desc{font-size:12px}
+  .vis-senior .sbb-section-title{font-size:26px;padding:28px 16px 16px}.vis-senior .sbb-offer-card{margin:0 16px 12px;padding:20px;border-radius:14px}.vis-senior .sbb-offer-title{font-size:17px}.vis-senior .sbb-offer-desc{font-size:15px;line-height:1.6}.vis-senior .sbb-pill{font-size:15px;padding:8px 20px}.vis-senior .sbb-btn-red{padding:14px;font-size:17px}.vis-senior .sbb-tab span{font-size:11px}
+  .vis-dashboard .sbb-section-title{font-size:16px;font-weight:700;padding:14px 16px 6px;text-transform:uppercase;letter-spacing:.08em;color:var(--sbb-granite)}.vis-dashboard .sbb-offer-card{margin:0 12px 3px;padding:10px 14px;border-radius:6px;border:none;border-bottom:1px solid var(--sbb-milk);display:flex;gap:10px;align-items:center}.vis-dashboard .sbb-offer-icon{width:20px;height:20px;margin-bottom:0;flex-shrink:0}.vis-dashboard .sbb-offer-icon img{width:20px;height:20px}.vis-dashboard .sbb-offer-title{font-size:14px;margin-bottom:0}.vis-dashboard .sbb-offer-desc{font-size:12px}
+  .vis-discovery .sbb-section-title{font-size:28px;padding:28px 16px 16px}.vis-discovery .sbb-offer-card:first-child{padding:24px;background:var(--sbb-milk);border:none}.vis-discovery .sbb-offer-card:first-child .sbb-offer-title{font-size:18px}.vis-discovery .sbb-offer-card:first-child .sbb-offer-desc{font-size:15px}
+  .vis-evening .sbb-section-title{font-size:20px}.vis-evening .sbb-offer-card.highlight{background:rgba(235,0,0,.03);border:1px solid rgba(235,0,0,.15)}
+  .vis-young .sbb-section-title{font-size:24px;font-weight:700;padding:20px 16px 10px;letter-spacing:-.02em}.vis-young .sbb-offer-card{margin:0 14px 6px;border-radius:16px;padding:14px 16px}.vis-young .sbb-offer-card.highlight{border-left:4px solid var(--sbb-red);background:linear-gradient(90deg,rgba(235,0,0,.04),transparent)}.vis-young .sbb-pill{border-radius:20px;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em}.vis-young .sbb-btn-red{border-radius:14px;font-size:14px;padding:10px;margin:12px 14px 6px}.vis-young .sbb-red-zone{background:var(--sbb-red);padding:10px 16px 36px}
+  .vis-onboard .sbb-section-title{font-size:24px;padding:24px 16px 12px;font-weight:300}.vis-onboard .sbb-offer-card{margin:0 16px 10px;padding:18px;border-radius:14px;border:1px solid var(--sbb-cloud)}.vis-onboard .sbb-offer-card.highlight{border:2px solid var(--sbb-red);background:rgba(235,0,0,.02)}.vis-onboard .sbb-offer-title{font-size:16px}.vis-onboard .sbb-offer-desc{font-size:14px;line-height:1.65}.vis-onboard .sbb-btn-red{border-radius:28px;font-size:16px;padding:14px}
+  .vis-activity .sbb-section-title{font-size:22px;font-weight:300;padding:20px 16px 10px}.vis-activity .sbb-offer-card{margin:0 16px 10px;padding:16px;border-radius:12px;border:none;background:var(--sbb-milk)}.vis-activity .sbb-offer-card.highlight{background:linear-gradient(135deg,var(--sbb-milk),rgba(235,0,0,.04));border-left:3px solid var(--sbb-red)}.vis-activity .sbb-info-row{background:var(--sbb-milk);border-radius:8px;margin:0 16px 8px;border:none}.vis-activity .sbb-pill{background:var(--sbb-milk);border-color:var(--sbb-granite)}
+  .vis-family .sbb-section-title{font-size:26px;padding:28px 16px 14px}.vis-family .sbb-offer-card{margin:0 16px 12px;padding:20px;border-radius:16px;border:1px solid var(--sbb-cloud)}.vis-family .sbb-offer-card.highlight{border:2px solid var(--sbb-red)}.vis-family .sbb-offer-icon{width:32px;height:32px;margin-bottom:12px}.vis-family .sbb-offer-icon img{width:32px;height:32px}.vis-family .sbb-offer-title{font-size:17px}.vis-family .sbb-offer-desc{font-size:15px;line-height:1.6}.vis-family .sbb-btn-red{padding:14px;font-size:16px;border-radius:28px}.vis-family .sbb-pill{font-size:14px;padding:8px 18px}
+  .vis-disruption .sbb-section-title{font-size:20px;font-weight:700;color:var(--sbb-red)}.vis-disruption .sbb-offer-card.highlight{border:2px solid var(--sbb-red);background:rgba(235,0,0,.03)}.vis-disruption .sbb-offer-card{margin:0 16px 8px;padding:16px;border-radius:10px}
+  .vis-weekend .sbb-section-title{font-size:26px;padding:24px 16px 14px;font-weight:300}.vis-weekend .sbb-offer-card{margin:0 16px 10px;padding:18px;border-radius:14px}.vis-weekend .sbb-offer-card.highlight{background:var(--sbb-milk);border:none;padding:22px}.vis-weekend .sbb-offer-card.highlight .sbb-offer-title{font-size:18px}
+
+  /* ═══ SERVICES CANVAS ═══ */
+  #services-canvas{width:100%;height:400px;border-radius:10px;margin:32px 0;cursor:default}
+
+  /* ═══ TIMELINE ═══ */
+  .phases{margin:32px 0}
+  .phase{padding:16px 0 16px 28px;border-left:2px solid var(--border);position:relative;margin-left:8px}
+  .phase::before{content:'';position:absolute;left:-5px;top:20px;width:8px;height:8px;border-radius:50%;background:var(--text-4);border:2px solid var(--bg)}
+  .phase.now::before{background:var(--accent);box-shadow:0 0 8px rgba(79,70,229,.3)}
+  .phase h4{font-family:var(--mono);font-size:11px;color:var(--text-3);letter-spacing:.08em;margin-bottom:4px}
+  .phase p{font-size:14px;color:var(--text-2);margin:0}
+
+  /* ═══ COLOPHON ═══ */
+  .colophon{padding:60px 0 40px;border-top:1px solid var(--border);margin-top:8vh}
+  .colophon p{font-family:var(--mono);font-size:11px;color:var(--text-3);letter-spacing:.04em;line-height:2;margin:0}
+  .colophon a{color:var(--text-3);transition:color .2s;text-decoration:none}.colophon a:hover{color:var(--text-1)}
+
+  /* ═══ PULL QUOTE ═══ */
+  .pull{margin:48px 0;padding:36px;border-radius:16px;background:var(--accent-bg);border:1px solid rgba(79,70,229,.1)}
+  .pull blockquote{font-family:var(--serif);font-size:clamp(22px,3.5vw,32px);font-weight:400;font-style:italic;color:var(--text-1);line-height:1.35;margin-bottom:12px}
+  .pull cite{font-family:var(--sans);font-size:13px;font-weight:400;color:var(--text-3);font-style:normal;display:block}
+
+  /* ═══ SCROLL REVEAL ═══ */
+  @supports(animation-timeline:view()){
+    .reveal{animation:fadeUp .6s both;animation-timeline:view();animation-range:entry 0% entry 30%}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px);filter:blur(2px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+  }
+
+  /* ═══ RESPONSIVE ═══ */
+  @media(max-width:768px){
+    .decision-grid{grid-template-columns:1fr}
+    .demo-phone{width:320px;min-height:680px}
+    .demo-phone .phone-screen{max-height:668px;min-height:668px}
+    #arch-three{height:350px}
+    .cover h1{font-size:36px}
+  }
+  @media(max-width:480px){
+    .cover h1{font-size:28px}
+    .sec-title{font-size:24px}
+    .demo-phone{width:290px;min-height:620px}
+    .demo-phone .phone-screen{max-height:608px;min-height:608px}
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+<!-- ═══ LEFT: NAV ═══ -->
+<nav class="col-nav" id="sidebar">
+  <div class="col-nav-logo">.<span>brand</span></div>
+  <a href="#cover"><span class="sn">00</span>Cover</a>
+  <a href="#shift"><span class="sn">01</span>The Shift</a>
+  <a href="#containers"><span class="sn">02</span>Containers</a>
+  <a href="#architecture"><span class="sn">03</span>Architecture</a>
+  <a href="#drift"><span class="sn">04</span>Drift Control</a>
+  <a href="#demo"><span class="sn">05</span>Live Demo</a>
+  <a href="#services"><span class="sn">06</span>Services</a>
+  <a href="#next"><span class="sn">07</span>Next</a>
+</nav>
+
+<!-- ═══ CENTER: CONTENT ═══ -->
+<div class="col-main">
+
+<!-- ═══════════════════════════════════════════
+     1. COVER
+     ═══════════════════════════════════════════ -->
+<section class="cover" id="cover">
+  <div class="cover-eyebrow">Manifesto</div>
+  <h1>From static guidelines<br>to <em>living identity<br>agents.</em></h1>
+  <p class="cover-sub">A .brand file is not a document. It is an agent. It doesn't describe a brand identity &mdash; it <em>is</em> one.</p>
+  <div class="cover-meta">
+    <strong>Daniel Kunz</strong> &mdash; Nord.spot<br>
+    <strong>Nicolas Paupe</strong> &mdash; Brigade Studio<br>
+    Fribourg, April 2026
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     2. THE SHIFT
+     ═══════════════════════════════════════════ -->
+<section class="reveal" id="shift">
+  <div class="sec-num">02</div>
+  <h2 class="sec-title">The <em>shift.</em></h2>
+  <p>AI agents are becoming the primary interface between consumers and brands. A 200-page PDF doesn't negotiate with a shopping assistant. Brand guidelines as we know them cannot survive this shift.</p>
+  <canvas id="evolution-canvas"></canvas>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     3. EXPRESSION CONTAINERS
+     ═══════════════════════════════════════════ -->
+<section class="reveal" id="containers">
+  <div class="sec-num">03</div>
+  <h2 class="sec-title">Expression <em>containers.</em></h2>
+  <p>Content is not placed into fixed components. It is expressed through adaptive containers that respond to context in real time. Each container is a decision layer where intent, audience, and situation converge.</p>
+  <div class="ec-demo">
+    <div class="ec-toggles" id="ec-toggles">
+      <button class="ec-btn on" data-key="weather" data-a="sunny" data-b="rainy">Sunny</button>
+      <button class="ec-btn on" data-key="time" data-a="morning" data-b="evening">Morning</button>
+      <button class="ec-btn on" data-key="persona" data-a="student" data-b="executive">Student</button>
+    </div>
+    <div class="ec-preview" id="ec-preview">
+      <div class="ec-tag">CONTAINER RENDERING</div>
+      <h4>Weekend Escape</h4>
+      <p>Lake cruise + Lavaux wine train. Group discount for under-25s.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     4. ARCHITECTURE
+     ═══════════════════════════════════════════ -->
+<section class="reveal" id="architecture">
+  <div class="sec-num">04</div>
+  <h2 class="sec-title">Seven layers. Three <em>freedoms.</em></h2>
+  <p>An operating system for brands that think. Each layer has a defined freedom level &mdash; from locked core identity to autonomous expression.</p>
+  <div id="arch-three"></div>
+  <div id="arch-info">Click a ring to explore a layer.</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     5. DRIFT CONTROL
+     ═══════════════════════════════════════════ -->
+<section class="reveal" id="drift">
+  <div class="sec-num">05</div>
+  <h2 class="sec-title">Drift <em>control.</em></h2>
+  <p>Three tiers of freedom define how much the AI can deviate. Each brand element has a drift level set by the strategist.</p>
+  <div class="drift-slider-group">
+    <div class="drift-slider">
+      <label>Brand Color</label>
+      <input type="range" min="0" max="2" value="0" id="drift-color">
+      <div class="drift-labels"><span>Locked</span><span>Controlled</span><span>Autonomous</span></div>
+      <div class="drift-desc" id="drift-color-desc">#EB0000 always</div>
+    </div>
+    <div class="drift-slider">
+      <label>Tone of Voice</label>
+      <input type="range" min="0" max="2" value="1" id="drift-tone">
+      <div class="drift-labels"><span>Locked</span><span>Controlled</span><span>Autonomous</span></div>
+      <div class="drift-desc" id="drift-tone-desc">formal/informal by age</div>
+    </div>
+    <div class="drift-slider">
+      <label>Content Layout</label>
+      <input type="range" min="0" max="2" value="2" id="drift-layout">
+      <div class="drift-labels"><span>Locked</span><span>Controlled</span><span>Autonomous</span></div>
+      <div class="drift-desc" id="drift-layout-desc">every screen unique</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     6. LIVE DEMO
+     ═══════════════════════════════════════════ -->
+<section class="reveal" id="demo">
+  <div class="sec-num">06</div>
+  <h2 class="sec-title">The SBB <em>proof of concept.</em></h2>
+  <p>7 personas. 4 languages. One brand. Select any persona and watch the app transform.</p>
+
+  <div class="persona-strip" id="persona-strip"></div>
+  <div class="scenario-strip" id="scenario-strip"></div>
+
+  <div class="demo-phone-wrap">
+    <div class="demo-phone">
+      <div class="phone-notch"></div>
+      <div class="agent-thinking" id="agent-thinking"><div class="thinking-ring"></div><div class="thinking-label">.brand agent</div><div class="thinking-detail" id="thinking-detail"></div></div>
+      <div class="phone-screen" id="screen"></div>
+    </div>
+  </div>
+
+  <div class="decision-grid" id="decisions"></div>
+  <div class="reasoning-block" id="reasoning">
+    <h4>.brand reasoning</h4>
+    <p>Select a persona above.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     7. CONNECTED SERVICES
+     ═══════════════════════════════════════════ -->
+<section class="reveal" id="services">
+  <div class="sec-num">07</div>
+  <h2 class="sec-title">Connected <em>services.</em></h2>
+  <p>The brand connects to a network of AI and data services &mdash; campaigns, performance, testing, CRM, social, external data, learning loops, and workflow orchestration.</p>
+  <canvas id="services-canvas"></canvas>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     8. WHAT'S NEXT
+     ═══════════════════════════════════════════ -->
+<section class="reveal" id="next">
+  <div class="sec-num">08</div>
+  <h2 class="sec-title">What comes <em>next.</em></h2>
+  <div class="phases">
+    <div class="phase now"><h4>Phase 1 &mdash; Now</h4><p>Brand Knowledge API. Semantic search. SBB proof of concept live on Cloudflare edge.</p></div>
+    <div class="phase"><h4>Phase 2 &mdash; MCP Agent</h4><p>The API becomes a proper .brand MCP server any AI system can connect to.</p></div>
+    <div class="phase"><h4>Phase 3 &mdash; Optimization</h4><p>Every interaction generates signal. A/B testing, performance monitoring, learning loops.</p></div>
+    <div class="phase"><h4>Phase 4 &mdash; Multi-Channel</h4><p>Digital, physical, spatial. Total coherence across every touchpoint.</p></div>
+    <div class="phase"><h4>Phase 5 &mdash; Ecosystem</h4><p>File format spec, marketplace, inter-brand communication.</p></div>
+  </div>
+
+  <div class="pull">
+    <blockquote>Tu poc la marque &mdash; elle te poc back.</blockquote>
+    <cite>Nicolas Paupe, Brigade Studio &mdash; You poke the brand, it pokes you back.</cite>
+  </div>
+</section>
+
+<!-- COLOPHON -->
+<div class="colophon">
+  <p>
+    <strong style="color:var(--accent)">.</strong>brand &mdash; a concept by <a href="https://nord.spot">Nord.spot</a> &times; <a href="https://brigade.studio">Brigade Studio</a><br>
+    Daniel Kunz &middot; Nicolas Paupe &middot; Fribourg, 2026<br>
+    SBB/CFF/FFS brand data used for research purposes<br>
+    <a href="/">Back to landing page</a>
+  </p>
+</div>
+
+</div><!-- /col-main -->
+
+<!-- ═══ RIGHT: EXAMPLES & TIPS ═══ -->
+<div class="col-aside">
+
+  <!-- Cover aside -->
+  <div style="height:100vh;display:flex;align-items:center">
+    <div>
+      <div class="aside-card glow">
+        <div class="aside-label"><span class="aside-live"></span>Market signal</div>
+        <div class="aside-counter">$3&ndash;5T</div>
+        <div class="aside-counter-label">Agentic commerce by 2030</div>
+        <p style="margin-top:12px">Gartner: 30% of enterprises will deploy autonomous AI agents by 2026. The .brand protocol positions identity at the center.</p>
+      </div>
+      <div class="aside-card">
+        <div class="aside-label">Proof of concept</div>
+        <h5>SBB/CFF/FFS</h5>
+        <p>Swiss Federal Railways. 4 languages, strict brand rules, 120 years of cultural identity. The perfect stress-test.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shift aside -->
+  <div style="padding:12vh 0">
+    <div class="aside-card glow">
+      <div class="aside-label">Example</div>
+      <h5>What a PDF can't do</h5>
+      <p>A shopping agent asks: "What tone should I use for a 22-year-old French speaker?" A PDF has no answer. A .brand agent responds: <code>tu</code>, informal, eco-conscious lead, budget-first.</p>
+    </div>
+    <div class="aside-card">
+      <div class="aside-label">Market signal</div>
+      <p>Firsthand raised $26M for "brand agents" in ads. Figma ships an MCP server for design systems. brand.ai turns guidelines into machine-readable specs. Nobody combines all three into a protocol.</p>
+    </div>
+  </div>
+
+  <!-- Containers aside -->
+  <div style="padding:12vh 0">
+    <div class="aside-card glow">
+      <div class="aside-label"><span class="aside-live"></span>SBB example</div>
+      <h5>Same container, 3 outputs</h5>
+      <ul>
+        <li>Lena (22, FR, Saturday): Lavaux wine train, group discount</li>
+        <li>Thomas (54, DE, Monday): IC 724 seat reservation, Business Lounge</li>
+        <li>Yuki (31, EN, rainy): Indoor museum, chocolate tour</li>
+      </ul>
+      <p class="tip">The container doesn't change. The context does. The brand decides how to fill it.</p>
+    </div>
+    <div class="aside-card">
+      <div class="aside-label">Nicolas Paupe</div>
+      <p>"The interface becomes a living surface where the brand perceives, interprets, and expresses itself continuously."</p>
+    </div>
+    <div class="aside-card">
+      <div class="aside-label">Data sources</div>
+      <ul>
+        <li>Geolocation</li>
+        <li>Weather (OpenWeather API)</li>
+        <li>Crowd density (SBB APIs)</li>
+        <li>Disruption signals</li>
+        <li>Swisstourism cross-data</li>
+        <li>App usage patterns</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Architecture aside -->
+  <div style="padding:12vh 0">
+    <div class="aside-card">
+      <div class="aside-label">How to read the layers</div>
+      <p>Click any ring in the 3D view. The 7 layers stack from Core (innermost, locked) to Value Creation (outermost, autonomous). Color = drift tier.</p>
+    </div>
+    <div class="aside-card">
+      <div class="aside-label">SBB in practice</div>
+      <h5>Layer 1: Core</h5>
+      <p><code>#EB0000</code> is SBB Red. Non-negotiable. 120 years of Swiss identity encoded in one hex value.</p>
+      <h5 style="margin-top:12px">Layer 4: Interaction</h5>
+      <p>Lena sees bold 24px French titles. Luigi sees calm 26px Italian with heritage content. Same brand. Autonomous decisions.</p>
+    </div>
+    <div class="aside-card">
+      <div class="aside-label">Reference</div>
+      <p>Architecture by Nicolas Paupe, Brigade Studio. Building on Wheeler's brand ideals: coherence, flexibility, commitment.</p>
+    </div>
+  </div>
+
+  <!-- Drift aside -->
+  <div style="padding:12vh 0">
+    <div class="aside-card">
+      <div class="aside-label">Try it</div>
+      <p>Drag the sliders left and right. Watch how the description changes. This is what a brand strategist configures when setting up a .brand agent.</p>
+    </div>
+    <div class="aside-card">
+      <div class="aside-label">SBB example</div>
+      <h5>Brand Color: Locked</h5>
+      <p><code>#EB0000</code> appears on every persona's screen. The red zone is always SBB Red. No AI override.</p>
+      <h5 style="margin-top:12px">Tone: Controlled</h5>
+      <p>Under 30 = "tu/du." Over 30 business = "Sie/vous/Lei." Rules set by the strategist. AI follows.</p>
+      <h5 style="margin-top:12px">Layout: Autonomous</h5>
+      <p>Marco's dashboard has no borders, 16px type, data rows. Isabelle's has 26px type, hero cards, generous padding. The agent decides.</p>
+    </div>
+  </div>
+
+  <!-- Demo aside -->
+  <div style="padding:12vh 0">
+    <div class="aside-card">
+      <div class="aside-label">What to notice</div>
+      <ul>
+        <li>Language switches: FR, DE, EN, IT</li>
+        <li>Tone: "tu" vs "Sie" vs "Lei"</li>
+        <li>Content: eco for Lena, heritage for Luigi</li>
+        <li>Layout: compact for Marco, generous for Isabelle</li>
+        <li>Products: Seven25 for Sophie, GA for Thomas</li>
+      </ul>
+    </div>
+    <div class="aside-card">
+      <div class="aside-label">Disruption mode</div>
+      <p>Select Lena, then switch to "Disruption." The entire interface restructures: alert banner, alternative routes, compensation &mdash; all proactive. Layer 4 autonomous.</p>
+    </div>
+    <div class="aside-card">
+      <div class="aside-label">Expression Containers in action</div>
+      <p>Each card on the phone is a container. The hero card, the offer cards, the toast notifications &mdash; all adaptive. Same container type, different expression per persona.</p>
+    </div>
+    <div class="aside-card glow">
+      <div class="aside-label"><span class="aside-live"></span>Live API</div>
+      <p style="margin-bottom:10px">Query the SBB .brand API:</p>
+      <div style="display:flex;gap:6px">
+        <input id="api-q" type="text" value="Can I modify the logo?" style="flex:1;padding:8px 12px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;color:var(--text-1);font-family:var(--mono);font-size:11px;outline:none" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+        <button onclick="queryAPI()" style="padding:8px 14px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-family:var(--mono);font-size:11px;cursor:pointer;font-weight:500">Ask</button>
+      </div>
+      <div id="api-result" style="margin-top:10px;font-family:var(--mono);font-size:11px;color:var(--text-3);min-height:20px"></div>
+    </div>
+  </div>
+
+  <!-- Services aside -->
+  <div style="padding:12vh 0">
+    <div class="aside-card glow">
+      <div class="aside-label"><span class="aside-live"></span>Orchestration example</div>
+      <h5>Summer in Ticino</h5>
+      <p>Weather API detects 32&deg;C in Locarno. Swisstourism flags lake events. SBB API confirms boat connections. CRM knows Isabelle has a GA. The .brand agent composes: "Isole di Brissago. Battello da Locarno. Incluso nel suo abbonamento."</p>
+    </div>
+    <div class="aside-card">
+      <div class="aside-label">n8n workflow</div>
+      <p>n8n connects the signals, triggers the container update, and logs the interaction for the learning loop. It's the nervous system of .brand.</p>
+    </div>
+    <div class="aside-card">
+      <div class="aside-label">A/B testing</div>
+      <p>"Practical" vs "emotional" tone for family offers. Measured live. Winner gets promoted. The brand literally learns what works.</p>
+    </div>
+  </div>
+
+  <!-- Next aside -->
+  <div style="padding:12vh 0">
+    <div class="aside-card">
+      <div class="aside-label">The duo</div>
+      <h5>Daniel Kunz</h5>
+      <p>Nord.spot. AI strategy, product engineering. Infrastructure, protocols, deployment.</p>
+      <h5 style="margin-top:12px">Nicolas Paupe</h5>
+      <p>Brigade Studio. Brand strategy, visual identity, emotional targeting, anthropological depth.</p>
+      <p class="tip">Where one stops, the other begins.</p>
+    </div>
+    <div class="aside-card">
+      <div class="aside-label">Technology</div>
+      <ul>
+        <li>Cloudflare Workers (compute)</li>
+        <li>Cloudflare D1 (structured data)</li>
+        <li>Vectorize V2 (semantic search)</li>
+        <li>Workers AI (embeddings)</li>
+        <li>MCP (Model Context Protocol)</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- /col-aside -->
+
+</div><!-- /page-wrap -->
+
+<script>
+// ═══════════════════════════════════════════
+// PERSONA DATA
+// ═══════════════════════════════════════════
+const I=n=>`https://icons.app.sbb.ch/icons/${n}.svg`;
+const BM=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142 48" width="50" height="17"><path fill="#eb0000" d="M1 47h141V1H1v46z"/><path fill="#fff" d="M87 40h9.3L83.8 27.7h15.5V40h7.4V27.7h15.6L109.7 40h9.3l16-16-15.9-16h-9.3l12.5 12.3h-15.6V8h-7.4v12.3H83.8L96.3 8H87L71 24l16 16z"/></svg>`;
+
+const personas=[
+{id:'lena',name:'Lena, 22',icon:'user-group-medium',label:'Student, Lausanne',banner:{img:'/images/lena-lausanne.jpg',label:'Lausanne \u00b7 EPFL \u00b7 Halbtax'},scenarios:[{id:'default',name:'Morning commute',color:'#34d399',vis:{cls:'vis-young',zone:'',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},from:'Lausanne',to:'Z\u00fcrich HB',info:'Trafic normal sur tout le r\u00e9seau.',title:'Pour toi.',offers:[{icon:'leaf-medium',title:'Bilan CO\u2082 de ton trajet.',desc:'Lausanne\u2013Z\u00fcrich: 4.2 kg CO\u2082 \u00e9conomis\u00e9s vs voiture.',btn:'D\u00e9tails',hl:true},{icon:'ticket-percent-medium',title:'Billets d\u00e9griff\u00e9s.',desc:'D\u00e8s CHF 10.90. Prochaines 48h.',btn:'R\u00e9server'},{icon:'smartphone-medium',title:'EasyRide.',desc:'Monte, descend. Meilleur prix auto.',btn:'Activer'}],cta:'Mes billets',section2:'Durabilit\u00e9.',offers2:[{icon:'train-medium',title:'Green Class.',desc:'Abo + v\u00e9lo \u00e9lectrique.',btn:'D\u00e9couvrir'}],alert:null,toast:null,progress:null,annoLeft:[{tag:'tone',cat:'Tone',text:'Informal "tu" \u2014 age < 30'},{tag:'content',cat:'Content',text:'Eco lead \u2014 sustainability flag'},{tag:'product',cat:'Product',text:'Budget-first \u2014 student segment'}],annoRight:[{tag:'typo',cat:'Typo',text:'Bold 24px \u2014 young energy'},{tag:'color',cat:'Color',text:'Gradient highlight card'},{tag:'layout',cat:'Layout',text:'Tight gaps \u2014 fast scan'}],reasoning:'French interface. Student with Halbtax: discounted tickets lead. Eco profile triggers CO\u2082 data. Informal "tu." Emotional anchor: independence.'},{id:'disruption',name:'Disruption',color:'#ef4444',vis:{cls:'vis-young vis-disruption',zone:'disruption',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},from:'Lausanne',to:'Z\u00fcrich HB',info:'\u26a0 Retard de 25 min. Lausanne\u2013Bern.',title:'Ton trajet.',offers:[{icon:'circle-cross-medium',title:'IR 15 retard\u00e9: +25 min.',desc:'Arriv\u00e9e: 09:47. Travaux \u00e0 Fribourg.',btn:null,hl:true},{icon:'arrow-change-horizontal-small',title:'Alternative: via Biel.',desc:'08:45\u219210:02. Sans perturbation.',btn:'Choisir'},{icon:'smartphone-medium',title:'Push activ\u00e9e.',desc:'Alerte si retard augmente.',btn:null}],cta:'Alternatives',section2:'Compensation.',offers2:[{icon:'ticket-percent-medium',title:'D\u00e9dommagement.',desc:'> 60 min = remboursement partiel.',btn:'Info'}],alert:{text:'<strong>Disruption</strong> Lausanne\u2013Bern: +25 min.'},toast:null,progress:null,annoLeft:[{tag:'context',cat:'Context',text:'Disruption \u2014 alternatives first'},{tag:'tone',cat:'Tone',text:'Still "tu," factual urgency'},{tag:'drift',cat:'Drift',text:'Layer 4 autonomous reorder'}],annoRight:[{tag:'color',cat:'Color',text:'Warmer red zone gradient'},{tag:'layout',cat:'Layout',text:'Alert banner inverts hierarchy'},{tag:'product',cat:'Product',text:'Compensation proactive'}],reasoning:'Disruption: delay detected, interface restructured. Alternatives surface instantly. Compensation appears proactively. Layer 4 autonomous.'}],lang:'fr',tabs:{home:'Accueil',tt:'Horaire',tk:'Billets',pr:'Profil'}},
+{id:'thomas',name:'Thomas, 54',icon:'user-medium',label:'Executive, Bern',banner:null,scenarios:[{id:'default',name:'Morning commute',color:'#34d399',vis:{cls:'vis-premium',zone:'',heroCard:false,timeDisplay:null,stepIndicator:false,savingsBadge:false},from:'Bern',to:'Z\u00fcrich HB',info:'Normalbetrieb.',title:'F\u00fcr Sie.',offers:[{icon:'seat-window-medium',title:'Sitzplatzreservation.',desc:'Wagen 1, Platz 62. Ruhezone.',btn:'\u00c4ndern',hl:true},{icon:'cup-hot-medium',title:'Business Lounge.',desc:'Bern, Gleis 12.',btn:'Zeiten'},{icon:'timetable-medium',title:'IC 724, 07:32.',desc:'Ankunft 08:28. Auslastung tief.',btn:'Details'}],cta:'Meine Billette',section2:'Business.',offers2:[{icon:'diamond-medium',title:'Business Travel.',desc:'Reisekostenmanagement.',btn:'Info'}],alert:null,toast:null,progress:null,annoLeft:[{tag:'tone',cat:'Tone',text:'Formal "Sie" \u2014 executive'},{tag:'content',cat:'Content',text:'Seat reservation leads'},{tag:'product',cat:'Product',text:'No prices \u2014 GA holder'}],annoRight:[{tag:'typo',cat:'Typo',text:'"F\u00fcr Sie." \u2014 formal period'},{tag:'color',cat:'Color',text:'Restraint = premium'},{tag:'layout',cat:'Layout',text:'Dense \u2014 exec wants data'}],reasoning:'Formal "Sie." GA 1st class: seat + Business Lounge. No prices. Emotional anchor: control.'}],lang:'de',tabs:{home:'Home',tt:'Fahrplan',tk:'Billette',pr:'Profil'}},
+{id:'yuki',name:'Yuki, 31',icon:'globe-medium',label:'Tourist, Tokyo',banner:{img:'/images/yuki-alps.jpg',label:'Swiss Alps \u00b7 Jungfraujoch'},scenarios:[{id:'default',name:'Discovery',color:'#38bdf8',vis:{cls:'vis-discovery',zone:'scenic',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Swiss Travel Pass \u2014 unlimited'},from:'Z\u00fcrich HB',to:'Interlaken Ost',info:'All lines normal.',title:'Discover Switzerland.',offers:[{icon:'mountain-sun-medium',title:'Jungfraujoch.',desc:'25% off with Swiss Travel Pass.',btn:'Book',hl:true},{icon:'binoculars-medium',title:'GoldenPass Panoramic.',desc:'Montreux\u2013Interlaken.',btn:'Reserve'},{icon:'camera-medium',title:'Scenic routes.',desc:'Glacier Express, Bernina.',btn:'Explore'}],cta:'My tickets',section2:'Good to know.',offers2:[{icon:'circle-information-medium',title:'How Swiss trains work.',desc:'Quick guide for visitors.',btn:'Read'}],alert:null,toast:null,progress:null,annoLeft:[{tag:'tone',cat:'Tone',text:'Clear English, no jargon'},{tag:'content',cat:'Content',text:'Scenic routes dominate'},{tag:'product',cat:'Product',text:'Travel Pass in every offer'}],annoRight:[{tag:'typo',cat:'Typo',text:'28px hero card \u2014 discovery'},{tag:'color',cat:'Color',text:'Scenic red zone gradient'},{tag:'layout',cat:'Layout',text:'Jungfraujoch gets premium'}],reasoning:'English for tourist. Scenic routes dominate. Jungfraujoch leads. "How trains work" for newcomer. Emotional anchor: wonder.'}],lang:'en',tabs:{home:'Home',tt:'Timetable',tk:'Tickets',pr:'Profile'}},
+{id:'mueller',name:'Familie M\u00fcller',icon:'user-group-medium',label:'Family, Luzern',banner:{img:'/images/family-engelberg.jpg',label:'Engelberg \u00b7 Familienausflug'},scenarios:[{id:'default',name:'Family outing',color:'#fb923c',vis:{cls:'vis-family',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:true,zoneText:'Ihr Familienausflug'},from:'Luzern',to:'Engelberg',info:'Normalbetrieb.',title:'Familienausfl\u00fcge.',offers:[{icon:'ticket-day-medium',title:'Familien-Spartageskarte.',desc:'4 Pers., ganze Schweiz. Ab CHF 76.\u2013',btn:'Kaufen',hl:true},{icon:'train-medium',title:'Kinder-Spielwagen.',desc:'Wagen 7, Spielplatz auf Schienen.',btn:'Details'},{icon:'ticket-percent-medium',title:'Kinder gratis.',desc:'Junior-Karte.',btn:'Info'}],cta:'Meine Billette',section2:'Top-Angebote.',offers2:[{icon:'star-medium',title:'RailAway Kombi.',desc:'Zug + Eintritt. Pilatus.',btn:'Entdecken'}],alert:null,toast:null,progress:null,annoLeft:[{tag:'tone',cat:'Tone',text:'Warm, factual \u2014 no pressure'},{tag:'content',cat:'Content',text:'Spielwagen \u2014 practical'},{tag:'product',cat:'Product',text:'Budget-first for families'}],annoRight:[{tag:'typo',cat:'Typo',text:'26px, generous radius'},{tag:'color',cat:'Color',text:'Warm red zone welcome'},{tag:'layout',cat:'Layout',text:'Hero card + savings badge'}],reasoning:'Family: savings card leads. Kinder-Spielwagen practical info. Emotional anchor: togetherness.'}],lang:'de',tabs:{home:'Home',tt:'Fahrplan',tk:'Billette',pr:'Profil'}},
+{id:'sophie',name:'Sophie, 17',icon:'music-notes-medium',label:'Teenager, Biel',banner:{img:'/images/sophie-bern-night.jpg',label:'Bern \u00b7 Nachtleben'},scenarios:[{id:'default',name:'Night out',color:'#c084fc',vis:{cls:'vis-evening',zone:'evening',heroCard:false,timeDisplay:'23:47',timeSub:'Dernier S3 \u2192 Biel',stepIndicator:false,savingsBadge:false},from:'Biel/Bienne',to:'Bern',info:'Trafic normal.',title:'Ce soir.',offers:[{icon:'clock-medium',title:'Dernier train: 23:47.',desc:'S3. Tu rentres en s\u00e9curit\u00e9.',btn:null,hl:true},{icon:'moon-medium',title:'Moonliner.',desc:'Bus de nuit jusqu\'a 03:30.',btn:'Horaires'},{icon:'ticket-percent-medium',title:'Groupe: \u201330%.',desc:'3+ personnes.',btn:'Partager'}],cta:'Mes billets',section2:'Seven25.',offers2:[{icon:'ticket-star-medium',title:'Ton abo, ta libert\u00e9.',desc:'Gratuit d\u00e8s 19h.',btn:'D\u00e9tails'}],alert:null,toast:null,progress:null,annoLeft:[{tag:'tone',cat:'Tone',text:'"Tu" + evening content'},{tag:'content',cat:'Content',text:'Last train = safety first'},{tag:'product',cat:'Product',text:'Seven25 \u2014 hero product'}],annoRight:[{tag:'typo',cat:'Typo',text:'23:47 countdown urgency'},{tag:'color',cat:'Color',text:'Evening gradient'},{tag:'layout',cat:'Layout',text:'Last-train highlighted'}],reasoning:'Sophie: Seven25 pass. Night-oriented. Last train, Moonliner, group discount. Train is freedom. Emotional anchor: independence.'}],lang:'fr',tabs:{home:'Accueil',tt:'Horaire',tk:'Billets',pr:'Profil'}},
+{id:'isabelle',name:'Isabelle, 67',icon:'heart-medium',label:'Retiree, Bellinzona',banner:{img:'/images/isabelle-ticino.jpg',label:'Lago Maggiore \u00b7 Ticino'},scenarios:[{id:'default',name:'Day trip',color:'#38bdf8',vis:{cls:'vis-senior',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Buongiorno, Isabelle'},from:'Bellinzona',to:'Locarno',info:'Traffico regolare.',title:'Per lei.',offers:[{icon:'ship-steering-wheel-medium',title:'Isole di Brissago.',desc:'Giardino botanico.',btn:'Orari',hl:true},{icon:'cutlery-medium',title:'Cardada \u2014 pranzo.',desc:'Funivia inclusa.',btn:'Scoprire'},{icon:'clock-medium',title:"L'orologio SBB.",desc:'Dal 1944.',btn:'Storia'}],cta:'I miei biglietti',section2:'Gite.',offers2:[{icon:'walk-medium',title:'Sentiero Lago Maggiore.',desc:'12 km, piano.',btn:'Percorso'}],alert:null,toast:null,progress:null,annoLeft:[{tag:'tone',cat:'Tone',text:'Formal "Lei" \u2014 calm'},{tag:'content',cat:'Content',text:'Heritage \u2014 tradition values'},{tag:'product',cat:'Product',text:'GA benefits woven in'}],annoRight:[{tag:'typo',cat:'Typo',text:'26px, generous padding'},{tag:'color',cat:'Color',text:'"Buongiorno" \u2014 warm'},{tag:'layout',cat:'Layout',text:'Large tap targets'}],reasoning:'Italian. Formal "Lei," calm pacing. Brissago, restaurant, SBB clock. Emotional anchor: beauty.'}],lang:'it',tabs:{home:'Home',tt:'Orario',tk:'Biglietti',pr:'Profilo'}},
+{id:'luigi',name:'Luigi, 72',icon:'clock-medium',label:'Pensioner, Lugano',banner:{img:'/images/lucia-lugano.jpg',label:'Lugano \u00b7 Lago \u00b7 Gottardo'},scenarios:[{id:'default',name:'Morning ritual',color:'#fb923c',vis:{cls:'vis-senior',zone:'tall',heroCard:true,timeDisplay:null,stepIndicator:false,savingsBadge:false,zoneText:'Buongiorno, Signor Luigi'},from:'Lugano',to:'Milano Centrale',info:'Traffico regolare.',title:'Per lei.',offers:[{icon:'newspaper-medium',title:'Minibar, vagone 1.',desc:'Caff\u00e8, cornetto, Corriere.',btn:null,hl:true},{icon:'museum-medium',title:'Milano in giornata.',desc:'09:17\u219217:45.',btn:'Orari'},{icon:'train-station-medium',title:'Ferrovia del Gottardo.',desc:'Percorso storico.',btn:'Scoprire'}],cta:'I miei biglietti',section2:'Patrimonio.',offers2:[{icon:'clock-medium',title:"L'orologio FFS.",desc:'1944, Hans Hilfiker.',btn:'Storia'}],alert:null,toast:null,progress:null,annoLeft:[{tag:'tone',cat:'Tone',text:'Formal "Lei" \u2014 unhurried'},{tag:'content',cat:'Content',text:'Minibar ritual recognized'},{tag:'product',cat:'Product',text:'Heritage \u2014 Swiss tradition'}],annoRight:[{tag:'typo',cat:'Typo',text:'Senior \u2014 max readability'},{tag:'color',cat:'Color',text:'Named greeting \u2014 dignity'},{tag:'layout',cat:'Layout',text:'Daily ritual as hero card'}],reasoning:'Formal Italian. Minibar ritual recognized. Milan day trip, Gotthard heritage. Emotional anchor: tradition and dignity.'}],lang:'it',tabs:{home:'Home',tt:'Orario',tk:'Biglietti',pr:'Profilo'}},
+];
+
+let curP=0,curS=0,transitioning=false;
+
+// ═══════════════════════════════════════════
+// RENDER FUNCTION
+// ═══════════════════════════════════════════
+function renderTo(el,p,si){
+  const sc=p.scenarios[si||0],v=sc.vis;el.scrollTop=0;
+  el.className='phone-screen '+(v.cls||'');
+  const zc=v.zone||'',zt=v.zoneText?`<div class="sbb-red-zone-text">${v.zoneText}</div>`:'';
+  const card=(o,i)=>{const h=v.heroCard&&i===0,c=h?'hero-card':'sbb-offer-card'+(o.hl?' highlight':''),b=v.savingsBadge&&i===0&&o.btn?'<div class="savings-badge">AKTION</div>':'';return`<div class="${c}">${b}<div class="sbb-offer-icon"><img src="${I(o.icon)}" alt=""/></div><div class="sbb-offer-title">${o.title}</div><div class="sbb-offer-desc">${o.desc}</div>${o.btn?`<div class="sbb-pill">${o.btn}</div>`:''}</div>`};
+  const te=v.timeDisplay?`<div class="time-display">${v.timeDisplay}</div><div class="time-sub">${v.timeSub||''}</div>`:'';
+  const se=v.stepIndicator?'<div style="padding:0 16px"><div class="step-indicator"><div class="step-dot active"></div><div class="step-dot"></div><div class="step-dot"></div></div></div>':'';
+  const be=p.banner?`<div class="sbb-persona-banner"><img src="${p.banner.img}" alt="" loading="eager"/><span class="banner-label">${p.banner.label}</span></div>`:'';
+  const ae=sc.alert?`<div class="sbb-alert"><img src="${I('circle-cross-medium')}" alt=""/><div class="sbb-alert-text">${sc.alert.text}</div></div>`:'';
+  const oe=sc.toast?`<div class="sbb-toast"><img src="${I(sc.toast.icon)}" alt=""/><div class="sbb-toast-text">${sc.toast.text}</div></div>`:'';
+  const pe=sc.progress?`<div style="padding:4px 16px 0;font-size:11px;color:var(--sbb-granite);display:flex;justify-content:space-between"><span>${sc.progress.label}</span><span>${sc.progress.value}%</span></div><div class="sbb-progress"><div class="sbb-progress-bar" style="width:${sc.progress.value}%"></div></div>`:'';
+  const ic=sc.info.includes('\u26a0')||sc.info.includes('Retard')||sc.info.includes('versp\u00e4tet')?'sbb-info-row disruption-info':'sbb-info-row';
+  el.innerHTML=`<div class="sbb-status"></div><div class="sbb-header"><div class="sbb-header-left"><img src="${I('hamburger-menu-medium')}" alt=""/><img src="${I('magnifying-glass-medium')}" alt=""/><img src="${I('user-medium')}" alt=""/></div><div>${BM}</div></div>${be}${ae}<div class="sbb-red-zone ${zc}">${zt}</div><div class="sbb-search-card" style="position:relative"><div class="sbb-search-row"><div class="sbb-dot"></div><div class="sbb-search-text">${sc.from}</div></div><div class="sbb-search-row"><div class="sbb-dot dest"></div><div class="sbb-search-text">${sc.to}</div></div><div class="sbb-swap"><img src="${I('arrow-change-horizontal-small')}" alt=""/></div></div><div class="${ic}"><img src="${I('circle-information-small')}" alt=""/><span>${sc.info}</span></div>${oe}${te}${pe}<div class="sbb-section-title">${sc.title}</div>${se}${sc.offers.map((o,i)=>card(o,i)).join('')}<div class="sbb-btn-red"><img src="${I('ticket-route-medium')}" alt=""/>${sc.cta}</div><div class="sbb-section-title">${sc.section2}</div>${sc.offers2.map(o=>`<div class="sbb-offer-card"><div class="sbb-offer-icon"><img src="${I(o.icon)}" alt=""/></div><div class="sbb-offer-title">${o.title}</div><div class="sbb-offer-desc">${o.desc}</div>${o.btn?`<div class="sbb-pill">${o.btn}</div>`:''}</div>`).join('')}<div style="height:8px"></div><div class="sbb-tab-bar">${['home','tt','tk','pr'].map((t,i)=>{const ic={home:'house-small',tt:'timetable-small',tk:'ticket-route-small',pr:'user-small'};return`<div class="sbb-tab${i===0?' active':''}"><img src="${I(ic[t])}" alt=""/><span>${p.tabs[t]}</span></div>`}).join('')}</div>`;
+}
+
+// ═══════════════════════════════════════════
+// PERSONA STRIP + SCENARIO STRIP
+// ═══════════════════════════════════════════
+const strip=document.getElementById('persona-strip');
+strip.innerHTML=personas.map((p,i)=>`<button class="p-chip${i===curP?' active':''}" data-i="${i}">${p.name} <span class="lang">${p.lang}</span></button>`).join('');
+document.querySelectorAll('.p-chip').forEach(b=>b.addEventListener('click',()=>{
+  if(transitioning)return;const i=+b.dataset.i;if(i===curP)return;
+  document.querySelectorAll('.p-chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+  curP=i;curS=0;renderScenarios();transitionTo(personas[i],0);
+}));
+
+function renderScenarios(){
+  const p=personas[curP],ss=document.getElementById('scenario-strip');
+  if(p.scenarios.length<=1){ss.innerHTML='';return}
+  ss.innerHTML=p.scenarios.map((s,i)=>`<button class="s-chip${i===0?' active':''}" data-si="${i}">${s.name}</button>`).join('');
+  document.querySelectorAll('.s-chip').forEach(b=>b.addEventListener('click',()=>{
+    if(transitioning)return;const si=+b.dataset.si;if(si===curS)return;
+    document.querySelectorAll('.s-chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+    curS=si;transitionTo(personas[curP],si);
+  }));
+}
+
+function transitionTo(p,si){
+  transitioning=true;const th=document.getElementById('agent-thinking'),td=document.getElementById('thinking-detail'),sc=document.getElementById('screen');
+  const msgs=[`${p.name.split(',')[0]}...`,`${p.lang.toUpperCase()} \u00b7 ${p.scenarios[si].name}`,`Generating...`];
+  td.textContent=msgs[0];th.classList.add('visible');sc.classList.add('transitioning');
+  let mi=0;const iv=setInterval(()=>{mi++;if(mi<msgs.length)td.textContent=msgs[mi]},250);
+  setTimeout(()=>{clearInterval(iv);renderTo(sc,p,si);th.classList.remove('visible');sc.classList.remove('transitioning');transitioning=false;updatePanels(p,si)},800);
+}
+
+function updatePanels(p,si){
+  const sc=p.scenarios[si],all=[...sc.annoLeft,...sc.annoRight];
+  document.getElementById('decisions').innerHTML=all.map(a=>`<div class="decision-item"><div class="decision-tag">${a.cat}</div><div class="decision-text">${a.text}</div></div>`).join('');
+  const re=document.getElementById('reasoning');
+  re.innerHTML=`<h4>.brand reasoning</h4><p></p>`;typeWriter(re.querySelector('p'),sc.reasoning);
+}
+
+function typeWriter(el,txt){let i=0;el.innerHTML='<span class="reasoning-cursor"></span>';(function t(){if(i<txt.length){el.innerHTML=txt.substring(0,i+3)+'<span class="reasoning-cursor"></span>';i+=3;setTimeout(t,8)}else el.textContent=txt})()}
+
+// Init phone
+renderScenarios();
+renderTo(document.getElementById('screen'),personas[curP],0);
+updatePanels(personas[curP],0);
+
+// ═══════════════════════════════════════════
+// ASIDE CARD SCROLL REVEAL
+// ═══════════════════════════════════════════
+const cardObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    } else {
+      // Re-hide when scrolling away so they animate again on re-entry
+      e.target.classList.remove('visible');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+document.querySelectorAll('.aside-card').forEach(c => cardObserver.observe(c));
+
+// ═══════════════════════════════════════════
+// LIVE API QUERY
+// ═══════════════════════════════════════════
+function queryAPI(){
+  const q=document.getElementById('api-q').value;
+  const r=document.getElementById('api-result');
+  r.textContent='Querying...';r.style.color='var(--accent)';
+  fetch('https://sbb-brand-api.billowing-leaf-4d6a.workers.dev/api/search?q='+encodeURIComponent(q))
+    .then(res=>res.json())
+    .then(data=>{
+      if(data.results&&data.results.length>0){
+        r.textContent=data.results[0].text||data.results[0].content||JSON.stringify(data.results[0]).substring(0,200);
+        r.style.color='var(--text-2)';
+      } else if(data.answer){
+        r.textContent=data.answer.substring(0,200);r.style.color='var(--text-2)';
+      } else {
+        r.textContent=JSON.stringify(data).substring(0,200);r.style.color='var(--text-2)';
+      }
+    })
+    .catch(e=>{r.textContent='Error: '+e.message;r.style.color='var(--pop)'});
+}
+document.getElementById('api-q').addEventListener('keydown',e=>{if(e.key==='Enter')queryAPI()});
+
+// ═══════════════════════════════════════════
+// SIDEBAR SCROLL SPY
+// ═══════════════════════════════════════════
+const sections=document.querySelectorAll('section[id]');
+const sidebarLinks=document.querySelectorAll('.col-nav a');
+const spy=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      sidebarLinks.forEach(l=>l.classList.remove('active'));
+      const link=document.querySelector(`.col-nav a[href="#${e.target.id}"]`);
+      if(link)link.classList.add('active');
+    }
+  });
+},{rootMargin:'-20% 0px -60% 0px'});
+sections.forEach(s=>spy.observe(s));
+
+// ═══════════════════════════════════════════
+// EVOLUTION CANVAS (Section 2)
+// ═══════════════════════════════════════════
+(function(){
+  const c=document.getElementById('evolution-canvas');
+  if(!c)return;
+  const ctx=c.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  function resize(){
+    const r=c.getBoundingClientRect();
+    c.width=r.width*dpr;c.height=r.height*dpr;
+    ctx.scale(dpr,dpr);
+  }
+  resize();
+  window.addEventListener('resize',resize);
+
+  const nodes=[
+    {label:'Static',x:0,y:0,color:'#ccc'},
+    {label:'Dynamic',x:0,y:0,color:'#999'},
+    {label:'AI-Generated',x:0,y:0,color:'#818CF8'},
+    {label:'.brand',x:0,y:0,color:'#4F46E5'}
+  ];
+  let anim=0;
+
+  function draw(){
+    anim+=0.005;
+    const w=c.width/dpr,h=c.height/dpr;
+    ctx.clearRect(0,0,w,h);
+
+    const spacing=w/(nodes.length+1);
+    nodes.forEach((n,i)=>{
+      n.x=spacing*(i+1);
+      n.y=h/2+Math.sin(anim+i*0.8)*12;
+    });
+
+    // Lines
+    ctx.strokeStyle='rgba(79,70,229,0.2)';
+    ctx.lineWidth=1.5;
+    ctx.setLineDash([4,6]);
+    ctx.lineDashOffset=-anim*40;
+    for(let i=0;i<nodes.length-1;i++){
+      ctx.beginPath();
+      ctx.moveTo(nodes[i].x,nodes[i].y);
+      ctx.lineTo(nodes[i+1].x,nodes[i+1].y);
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+
+    // Nodes
+    nodes.forEach((n,i)=>{
+      const r=i===3?24:18;
+      // Glow for .brand
+      if(i===3){
+        const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,40);
+        g.addColorStop(0,'rgba(79,70,229,0.12)');
+        g.addColorStop(1,'transparent');
+        ctx.fillStyle=g;
+        ctx.beginPath();ctx.arc(n.x,n.y,40,0,Math.PI*2);ctx.fill();
+      }
+      ctx.fillStyle=n.color;
+      ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);ctx.fill();
+      // Label
+      ctx.fillStyle='#333';
+      ctx.font='500 13px "DM Sans",sans-serif';
+      ctx.textAlign='center';
+      ctx.fillText(n.label,n.x,n.y+r+22);
+      if(i<nodes.length-1){
+        ctx.fillStyle='#bbb';
+        ctx.font='11px "DM Mono",monospace';
+        ctx.fillText('\u2192',(nodes[i].x+nodes[i+1].x)/2,nodes[i].y-20);
+      }
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ═══════════════════════════════════════════
+// EXPRESSION CONTAINER DEMO (Section 3)
+// ═══════════════════════════════════════════
+(function(){
+  const state={weather:'sunny',time:'morning',persona:'student'};
+  const btns=document.querySelectorAll('.ec-btn');
+  const preview=document.getElementById('ec-preview');
+
+  function update(){
+    const w=state.weather,t=state.time,p=state.persona;
+    let title,desc,bg,tag;
+
+    if(w==='sunny'&&t==='morning'&&p==='student'){
+      title='Weekend Escape';desc='Lake cruise + Lavaux wine train. Group discount for under-25s.';bg='var(--surface)';tag='LEISURE \u00b7 STUDENT';
+    } else if(w==='rainy'&&t==='morning'&&p==='student'){
+      title='Study Lounge';desc='Free coworking at Bern HB. Hot chocolate on us with Halbtax.';bg='rgba(79,70,229,0.04)';tag='INDOOR \u00b7 RAINY';
+    } else if(w==='sunny'&&t==='evening'&&p==='student'){
+      title='Ce soir.';desc='Open-air cinema at Lausanne. Last S3 at 23:47. Group discount.';bg='rgba(244,63,94,0.04)';tag='EVENING \u00b7 YOUNG';
+    } else if(w==='rainy'&&t==='evening'&&p==='student'){
+      title='Night In? Night Out.';desc='Moonliner runs until 03:30. Museum night pass CHF 12.';bg='rgba(79,70,229,0.06)';tag='NIGHT \u00b7 INDOOR';
+    } else if(w==='sunny'&&t==='morning'&&p==='executive'){
+      title='F\u00fcr Sie.';desc='IC 724, Platz 62, Ruhezone. Business Lounge Bern open.';bg='var(--surface)';tag='COMMUTE \u00b7 PREMIUM';
+    } else if(w==='rainy'&&t==='morning'&&p==='executive'){
+      title='Ihr Morgen.';desc='Umbrella pickup at Bern HB. IC 724 on time. Lounge open early.';bg='rgba(79,70,229,0.04)';tag='WEATHER \u00b7 SERVICE';
+    } else if(w==='sunny'&&t==='evening'&&p==='executive'){
+      title='After Work.';desc='1st class quiet zone. Schedule sync with Outlook. No disruptions.';bg='rgba(244,63,94,0.03)';tag='EVENING \u00b7 FORMAL';
+    } else {
+      title='Guten Abend.';desc='All lines normal. Rain expected until 22:00. Indoor lounge available.';bg='rgba(79,70,229,0.05)';tag='EVENING \u00b7 WEATHER';
+    }
+
+    preview.style.background=bg;
+    preview.innerHTML=`<div class="ec-tag">${tag}</div><h4>${title}</h4><p>${desc}</p>`;
+  }
+
+  btns.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const k=btn.dataset.key;
+      const isA=state[k]===btn.dataset.a;
+      state[k]=isA?btn.dataset.b:btn.dataset.a;
+      btn.classList.toggle('on');
+      btn.textContent=state[k].charAt(0).toUpperCase()+state[k].slice(1);
+      update();
+    });
+  });
+  update();
+})();
+
+// ═══════════════════════════════════════════
+// THREE.JS ARCHITECTURE (Section 4)
+// ═══════════════════════════════════════════
+(function(){
+  const container=document.getElementById('arch-three');
+  if(!container||typeof THREE==='undefined')return;
+  const w=container.clientWidth,h=500;
+
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(45,w/h,0.1,100);
+  camera.position.set(0,6,8);
+  camera.lookAt(0,0,0);
+
+  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  renderer.setSize(w,h);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setClearColor(0xF0F0EC,1);
+  container.appendChild(renderer.domElement);
+  renderer.domElement.style.borderRadius='10px';
+
+  const layers=[
+    {name:'Core Intelligence',drift:'Locked',color:0xF43F5E,desc:'Vision, values, positioning, brand DNA. The immutable nucleus.'},
+    {name:'Expression Engine',drift:'Controlled',color:0x4F46E5,desc:'Tone, visual language, narrative formats. AI operates within parameters.'},
+    {name:'Context Adaptation',drift:'Controlled',color:0x4F46E5,desc:'Consumer typologies, cultural narratives, temporal context.'},
+    {name:'Interaction Layer',drift:'Autonomous',color:0x818CF8,desc:'Real-time outputs. Every expression unique, every expression on-brand.'},
+    {name:'System Network',drift:'Controlled',color:0x4F46E5,desc:'Agent-to-agent dialogue, cross-touchpoint synchronization.'},
+    {name:'Governance',drift:'Locked',color:0xF43F5E,desc:'Human oversight, creative direction, ethics. Custodians of meaning.'},
+    {name:'Value Creation',drift:'Autonomous',color:0x818CF8,desc:'Products, experiences, optimization loops, learning.'}
+  ];
+
+  const group=new THREE.Group();
+  const rings=[];
+  layers.forEach((l,i)=>{
+    const radius=3.0-i*0.3;
+    const geo=new THREE.TorusGeometry(radius,0.06,16,80);
+    const mat=new THREE.MeshStandardMaterial({color:l.color,emissive:l.color,emissiveIntensity:0.25,roughness:0.4,metalness:0.1});
+    const mesh=new THREE.Mesh(geo,mat);
+    mesh.position.y=-i*0.5;
+    mesh.rotation.x=Math.PI/2;
+    mesh.userData={index:i,layer:l};
+    group.add(mesh);
+    rings.push(mesh);
+  });
+  group.rotation.x=-0.4;
+  scene.add(group);
+
+  scene.add(new THREE.AmbientLight(0xffffff,0.6));
+  const dl=new THREE.DirectionalLight(0xffffff,0.7);
+  dl.position.set(3,8,5);scene.add(dl);
+  const dl2=new THREE.DirectionalLight(0xD4A574,0.3);
+  dl2.position.set(-3,-2,4);scene.add(dl2);
+
+  let time=0;
+  function animate(){
+    requestAnimationFrame(animate);
+    time+=0.004;
+    rings.forEach((r,i)=>{
+      r.rotation.z=time*(i%2===0?1:-1)*0.3;
+    });
+    renderer.render(scene,camera);
+  }
+  animate();
+
+  let isDragging=false,prevX=0,prevY=0,rotX=-0.4,rotY=0;
+
+  renderer.domElement.addEventListener('mousedown',e=>{isDragging=true;prevX=e.clientX;prevY=e.clientY});
+  window.addEventListener('mouseup',()=>isDragging=false);
+  window.addEventListener('mousemove',e=>{
+    if(!isDragging)return;
+    const dx=e.clientX-prevX,dy=e.clientY-prevY;
+    rotY+=dx*0.005;rotX+=dy*0.005;
+    group.rotation.y=rotY;group.rotation.x=rotX;
+    prevX=e.clientX;prevY=e.clientY;
+  });
+
+  // Click detection
+  const raycaster=new THREE.Raycaster();
+  const mouse=new THREE.Vector2();
+  let selectedRing=null;
+
+  renderer.domElement.addEventListener('click',e=>{
+    const rect=renderer.domElement.getBoundingClientRect();
+    mouse.x=((e.clientX-rect.left)/rect.width)*2-1;
+    mouse.y=-((e.clientY-rect.top)/rect.height)*2+1;
+    raycaster.setFromCamera(mouse,camera);
+    const intersects=raycaster.intersectObjects(rings);
+    if(intersects.length>0){
+      const hit=intersects[0].object;
+      const l=hit.userData.layer;
+      const idx=hit.userData.index;
+      // Reset previous
+      if(selectedRing)selectedRing.material.emissiveIntensity=0.3;
+      hit.material.emissiveIntensity=0.8;
+      selectedRing=hit;
+      document.getElementById('arch-info').innerHTML=`<strong style="color:var(--text-1)">${String(idx+1).padStart(2,'0')} ${l.name}</strong> <span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;margin-left:8px;background:${l.drift==='Locked'?'rgba(244,63,94,.1);color:#F43F5E':l.drift==='Controlled'?'rgba(79,70,229,.1);color:#4F46E5':'rgba(129,140,248,.1);color:#818CF8'}">${l.drift}</span><br><span style="color:var(--text-2)">${l.desc}</span>`;
+    }
+  });
+
+  // Resize
+  window.addEventListener('resize',()=>{
+    const nw=container.clientWidth;
+    camera.aspect=nw/h;camera.updateProjectionMatrix();
+    renderer.setSize(nw,h);
+  });
+})();
+
+// ═══════════════════════════════════════════
+// DRIFT SLIDERS (Section 5)
+// ═══════════════════════════════════════════
+(function(){
+  const driftData={
+    color:['"#EB0000 always"','warm palette, red dominant','context-driven palette'],
+    tone:['formal Swiss German','formal/informal by age','fully adaptive per persona'],
+    layout:['fixed grid','density varies by segment','every screen unique']
+  };
+  ['color','tone','layout'].forEach(key=>{
+    const slider=document.getElementById('drift-'+key);
+    const desc=document.getElementById('drift-'+key+'-desc');
+    if(!slider||!desc)return;
+    slider.addEventListener('input',()=>{
+      desc.textContent=driftData[key][+slider.value];
+      const colors=['var(--pop)','var(--accent)','var(--text-3)'];
+      desc.style.borderLeftColor=colors[+slider.value];
+    });
+    desc.textContent=driftData[key][+slider.value];
+    const colors=['var(--pop)','var(--accent)','var(--text-3)'];
+    desc.style.borderLeftColor=colors[+slider.value];
+  });
+})();
+
+// ═══════════════════════════════════════════
+// CONNECTED SERVICES CANVAS (Section 7)
+// ═══════════════════════════════════════════
+(function(){
+  const c=document.getElementById('services-canvas');
+  if(!c)return;
+  const ctx=c.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  function resize(){
+    const r=c.getBoundingClientRect();
+    c.width=r.width*dpr;c.height=r.height*dpr;
+    ctx.scale(dpr,dpr);
+  }
+  resize();
+  window.addEventListener('resize',resize);
+
+  const services=[
+    'Campaign\nOrchestration','Performance\nMonitoring','A/B\nTesting','CRM\nIntegration',
+    'Social\nSignals','External\nData','Learning\nLoop','n8n\nWorkflow'
+  ];
+  const tools=[
+    'Google Ads, Meta, Adobe','GA4, Mixpanel, Amplitude','Optimizely, LaunchDarkly','Salesforce, HubSpot, Segment',
+    'Brandwatch, Sprinklr, X','SBB APIs, OpenWeather','Anthropic, OpenAI, Vertex','n8n, Zapier, Make'
+  ];
+
+  let anim=0;
+  let hoverIdx=-1;
+
+  c.addEventListener('mousemove',e=>{
+    const rect=c.getBoundingClientRect();
+    const mx=e.clientX-rect.left,my=e.clientY-rect.top;
+    const w=rect.width,h=rect.height;
+    const cx=w/2,cy=h/2,rad=Math.min(w,h)*0.34;
+    hoverIdx=-1;
+    services.forEach((_,i)=>{
+      const a=(Math.PI*2/services.length)*i-Math.PI/2;
+      const nx=cx+Math.cos(a)*rad,ny=cy+Math.sin(a)*rad;
+      if(Math.hypot(mx-nx,my-ny)<28)hoverIdx=i;
+    });
+  });
+  c.addEventListener('mouseleave',()=>hoverIdx=-1);
+
+  function draw(){
+    anim+=0.008;
+    const w=c.width/dpr,h=c.height/dpr;
+    ctx.clearRect(0,0,w,h);
+    const cx=w/2,cy=h/2;
+    const rad=Math.min(w,h)*0.34;
+
+    // Compute node positions
+    const positions=services.map((_,i)=>{
+      const a=(Math.PI*2/services.length)*i-Math.PI/2;
+      return{x:cx+Math.cos(a)*rad,y:cy+Math.sin(a)*rad};
+    });
+
+    // Lines from center to nodes
+    positions.forEach((p,i)=>{
+      ctx.strokeStyle='rgba(79,70,229,0.15)';
+      ctx.lineWidth=1;
+      ctx.setLineDash([3,5]);
+      ctx.lineDashOffset=-anim*20+i*10;
+      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(p.x,p.y);ctx.stroke();
+    });
+
+    positions.forEach((p,i)=>{
+      const next=positions[(i+1)%positions.length];
+      ctx.strokeStyle='rgba(0,0,0,0.05)';
+      ctx.lineWidth=1;
+      ctx.setLineDash([2,4]);
+      ctx.lineDashOffset=-anim*15;
+      ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(next.x,next.y);ctx.stroke();
+    });
+    ctx.setLineDash([]);
+
+    // Center node
+    const cg=ctx.createRadialGradient(cx,cy,0,cx,cy,32);
+    cg.addColorStop(0,'rgba(79,70,229,0.2)');cg.addColorStop(1,'transparent');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(cx,cy,32,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#4F46E5';ctx.beginPath();ctx.arc(cx,cy,16,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='bold 10px "DM Mono",monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('.brand',cx,cy);
+
+    positions.forEach((p,i)=>{
+      const isHover=i===hoverIdx;
+      const nr=isHover?14:10;
+      ctx.fillStyle=isHover?'#4F46E5':'#ccc';
+      ctx.beginPath();ctx.arc(p.x,p.y,nr,0,Math.PI*2);ctx.fill();
+
+      ctx.fillStyle=isHover?'#111':'#888';
+      ctx.font=(isHover?'500 ':'')+'11px "DM Sans",sans-serif';
+      ctx.textAlign='center';
+      const lines=services[i].split('\n');
+      lines.forEach((line,li)=>{
+        ctx.fillText(line,p.x,p.y+nr+14+li*14);
+      });
+
+      if(isHover){
+        ctx.fillStyle='#999';
+        ctx.font='10px "DM Mono",monospace';
+        ctx.fillText(tools[i],p.x,p.y+nr+14+lines.length*14+4);
+      }
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
